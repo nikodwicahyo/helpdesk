@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Rules;
+
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
+use App\Services\AdminValidationService;
+
+class ValidAdminNip implements ValidationRule
+{
+    /**
+     * Run the validation rule.
+     */
+    public function validate(string $attribute, mixed $value, Closure $fail): void
+    {
+        if (!AdminValidationService::isValidAdminNip($value)) {
+            $fail("The {$attribute} must be a valid admin NIP from either admin_helpdesks or admin_aplikasis table.");
+        }
+    }
+}

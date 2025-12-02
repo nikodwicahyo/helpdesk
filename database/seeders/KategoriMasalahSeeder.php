@@ -1,0 +1,358 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Aplikasi;
+use App\Models\KategoriMasalah;
+use Illuminate\Database\Seeder;
+
+class KategoriMasalahSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        $applications = Aplikasi::all();
+
+        $categoriesData = [
+            'SIKEP' => [
+                [
+                    'name' => 'Login & Authentication',
+                    'description' => 'Masalah login, lupa password, dan autentikasi pengguna',
+                    'priority' => 'high',
+                    'status' => 'active',
+                    'sort_order' => 1,
+                    'icon' => 'fas fa-sign-in-alt',
+                    'keywords' => ['login', 'password', 'authentication', 'access', 'signin'],
+                    'estimated_resolution_time' => 30,
+                    'common_solutions' => 'Reset password, clear cache, check account status',
+                    'requires_attachment' => false,
+                ],
+                [
+                    'name' => 'Data Pegawai Tidak Muncul',
+                    'description' => 'Data pegawai tidak tampil atau tidak sinkron',
+                    'priority' => 'medium',
+                    'status' => 'active',
+                    'sort_order' => 2,
+                    'icon' => 'fas fa-users',
+                    'keywords' => ['data pegawai', 'tidak muncul', 'sinkronisasi', 'data hilang'],
+                    'estimated_resolution_time' => 60,
+                    'common_solutions' => 'Check database connection, run sync process, verify data integrity',
+                    'requires_attachment' => true,
+                ],
+                [
+                    'name' => 'Error Saat Input Data',
+                    'description' => 'Error saat menginput atau mengedit data pegawai',
+                    'priority' => 'medium',
+                    'status' => 'active',
+                    'sort_order' => 3,
+                    'icon' => 'fas fa-edit',
+                    'keywords' => ['input error', 'edit error', 'validation error', 'form error'],
+                    'estimated_resolution_time' => 45,
+                    'common_solutions' => 'Check field validation, clear browser cache, check network connectivity',
+                    'requires_attachment' => true,
+                ],
+                [
+                    'name' => 'Laporan Tidak Bisa Export',
+                    'description' => 'Gagal export laporan dalam berbagai format',
+                    'priority' => 'low',
+                    'status' => 'active',
+                    'sort_order' => 4,
+                    'icon' => 'fas fa-file-export',
+                    'keywords' => ['export', 'laporan', 'pdf', 'excel', 'download'],
+                    'estimated_resolution_time' => 90,
+                    'common_solutions' => 'Check disk space, verify export settings, check file permissions',
+                    'requires_attachment' => true,
+                ],
+                [
+                    'name' => 'Performance Lambat',
+                    'description' => 'Aplikasi berjalan lambat atau hang',
+                    'priority' => 'medium',
+                    'status' => 'active',
+                    'sort_order' => 5,
+                    'icon' => 'fas fa-tachometer-alt',
+                    'keywords' => ['slow', 'lambat', 'hang', 'loading', 'performance'],
+                    'estimated_resolution_time' => 120,
+                    'common_solutions' => 'Check server resources, optimize database queries, clear cache',
+                    'requires_attachment' => false,
+                ],
+            ],
+            'SIAN' => [
+                [
+                    'name' => 'Upload Dokumen Gagal',
+                    'description' => 'Tidak dapat mengunggah dokumen ke sistem',
+                    'priority' => 'high',
+                    'status' => 'active',
+                    'sort_order' => 1,
+                    'icon' => 'fas fa-upload',
+                    'keywords' => ['upload', 'unggah', 'file', 'document', 'gagal'],
+                    'estimated_resolution_time' => 30,
+                    'common_solutions' => 'Check file size, format, and permissions',
+                    'requires_attachment' => true,
+                ],
+                [
+                    'name' => 'Pencarian Dokumen Error',
+                    'description' => 'Fitur pencarian dokumen tidak berfungsi',
+                    'priority' => 'medium',
+                    'status' => 'active',
+                    'sort_order' => 2,
+                    'icon' => 'fas fa-search',
+                    'keywords' => ['pencarian', 'search', 'dokumen', 'tidak ditemukan'],
+                    'estimated_resolution_time' => 60,
+                    'common_solutions' => 'Rebuild search index, check database integrity',
+                    'requires_attachment' => false,
+                ],
+                [
+                    'name' => 'Akses Dokumen Rahasia',
+                    'description' => 'Masalah akses dokumen dengan klasifikasi rahasia',
+                    'priority' => 'urgent',
+                    'status' => 'active',
+                    'sort_order' => 3,
+                    'icon' => 'fas fa-lock',
+                    'keywords' => ['akses', 'rahasia', 'classified', 'security', 'izin'],
+                    'estimated_resolution_time' => 15,
+                    'common_solutions' => 'Verify security clearance, check access permissions',
+                    'requires_attachment' => false,
+                ],
+            ],
+            'E-OFFICE' => [
+                [
+                    'name' => 'Workflow Approval Stuck',
+                    'description' => 'Proses approval surat tertahan tidak bergerak',
+                    'priority' => 'high',
+                    'status' => 'active',
+                    'sort_order' => 1,
+                    'icon' => 'fas fa-clock',
+                    'keywords' => ['workflow', 'approval', 'stuck', 'tertunda', 'pending'],
+                    'estimated_resolution_time' => 30,
+                    'common_solutions' => 'Check approver status, restart workflow, verify business rules',
+                    'requires_attachment' => false,
+                ],
+                [
+                    'name' => 'Template Surat Tidak Muncul',
+                    'description' => 'Template surat tidak tampil dalam daftar',
+                    'priority' => 'medium',
+                    'status' => 'active',
+                    'sort_order' => 2,
+                    'icon' => 'fas fa-file-alt',
+                    'keywords' => ['template', 'surat', 'tidak muncul', 'missing'],
+                    'estimated_resolution_time' => 45,
+                    'common_solutions' => 'Check template permissions, reload template cache',
+                    'requires_attachment' => false,
+                ],
+                [
+                    'name' => 'Notifikasi Email Tidak Dikirim',
+                    'description' => 'Email notifikasi tidak terkirim ke penerima',
+                    'priority' => 'medium',
+                    'status' => 'active',
+                    'sort_order' => 3,
+                    'icon' => 'fas fa-envelope',
+                    'keywords' => ['email', 'notifikasi', 'tidak dikirim', 'notification'],
+                    'estimated_resolution_time' => 60,
+                    'common_solutions' => 'Check SMTP settings, verify email configuration',
+                    'requires_attachment' => false,
+                ],
+            ],
+            'SIKEU' => [
+                [
+                    'name' => 'Anggaran Tidak Balance',
+                    'description' => 'Laporan anggaran tidak balance atau tidak sesuai',
+                    'priority' => 'high',
+                    'status' => 'active',
+                    'sort_order' => 1,
+                    'icon' => 'fas fa-balance-scale',
+                    'keywords' => ['anggaran', 'balance', 'tidak sesuai', 'financial'],
+                    'estimated_resolution_time' => 60,
+                    'common_solutions' => 'Check budget allocation, verify transaction records',
+                    'requires_attachment' => true,
+                ],
+                [
+                    'name' => 'Import Data SPAN Gagal',
+                    'description' => 'Import data dari sistem SPAN tidak berhasil',
+                    'priority' => 'high',
+                    'status' => 'active',
+                    'sort_order' => 2,
+                    'icon' => 'fas fa-file-import',
+                    'keywords' => ['import', 'SPAN', 'gagal', 'data error'],
+                    'estimated_resolution_time' => 90,
+                    'common_solutions' => 'Check file format, validate data structure, check import settings',
+                    'requires_attachment' => true,
+                ],
+            ],
+            'PDD' => [
+                [
+                    'name' => 'Website Tidak Bisa Diakses',
+                    'description' => 'Portal web tidak dapat diakses atau error',
+                    'priority' => 'urgent',
+                    'status' => 'active',
+                    'sort_order' => 1,
+                    'icon' => 'fas fa-globe',
+                    'keywords' => ['website', 'tidak bisa akses', 'error', 'down'],
+                    'estimated_resolution_time' => 15,
+                    'common_solutions' => 'Check server status, DNS, network connectivity',
+                    'requires_attachment' => false,
+                ],
+                [
+                    'name' => 'Konten Tidak Update',
+                    'description' => 'Konten website tidak ter-update otomatis',
+                    'priority' => 'low',
+                    'status' => 'active',
+                    'sort_order' => 2,
+                    'icon' => 'fas fa-sync',
+                    'keywords' => ['konten', 'tidak update', 'sync', 'refresh'],
+                    'estimated_resolution_time' => 120,
+                    'common_solutions' => 'Check content management system, verify update schedule',
+                    'requires_attachment' => false,
+                ],
+            ],
+            'SIKON' => [
+                [
+                    'name' => 'Data WNI Tidak Ditemukan',
+                    'description' => 'Data WNI di luar negeri tidak dapat ditemukan',
+                    'priority' => 'high',
+                    'status' => 'active',
+                    'sort_order' => 1,
+                    'icon' => 'fas fa-user-times',
+                    'keywords' => ['WNI', 'data tidak ditemukan', 'citizen', 'missing'],
+                    'estimated_resolution_time' => 45,
+                    'common_solutions' => 'Check database, verify search parameters, contact embassy',
+                    'requires_attachment' => false,
+                ],
+                [
+                    'name' => 'Aplikasi Mobile Error',
+                    'description' => 'Aplikasi mobile untuk WNI bermasalah',
+                    'priority' => 'medium',
+                    'status' => 'active',
+                    'sort_order' => 2,
+                    'icon' => 'fas fa-mobile-alt',
+                    'keywords' => ['mobile app', 'error', 'crash', 'bug'],
+                    'estimated_resolution_time' => 90,
+                    'common_solutions' => 'Check app version, clear cache, reinstall if necessary',
+                    'requires_attachment' => true,
+                ],
+            ],
+            'SIMONAS' => [
+                [
+                    'name' => 'QR Code Tidak Bisa Scan',
+                    'description' => 'QR code asset tidak dapat di-scan',
+                    'priority' => 'low',
+                    'status' => 'active',
+                    'sort_order' => 1,
+                    'icon' => 'fas fa-qrcode',
+                    'keywords' => ['QR code', 'scan', 'tidak bisa', 'barcode'],
+                    'estimated_resolution_time' => 60,
+                    'common_solutions' => 'Check QR code quality, camera settings, app permissions',
+                    'requires_attachment' => true,
+                ],
+                [
+                    'name' => 'Data Asset Tidak Sinkron',
+                    'description' => 'Data asset antara server dan mobile tidak sinkron',
+                    'priority' => 'medium',
+                    'status' => 'active',
+                    'sort_order' => 2,
+                    'icon' => 'fas fa-exchange-alt',
+                    'keywords' => ['sinkronisasi', 'tidak sync', 'data berbeda'],
+                    'estimated_resolution_time' => 90,
+                    'common_solutions' => 'Check network, force sync, verify data integrity',
+                    'requires_attachment' => false,
+                ],
+            ],
+            'E-LEARN' => [
+                [
+                    'name' => 'Video Tidak Bisa Diputar',
+                    'description' => 'Video pembelajaran tidak dapat diputar',
+                    'priority' => 'medium',
+                    'status' => 'active',
+                    'sort_order' => 1,
+                    'icon' => 'fas fa-play-circle',
+                    'keywords' => ['video', 'tidak bisa putar', 'playback', 'media'],
+                    'estimated_resolution_time' => 45,
+                    'common_solutions' => 'Check internet connection, clear browser cache, try different browser',
+                    'requires_attachment' => false,
+                ],
+                [
+                    'name' => 'Sertifikat Tidak Muncul',
+                    'description' => 'Sertifikat penyelesaian kursus tidak tampil',
+                    'priority' => 'low',
+                    'status' => 'active',
+                    'sort_order' => 2,
+                    'icon' => 'fas fa-certificate',
+                    'keywords' => ['sertifikat', 'certificate', 'tidak muncul', 'completion'],
+                    'estimated_resolution_time' => 30,
+                    'common_solutions' => 'Check course completion status, regenerate certificate',
+                    'requires_attachment' => false,
+                ],
+            ],
+            'HELPDESK' => [
+                [
+                    'name' => 'Tidak Bisa Buat Tiket',
+                    'description' => 'User tidak dapat membuat tiket baru',
+                    'priority' => 'high',
+                    'status' => 'active',
+                    'sort_order' => 1,
+                    'icon' => 'fas fa-ticket-alt',
+                    'keywords' => ['buat tiket', 'create ticket', 'error', 'form'],
+                    'estimated_resolution_time' => 30,
+                    'common_solutions' => 'Check user permissions, verify form validation, check database',
+                    'requires_attachment' => true,
+                ],
+                [
+                    'name' => 'Notifikasi Tidak Diterima',
+                    'description' => 'User tidak menerima notifikasi tiket',
+                    'priority' => 'medium',
+                    'status' => 'active',
+                    'sort_order' => 2,
+                    'icon' => 'fas fa-bell',
+                    'keywords' => ['notifikasi', 'notification', 'tidak terima', 'email'],
+                    'estimated_resolution_time' => 45,
+                    'common_solutions' => 'Check notification settings, verify email configuration',
+                    'requires_attachment' => false,
+                ],
+            ],
+            'APD' => [
+                [
+                    'name' => 'Jadwal Protokol Bentrok',
+                    'description' => 'Jadwal acara protokol bentrok atau overlap',
+                    'priority' => 'high',
+                    'status' => 'active',
+                    'sort_order' => 1,
+                    'icon' => 'fas fa-calendar-times',
+                    'keywords' => ['jadwal', 'bentrok', 'overlap', 'conflict', 'protokol'],
+                    'estimated_resolution_time' => 60,
+                    'common_solutions' => 'Review scheduling rules, coordinate with protocol team',
+                    'requires_attachment' => false,
+                ],
+                [
+                    'name' => 'Undangan Tidak Terkirim',
+                    'description' => 'Undangan acara protokol tidak terkirim',
+                    'priority' => 'medium',
+                    'status' => 'active',
+                    'sort_order' => 2,
+                    'icon' => 'fas fa-envelope-open-text',
+                    'keywords' => ['undangan', 'tidak terkirim', 'invitation', 'email'],
+                    'estimated_resolution_time' => 45,
+                    'common_solutions' => 'Check mailing list, verify email settings, resend invitations',
+                    'requires_attachment' => false,
+                ],
+            ],
+        ];
+
+        foreach ($applications as $app) {
+            if (isset($categoriesData[$app->code])) {
+                foreach ($categoriesData[$app->code] as $category) {
+                    KategoriMasalah::firstOrCreate(
+                        [
+                            'aplikasi_id' => $app->id,
+                            'name' => $category['name']
+                        ], // Use composite unique key
+                        [
+                            'aplikasi_id' => $app->id,
+                            ...$category,
+                        ]
+                    );
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php artisan route:list:*)",
+      "Bash(php artisan tinker:*)",
+      "Bash(php artisan route:cache:*)",
+      "Bash(php artisan config:cache:*)",
+      "Bash(php artisan config:clear:*)",
+      "Bash(php artisan route:clear:*)",
+      "Bash(php artisan cache:clear:*)",
+      "Bash(php artisan:*)",
+      "Bash(php:*)",
+      "Bash(findstr:*)",
+      "Bash(npm run build)",
+      "Bash(curl:*)",
+      "Bash(find:*)",
+      "Bash('1003,1102d' -e '}' \"E:\\Proyek Kemlu\\helpdesk-kemlu-v3 - 3\\app\\Http\\Controllers\\AdminHelpdesk\\ReportController.php\")",
+      "Bash(dir:*)",
+      "Bash(ls:*)",
+      "Bash(del:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
