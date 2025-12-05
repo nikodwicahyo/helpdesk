@@ -18,7 +18,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label for="nama_lengkap" class="block text-sm font-medium text-gray-700 mb-2">
-                                    {{ t('modal.userModal.fullName') }} *
+                                    {{ t('modal.userModal.fullName') }} <span class="text-red-500">*</span>
                                 </label>
                                 <input
                                     id="nama_lengkap"
@@ -35,7 +35,7 @@
 
                             <div>
                                 <label for="nip" class="block text-sm font-medium text-gray-700 mb-2">
-                                    {{ t('modal.userModal.nipLong') }} *
+                                    {{ t('modal.userModal.nipLong') }} <span class="text-red-500">*</span>
                                 </label>
                                 <input
                                     id="nip"
@@ -56,7 +56,7 @@
 
                             <div>
                                 <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                                    {{ t('user.email') }} *
+                                    {{ t('user.email') }} <span class="text-red-500">*</span>
                                 </label>
                                 <input
                                     id="email"
@@ -193,7 +193,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label for="keahlian" class="block text-sm font-medium text-gray-700 mb-2">
-                                    {{ t('modal.userModal.expertise') }} *
+                                    {{ t('modal.userModal.expertise') }} <span class="text-red-500">*</span>
                                 </label>
                                 <input
                                     id="keahlian"
@@ -234,7 +234,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                                    {{ t('user.password') }} *
+                                    {{ t('user.password') }} <span class="text-red-500">*</span>
                                 </label>
                                 <input
                                     id="password"
@@ -251,7 +251,7 @@
 
                             <div>
                                 <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
-                                    {{ t('user.confirmPassword') }} *
+                                    {{ t('user.confirmPassword') }} <span class="text-red-500">*</span>
                                 </label>
                                 <input
                                     id="password_confirmation"

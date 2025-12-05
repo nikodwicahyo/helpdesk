@@ -25,7 +25,7 @@
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                         </svg>
-                        {{ category.status === 'active' ? 'Deactivate' : 'Activate' }}
+                        {{ category.status === 'active' ? t('adminAplikasi.categoryDetail.deactivate') : t('adminAplikasi.categoryDetail.activate') }}
                     </button>
                     <button
                         @click="editCategory"
@@ -34,7 +34,7 @@
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
-                        Edit
+                        {{ t('common.edit') }}
                     </button>
                 </div>
             </div>
@@ -43,34 +43,34 @@
         <!-- Category Info Cards -->
         <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
             <StatCard
-                title="Status"
+                :title="t('adminAplikasi.categoryDetail.stat.status')"
                 :value="category.status_label"
                 :icon="category.status === 'active' ? '✅' : '⭕'"
                 :color="category.status === 'active' ? 'green' : 'gray'"
             />
             <StatCard
-                title="Total Tickets"
-                :value="performance.total_tickets"
+                :title="t('dashboard.totalTickets')"
+                :value="safePerformance.total_tickets"
                 icon="🎫"
                 color="blue"
             />
             <StatCard
-                title="Resolution Rate"
-                :value="performance.resolution_rate.toFixed(1) + '%'"
+                :title="t('adminAplikasi.categoryDetail.stat.resolutionRate')"
+                :value="safePerformance.resolution_rate.toFixed(1) + '%'"
                 icon="📊"
                 color="green"
             />
             <StatCard
-                title="Avg Resolution Time"
-                :value="formatResolutionTime(performance.avg_resolution_time)"
+                :title="t('dashboard.admin.avgResolutionTime')"
+                :value="formatResolutionTime(safePerformance.avg_resolution_time)"
                 icon="⏱️"
                 color="yellow"
             />
             <StatCard
-                title="Health Score"
-                :value="(performance.health_score || 0).toFixed(0) + '/100'"
-                :icon="getHealthIcon(performance.health_score)"
-                :color="getHealthColor(performance.health_score)"
+                :title="t('adminAplikasi.categoryDetail.stat.healthScore')"
+                :value="safePerformance.health_score.toFixed(0) + '/100'"
+                :icon="getHealthIcon(safePerformance.health_score)"
+                :color="getHealthColor(safePerformance.health_score)"
             />
         </div>
 
@@ -99,10 +99,10 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Category Details -->
                         <div class="bg-gray-50 rounded-lg p-6">
-                            <h3 class="text-lg font-semibold mb-4">Category Details</h3>
+                            <h3 class="text-lg font-semibold mb-4">{{ t('adminAplikasi.categoryDetail.categoryDetails') }}</h3>
                             <dl class="space-y-3">
                                 <div>
-                                    <dt class="text-sm text-gray-600">Application</dt>
+                                    <dt class="text-sm text-gray-600">{{ t('adminAplikasi.categoryDetail.application') }}</dt>
                                     <dd class="text-sm font-medium text-gray-900">
                                         <Link 
                                             :href="`/admin-aplikasi/applications/${category.aplikasi.id}`"
@@ -113,27 +113,27 @@
                                     </dd>
                                 </div>
                                 <div v-if="category.code">
-                                    <dt class="text-sm text-gray-600">Category Code</dt>
+                                    <dt class="text-sm text-gray-600">{{ t('adminAplikasi.categoryDetail.categoryCode') }}</dt>
                                     <dd class="text-sm font-medium text-gray-900">{{ category.code }}</dd>
                                 </div>
                                 <div>
-                                    <dt class="text-sm text-gray-600">Default Priority</dt>
+                                    <dt class="text-sm text-gray-600">{{ t('adminAplikasi.categoryDetail.defaultPriority') }}</dt>
                                     <dd>
                                         <span :class="getPriorityBadge(category.default_priority)" class="px-2 py-1 text-xs font-medium rounded-full">
-                                            {{ category.default_priority }}
+                                            {{ t(`priority.${category.default_priority}`) }}
                                         </span>
                                     </dd>
                                 </div>
                                 <div v-if="category.estimated_resolution_time">
-                                    <dt class="text-sm text-gray-600">Estimated Resolution Time</dt>
+                                    <dt class="text-sm text-gray-600">{{ t('adminAplikasi.categoryDetail.estimatedResolutionTime') }}</dt>
                                     <dd class="text-sm font-medium text-gray-900">{{ formatResolutionTime(category.estimated_resolution_time) }}</dd>
                                 </div>
                                 <div v-if="category.sla_hours">
-                                    <dt class="text-sm text-gray-600">SLA Target</dt>
-                                    <dd class="text-sm font-medium text-gray-900">{{ category.sla_hours }} hours</dd>
+                                    <dt class="text-sm text-gray-600">{{ t('adminAplikasi.categoryDetail.slaTarget') }}</dt>
+                                    <dd class="text-sm font-medium text-gray-900">{{ t('adminAplikasi.categoryDetail.hours', { count: category.sla_hours }) }}</dd>
                                 </div>
                                 <div>
-                                    <dt class="text-sm text-gray-600">Created</dt>
+                                    <dt class="text-sm text-gray-600">{{ t('common.created') }}</dt>
                                     <dd class="text-sm font-medium text-gray-900">{{ formatDate(category.created_at) }}</dd>
                                 </div>
                             </dl>
@@ -141,42 +141,42 @@
 
                         <!-- Performance Metrics -->
                         <div class="bg-gray-50 rounded-lg p-6">
-                            <h3 class="text-lg font-semibold mb-4">Performance Metrics</h3>
+                            <h3 class="text-lg font-semibold mb-4">{{ t('adminAplikasi.categoryDetail.performanceMetrics') }}</h3>
                             <dl class="space-y-3">
                                 <div>
-                                    <dt class="text-sm text-gray-600">Total Tickets</dt>
-                                    <dd class="text-sm font-medium text-gray-900">{{ performance.total_tickets }}</dd>
+                                    <dt class="text-sm text-gray-600">{{ t('dashboard.totalTickets') }}</dt>
+                                    <dd class="text-sm font-medium text-gray-900">{{ safePerformance.total_tickets }}</dd>
                                 </div>
                                 <div>
-                                    <dt class="text-sm text-gray-600">Resolved Tickets</dt>
-                                    <dd class="text-sm font-medium text-gray-900">{{ performance.resolved_tickets }}</dd>
+                                    <dt class="text-sm text-gray-600">{{ t('adminAplikasi.categoryDetail.resolvedTickets') }}</dt>
+                                    <dd class="text-sm font-medium text-gray-900">{{ safePerformance.resolved_tickets }}</dd>
                                 </div>
                                 <div>
-                                    <dt class="text-sm text-gray-600">Resolution Rate</dt>
-                                    <dd class="text-sm font-medium text-gray-900">{{ performance.resolution_rate.toFixed(1) }}%</dd>
+                                    <dt class="text-sm text-gray-600">{{ t('adminAplikasi.categoryDetail.stat.resolutionRate') }}</dt>
+                                    <dd class="text-sm font-medium text-gray-900">{{ safePerformance.resolution_rate.toFixed(1) }}%</dd>
                                 </div>
                                 <div>
-                                    <dt class="text-sm text-gray-600">Average Resolution Time</dt>
-                                    <dd class="text-sm font-medium text-gray-900">{{ formatResolutionTime(performance.avg_resolution_time) }}</dd>
+                                    <dt class="text-sm text-gray-600">{{ t('adminAplikasi.categoryDetail.avgResolutionTime') }}</dt>
+                                    <dd class="text-sm font-medium text-gray-900">{{ formatResolutionTime(safePerformance.avg_resolution_time) }}</dd>
                                 </div>
-                                <div v-if="performance.sla_compliance">
-                                    <dt class="text-sm text-gray-600">SLA Compliance</dt>
-                                    <dd class="text-sm font-medium" :class="performance.sla_compliance >= 90 ? 'text-green-600' : 'text-red-600'">
-                                        {{ performance.sla_compliance.toFixed(1) }}%
+                                <div v-if="safePerformance.sla_compliance > 0">
+                                    <dt class="text-sm text-gray-600">{{ t('adminAplikasi.categoryDetail.slaCompliance') }}</dt>
+                                    <dd class="text-sm font-medium" :class="safePerformance.sla_compliance >= 90 ? 'text-green-600' : 'text-red-600'">
+                                        {{ safePerformance.sla_compliance.toFixed(1) }}%
                                     </dd>
                                 </div>
                                 <div>
-                                    <dt class="text-sm text-gray-600">Health Score</dt>
+                                    <dt class="text-sm text-gray-600">{{ t('adminAplikasi.categoryDetail.stat.healthScore') }}</dt>
                                     <dd>
                                         <div class="flex items-center space-x-2">
                                             <div class="flex-1 bg-gray-200 rounded-full h-2">
                                                 <div 
                                                     class="h-2 rounded-full transition-all duration-300"
-                                                    :class="getHealthBarColor(performance.health_score)"
-                                                    :style="`width: ${performance.health_score || 0}%`"
+                                                    :class="getHealthBarColor(safePerformance.health_score)"
+                                                    :style="`width: ${safePerformance.health_score}%`"
                                                 ></div>
                                             </div>
-                                            <span class="text-sm font-medium text-gray-900">{{ (performance.health_score || 0).toFixed(0) }}</span>
+                                            <span class="text-sm font-medium text-gray-900">{{ safePerformance.health_score.toFixed(0) }}</span>
                                         </div>
                                     </dd>
                                 </div>
@@ -187,7 +187,7 @@
                     <!-- Recommendations -->
                     <div v-if="recommendations && recommendations.length > 0" class="mt-6">
                         <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
-                            <h3 class="text-lg font-semibold text-blue-900 mb-4">💡 Recommendations</h3>
+                            <h3 class="text-lg font-semibold text-blue-900 mb-4">💡 {{ t('adminAplikasi.categoryDetail.recommendations') }}</h3>
                             <ul class="space-y-2">
                                 <li v-for="(rec, index) in recommendations" :key="index" class="flex items-start">
                                     <span class="text-blue-600 mr-2">•</span>
@@ -196,7 +196,7 @@
                                         <p class="text-xs text-blue-700 mt-1">{{ rec.action }}</p>
                                     </div>
                                     <span :class="getPriorityBadge(rec.priority)" class="px-2 py-1 text-xs font-medium rounded-full">
-                                        {{ rec.priority }}
+                                        {{ t(`priority.${rec.priority}`) }}
                                     </span>
                                 </li>
                             </ul>
@@ -207,43 +207,43 @@
                 <!-- Tickets Tab -->
                 <div v-if="activeTab === 'tickets'">
                     <div class="mb-6">
-                        <h3 class="text-lg font-semibold mb-4">Ticket Statistics by Status</h3>
+                        <h3 class="text-lg font-semibold mb-4">{{ t('adminAplikasi.categoryDetail.ticketStatistics') }}</h3>
                         <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
                             <div class="bg-gray-50 rounded-lg p-4 text-center">
                                 <div class="text-2xl font-bold text-gray-900">{{ ticketStats.total }}</div>
-                                <div class="text-sm text-gray-600">Total</div>
+                                <div class="text-sm text-gray-600">{{ t('dashboard.totalTickets') }}</div>
                             </div>
                             <div class="bg-yellow-50 rounded-lg p-4 text-center">
                                 <div class="text-2xl font-bold text-yellow-600">{{ ticketStats.open }}</div>
-                                <div class="text-sm text-gray-600">Open</div>
+                                <div class="text-sm text-gray-600">{{ t('status.open') }}</div>
                             </div>
                             <div class="bg-blue-50 rounded-lg p-4 text-center">
                                 <div class="text-2xl font-bold text-blue-600">{{ ticketStats.in_progress }}</div>
-                                <div class="text-sm text-gray-600">In Progress</div>
+                                <div class="text-sm text-gray-600">{{ t('status.inProgress') }}</div>
                             </div>
                             <div class="bg-green-50 rounded-lg p-4 text-center">
                                 <div class="text-2xl font-bold text-green-600">{{ ticketStats.resolved }}</div>
-                                <div class="text-sm text-gray-600">Resolved</div>
+                                <div class="text-sm text-gray-600">{{ t('status.resolved') }}</div>
                             </div>
                             <div class="bg-gray-50 rounded-lg p-4 text-center">
                                 <div class="text-2xl font-bold text-gray-600">{{ ticketStats.closed }}</div>
-                                <div class="text-sm text-gray-600">Closed</div>
+                                <div class="text-sm text-gray-600">{{ t('status.closed') }}</div>
                             </div>
                         </div>
                     </div>
 
                     <div class="overflow-x-auto">
-                        <h3 class="text-lg font-semibold mb-4">Recent Tickets</h3>
+                        <h3 class="text-lg font-semibold mb-4">{{ t('dashboard.recentTickets') }}</h3>
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ticket #</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Teknisi</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ t('ticket.ticketNumber') }}</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ t('ticket.ticketTitle') }}</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ t('ticket.status') }}</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ t('ticket.priority') }}</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ t('ticket.createdBy') }}</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ t('ticket.assignedTo') }}</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ t('common.created') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
@@ -260,13 +260,13 @@
                                             {{ ticket.priority_label }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-900">{{ ticket.user?.name || 'N/A' }}</td>
-                                    <td class="px-6 py-4 text-sm text-gray-900">{{ ticket.teknisi?.name || 'Unassigned' }}</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">{{ ticket.user?.name || t('common.notAvailable') }}</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">{{ ticket.teknisi?.name || t('common.unassigned') }}</td>
                                     <td class="px-6 py-4 text-sm text-gray-500">{{ ticket.created_at }}</td>
                                 </tr>
                                 <tr v-if="recentTickets.length === 0">
                                     <td colspan="7" class="px-6 py-8 text-center text-gray-500">
-                                        No tickets found for this category
+                                        {{ t('adminAplikasi.categoryDetail.noTickets') }}
                                     </td>
                                 </tr>
                             </tbody>
@@ -277,12 +277,12 @@
                 <!-- Expert Teknisi Tab -->
                 <div v-if="activeTab === 'experts'">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold">Expert Teknisi ({{ expertTeknisi.length }})</h3>
+                        <h3 class="text-lg font-semibold">{{ t('adminAplikasi.categoryDetail.expertTeknisi', { count: expertTeknisi.length }) }}</h3>
                         <button
                             @click="manageExperts"
                             class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
                         >
-                            Manage Experts
+                            {{ t('adminAplikasi.categoryDetail.manageExperts') }}
                         </button>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -306,21 +306,21 @@
                             </div>
                             <div class="mt-3 space-y-1 text-sm">
                                 <div class="flex justify-between">
-                                    <span class="text-gray-600">Expertise Level:</span>
-                                    <span class="font-medium text-gray-900">{{ teknisi.expertise_level || 'N/A' }}</span>
+                                    <span class="text-gray-600">{{ t('adminAplikasi.categoryDetail.expertiseLevel') }}</span>
+                                    <span class="font-medium text-gray-900">{{ teknisi.expertise_level || t('common.notAvailable') }}</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-gray-600">Success Rate:</span>
+                                    <span class="text-gray-600">{{ t('adminAplikasi.categoryDetail.successRate') }}</span>
                                     <span class="font-medium text-green-600">{{ (teknisi.success_rate || 0).toFixed(1) }}%</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-gray-600">Avg Resolution:</span>
+                                    <span class="text-gray-600">{{ t('adminAplikasi.categoryDetail.avgResolutionTime') }}</span>
                                     <span class="font-medium text-blue-600">{{ formatResolutionTime(teknisi.avg_resolution_time) }}</span>
                                 </div>
                             </div>
                         </div>
                         <div v-if="expertTeknisi.length === 0" class="col-span-full text-center py-8 text-gray-500">
-                            No expert teknisi assigned to this category yet
+                            {{ t('adminAplikasi.categoryDetail.noExperts') }}
                         </div>
                     </div>
                 </div>
@@ -341,15 +341,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { Link, router, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import StatCard from '@/Components/Common/StatCard.vue';
 import AdminAplikasiCategoryModal from '@/Components/Modals/AdminAplikasiCategoryModal.vue';
 import { useToasts } from '@/composables/useToasts';
+import { useI18n } from 'vue-i18n';
 
 const page = usePage();
 const { success, error } = useToasts();
+const { t, locale } = useI18n();
 
 const props = defineProps({
     category: {
@@ -394,21 +396,32 @@ const props = defineProps({
 const activeTab = ref('overview');
 const showEditModal = ref(false);
 
-const tabs = [
-    { id: 'overview', label: 'Overview' },
-    { id: 'tickets', label: 'Tickets' },
-    { id: 'experts', label: 'Expert Teknisi' },
-];
+// Computed property to safely handle performance data with null/undefined values
+const safePerformance = computed(() => ({
+    total_tickets: props.performance?.total_tickets ?? 0,
+    resolved_tickets: props.performance?.resolved_tickets ?? 0,
+    resolution_rate: props.performance?.resolution_rate ?? 0,
+    avg_resolution_time: props.performance?.avg_resolution_time ?? 0,
+    sla_compliance: props.performance?.sla_compliance ?? 0,
+    health_score: props.performance?.health_score ?? 0,
+    success_rate: props.performance?.success_rate ?? 0,
+}));
+
+const tabs = computed(() => ([
+    { id: 'overview', label: t('adminAplikasi.categoryDetail.tabs.overview') },
+    { id: 'tickets', label: t('adminAplikasi.categoryDetail.tabs.tickets') },
+    { id: 'experts', label: t('adminAplikasi.categoryDetail.tabs.experts') },
+]));
 
 // Handle flash messages
 onMounted(() => {
     const flash = page.props.flash;
     if (flash) {
         if (flash.success) {
-            success({ title: 'Success', message: flash.success });
+            success({ title: t('common.success'), message: flash.success });
         }
         if (flash.error) {
-            error({ title: 'Error', message: flash.error });
+            error({ title: t('common.error'), message: flash.error });
         }
     }
 });
@@ -419,7 +432,7 @@ const editCategory = () => {
 
 const toggleStatus = () => {
     const newStatus = props.category.status === 'active' ? 'inactive' : 'active';
-    if (confirm(`Are you sure you want to ${newStatus === 'active' ? 'activate' : 'deactivate'} this category?`)) {
+    if (confirm(t('adminAplikasi.categoryDetail.confirmStatusChange', { action: newStatus === 'active' ? t('adminAplikasi.categoryDetail.activate') : t('adminAplikasi.categoryDetail.deactivate') }))) {
         router.post(`/admin-aplikasi/categories/${props.category.id}/update-status`, {
             status: newStatus,
         });
@@ -428,7 +441,7 @@ const toggleStatus = () => {
 
 const manageExperts = () => {
     // TODO: Implement expert teknisi management modal
-    alert('Expert teknisi management coming soon!');
+    alert(t('adminAplikasi.categoryDetail.expertsComingSoon'));
 };
 
 const onCategoryUpdated = () => {
@@ -481,20 +494,25 @@ const getStatusBadge = (status) => {
 };
 
 const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-    });
+    if (!date) return t('common.notAvailable');
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    try {
+        return new Intl.DateTimeFormat(locale.value || 'en-US', options).format(new Date(date));
+    } catch (error) {
+        return new Intl.DateTimeFormat('en-US', options).format(new Date(date));
+    }
 };
 
 const formatResolutionTime = (minutes) => {
-    if (!minutes) return 'N/A';
+    if (!minutes) return t('common.notAvailable');
     const hours = Math.floor(minutes / 60);
     const mins = Math.floor(minutes % 60);
+    const hourLabel = t('time.hoursShort', hours);
+    const minuteLabel = t('time.minutesShort', mins);
+
     if (hours > 0) {
-        return `${hours}h ${mins}m`;
+        return `${hours}${hourLabel} ${mins}${minuteLabel}`;
     }
-    return `${mins}m`;
+    return `${mins}${minuteLabel}`;
 };
 </script>

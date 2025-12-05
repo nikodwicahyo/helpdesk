@@ -13,8 +13,8 @@
         </div>
 
         <!-- Enhanced Loading Text -->
-        <div v-if="text" class="text-center">
-          <p :class="textClass" class="font-medium">{{ text }}</p>
+        <div class="text-center">
+          <p :class="textClass" class="font-medium">{{ text || t('loading.defaultText') }}</p>
           <p v-if="subtext" class="text-sm text-gray-500 mt-1">{{ subtext }}</p>
 
           <!-- Progress Bar for longer operations -->
@@ -75,8 +75,8 @@
       </div>
 
       <!-- Loading Text -->
-      <div v-if="text" class="text-center">
-        <p :class="textClass">{{ text }}</p>
+      <div class="text-center">
+        <p :class="textClass">{{ text || t('loading.defaultText') }}</p>
         <p v-if="subtext" class="text-sm text-gray-500 mt-1">{{ subtext }}</p>
       </div>
     </div>
@@ -85,6 +85,9 @@
 
 <script setup>
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   show: {
@@ -93,7 +96,7 @@ const props = defineProps({
   },
   text: {
     type: String,
-    default: 'Loading...'
+    default: null
   },
   subtext: {
     type: String,

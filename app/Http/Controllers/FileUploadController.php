@@ -6,38 +6,38 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use App\Services\SystemSettingsService;
 
 class FileUploadController extends Controller
 {
     /**
-        * Maximum file size in kilobytes (2048 KB = 2MB)
+     * Get maximum file size in kilobytes from system settings
      */
-    const MAX_FILE_SIZE = 2048;
+    protected function getMaxFileSize(): int
+    {
+        return SystemSettingsService::getMaxFileSize() * 1024; // Convert MB to KB
+    }
 
     /**
-     * Allowed file types
+     * Get maximum files per ticket from system settings
      */
-    const ALLOWED_MIMES = [
-        'image/jpeg',
-        'image/png',
-        'image/gif',
-        'image/webp',
-        'application/pdf',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'text/plain',
-        'application/vnd.ms-excel',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    ];
+    protected function getMaxFilesPerTicket(): int
+    {
+        return SystemSettingsService::getMaxFilesPerTicket();
+    }
 
     /**
      * Upload files for tickets
      */
     public function uploadTicketFiles(Request $request)
     {
+        $maxFiles = $this->getMaxFilesPerTicket();
+        $maxSize = $this->getMaxFileSize();
+        $allowedExtensions = $this->getAllowedExtensions();
+
         $validator = Validator::make($request->all(), [
-            'files' => 'required|array|max:5',
-            'files.*' => 'required|file|max:' . self::MAX_FILE_SIZE . '|mimes:' . $this->getAllowedExtensions(),
+            'files' => "required|array|max:{$maxFiles}",
+            'files.*' => "required|file|max:{$maxSize}|mimes:{$allowedExtensions}",
             'ticket_number' => 'nullable|string|max:50'
         ]);
 
@@ -189,25 +189,31 @@ class FileUploadController extends Controller
     }
 
     /**
-     * Get allowed file extensions
+     * Get allowed file extensions from system settings
      */
     private function getAllowedExtensions(): string
     {
-        return 'jpeg,jpg,png,gif,webp,pdf,doc,docx,txt,xls,xlsx';
+        $types = SystemSettingsService::getAllowedFileTypes();
+        return implode(',', $types);
     }
 
     /**
-     * Validate file type and size
+     * Validate file type and size using system settings
      */
     private function validateFile($file): bool
     {
+        $maxSizeBytes = $this->getMaxFileSize() * 1024;
+        
         // Check file size
-        if ($file->getSize() > self::MAX_FILE_SIZE * 1024) {
+        if ($file->getSize() > $maxSizeBytes) {
             return false;
         }
 
-        // Check mime type
-        if (!in_array($file->getMimeType(), self::ALLOWED_MIMES)) {
+        // Check extension
+        $allowedTypes = SystemSettingsService::getAllowedFileTypes();
+        $extension = strtolower($file->getClientOriginalExtension());
+        
+        if (!in_array($extension, $allowedTypes)) {
             return false;
         }
 

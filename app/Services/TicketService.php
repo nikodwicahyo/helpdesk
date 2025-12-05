@@ -580,7 +580,14 @@ class TicketService
                 'kategoriMasalah',
                 'assignedTeknisi',
                 'comments.commenter',
-                'history.performedBy'
+                'history' => function ($query) {
+                    $query->with([
+                        'performedByUser',
+                        'performedByTeknisi',
+                        'performedByAdminHelpdesk',
+                        'performedByAdminAplikasi'
+                    ])->orderBy('created_at', 'desc');
+                }
             ])->findOrFail($ticketId);
 
             // Check if user can view this ticket
@@ -642,43 +649,70 @@ class TicketService
                 'time_elapsed' => $ticket->time_elapsed,
                 'resolution_time' => $ticket->formatted_resolution_time,
                 'view_count' => $ticket->view_count,
+                'rating' => $ticket->user_rating,
+                'feedback' => $ticket->user_feedback,
             ];
 
             // Format comments
             $comments = $ticket->comments->map(function ($comment) {
                 $commenter = $comment->commenter;
+                $commenterName = $commenter ? $commenter->name : 'Unknown User';
+                $commenterType = $comment->commenter_type ?? 'user';
+                // Convert class name to role type if needed
+                if (is_string($commenterType) && str_contains($commenterType, '\\')) {
+                    $commenterType = strtolower(class_basename($commenterType));
+                    $commenterType = str_replace('admin', 'admin_', $commenterType);
+                }
+                
                 return [
                     'id' => $comment->id,
                     'comment' => $comment->comment,
+                    'commenter_name' => $commenterName,
+                    'commenter_type' => $commenterType,
                     'user' => [
                         'nip' => $commenter ? $commenter->nip : null,
-                        'name' => $commenter ? $commenter->name : 'Unknown User',
-                        'role' => $comment->commenter_role ?? 'Unknown',
+                        'name' => $commenterName,
+                        'role' => $commenterType,
                     ],
                     'attachments' => $comment->attachments ?? [],
                     'created_at' => $comment->created_at,
-                    'formatted_created_at' => $comment->created_at->diffForHumans(),
+                    'formatted_created_at' => $comment->created_at ? $comment->created_at->diffForHumans() : null,
                 ];
             });
 
-            // Format history
+            // Format history - get performer based on type
             $history = $ticket->history->map(function ($historyItem) {
-                $performer = $historyItem->performedBy;
+                // Get performer based on performed_by_type
+                $performer = null;
+                switch ($historyItem->performed_by_type) {
+                    case 'user':
+                        $performer = $historyItem->performedByUser;
+                        break;
+                    case 'teknisi':
+                        $performer = $historyItem->performedByTeknisi;
+                        break;
+                    case 'admin_helpdesk':
+                        $performer = $historyItem->performedByAdminHelpdesk;
+                        break;
+                    case 'admin_aplikasi':
+                        $performer = $historyItem->performedByAdminAplikasi;
+                        break;
+                }
+                
                 return [
                     'id' => $historyItem->id,
-                    'old_status' => $historyItem->old_status,
-                    'new_status' => $historyItem->new_status,
+                    'old_value' => $historyItem->old_value,
+                    'new_value' => $historyItem->new_value,
                     'action' => $historyItem->action,
-                    'action_type' => $historyItem->action_type,
-                    'description' => $historyItem->description,
-                    'notes' => $historyItem->notes,
+                    'description' => $historyItem->description ?? $historyItem->action_label,
+                    'field_name' => $historyItem->field_name,
                     'user' => [
-                        'nip' => $performer ? $performer->nip : null,
+                        'nip' => $performer ? $performer->nip : $historyItem->performed_by_nip,
                         'name' => $performer ? $performer->name : 'System',
-                        'role' => $historyItem->performed_by_type ? class_basename($historyItem->performed_by_type) : 'System',
+                        'role' => $historyItem->performed_by_type ?? 'system',
                     ],
                     'created_at' => $historyItem->created_at,
-                    'formatted_created_at' => $historyItem->created_at->diffForHumans(),
+                    'formatted_created_at' => $historyItem->created_at ? $historyItem->created_at->diffForHumans() : null,
                 ];
             });
 

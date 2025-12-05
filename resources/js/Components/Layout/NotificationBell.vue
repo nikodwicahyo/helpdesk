@@ -35,7 +35,7 @@
         <!-- Header -->
         <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-gray-50">
           <div class="flex items-center space-x-2">
-            <h3 class="text-sm font-semibold text-gray-900">Notifications</h3>
+            <h3 class="text-sm font-semibold text-gray-900">{{ t('notifications.title') }}</h3>
             <div
               :class="[
                 'w-2 h-2 rounded-full',
@@ -63,24 +63,24 @@
               </div>
             </div>
             
-            <h3 class="text-base font-semibold text-gray-900 mb-1">No New Notifications</h3>
+            <h3 class="text-base font-semibold text-gray-900 mb-1">{{ t('notifications.noNew') }}</h3>
             <p class="text-sm text-gray-500 mb-6 max-w-[200px] mx-auto">
-              You're all caught up! We'll notify you when something important happens.
+              {{ t('notifications.youreCaughtUp') }}
             </p>
 
             <!-- Status Badge -->
             <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-50 border border-gray-200 text-gray-600">
               <span v-if="polling.isPolling" class="flex items-center">
                 <span class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-                Live updates active
+                {{ t('notifications.liveUpdatesActive') }}
               </span>
               <span v-else-if="polling.hasError" class="flex items-center text-red-600">
                 <span class="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
-                Connection interrupted
+                {{ t('notifications.connectionInterrupted') }}
               </span>
               <span v-else class="flex items-center">
                 <span class="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
-                Updates paused
+                {{ t('notifications.updatesPaused') }}
               </span>
             </div>
 
@@ -93,7 +93,7 @@
                 <svg class="w-3 h-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.001 0 01-15.357-2m15.357 2H15" />
                 </svg>
-                Retry Connection
+                {{ t('notifications.retryConnection') }}
               </button>
             </div>
             
@@ -103,7 +103,7 @@
                 @click="$emit('view-all')"
                 class="text-xs font-medium text-indigo-600 hover:text-indigo-800 transition-colors duration-200 group inline-flex items-center"
               >
-                View notification history
+                {{ t('notifications.viewNotificationHistory') }}
                 <svg class="w-3 h-3 ml-1 transform group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
@@ -154,7 +154,7 @@
                     'text-xs px-2 py-1 rounded-full font-medium',
                     getPriorityClass(notification.priority)
                   ]">
-                    {{ notification.priority_label || notification.priority }}
+                    {{ notification.priority_label || getPriorityLabel(notification.priority) }}
                   </span>
                   <p class="text-xs text-gray-500">{{ formatTime(notification.created_at || notification.timestamp) }}</p>
                 </div>
@@ -162,10 +162,10 @@
                 <!-- Action info -->
                 <div v-if="notification.data && notification.data.ticket_number" class="flex items-center space-x-2 mt-1">
                   <span class="text-xs text-gray-500">
-                    Ticket: {{ notification.data.ticket_number }}
+                    {{ t('notifications.ticket') }}: {{ notification.data.ticket_number }}
                   </span>
                   <span v-if="notification.data.user_name" class="text-xs text-gray-500">
-                    by {{ notification.data.user_name }}
+                    {{ t('notifications.by') }} {{ notification.data.user_name }}
                   </span>
                 </div>
 
@@ -176,7 +176,7 @@
                     v-if="notification.source === 'polling'"
                     class="text-xs text-blue-600 font-medium"
                   >
-                    Live
+                    {{ t('notifications.polling') }}
                   </span>
                   <span
                     v-if="notification.triggered_by && notification.triggered_by.name"
@@ -203,7 +203,7 @@
               @click="$emit('view-all')"
               class="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
             >
-              View all →
+              {{ t('notifications.viewAll') }}
             </button>
           </div>
         </div>
@@ -217,6 +217,9 @@ import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { Link, router } from '@inertiajs/vue3';
 import { useNotificationPolling } from '../../composables/usePolling.js';
 import { useDateFormatter } from '@/composables/useDateFormatter';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const emit = defineEmits(['view-all', 'notification-clicked']);
 
@@ -300,6 +303,20 @@ const getNotificationIcon = (type) => {
   return icons[type] || '📢';
 };
 
+// Get translated notification type label
+const getNotificationTypeLabel = (type) => {
+  const labels = {
+    'ticket_created': t('notifications.notificationType.ticket_created'),
+    'ticket_assigned': t('notifications.notificationType.ticket_assigned'),
+    'status_updated': t('notifications.notificationType.status_updated'),
+    'comment_added': t('notifications.notificationType.comment_added'),
+    'ticket_resolved': t('notifications.notificationType.ticket_resolved'),
+    'ticket_urgent': t('notifications.notificationType.ticket_urgent'),
+    'rating_received': t('notifications.notificationType.rating_received')
+  };
+  return labels[type] || type;
+};
+
 const getNotificationColor = (type) => {
   const colors = {
     'ticket_created': 'bg-blue-100',
@@ -324,6 +341,17 @@ const getPriorityClass = (priority) => {
     'urgent': 'bg-red-100 text-red-700'
   };
   return classes[priority] || 'bg-gray-100 text-gray-700';
+};
+
+// Get translated priority label
+const getPriorityLabel = (priority) => {
+  const labels = {
+    'low': t('notifications.priority.low'),
+    'medium': t('notifications.priority.medium'),
+    'high': t('notifications.priority.high'),
+    'urgent': t('notifications.priority.urgent')
+  };
+  return labels[priority] || priority;
 };
 
 const handleNotificationClick = (notification) => {

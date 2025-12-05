@@ -25,7 +25,7 @@
                                 <div class="sm:flex sm:items-start">
                                     <div class="mt-3 text-center sm:mt-0 sm:text-left">
                                         <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                                            {{ title }}
+                                            {{ title || t('confirmationDialog.confirmAction') }}
                                         </h3>
                                         <div v-if="description" class="mt-2 text-sm text-gray-500">
                                             {{ description }}
@@ -38,10 +38,10 @@
                             <div v-if="content || $slots.default" class="px-4 pt-2 pb-4 sm:p-6 sm:pt-4 flex-1 overflow-y-auto">
                                 <div class="text-sm text-gray-600">
                                     <slot v-if="$slots.default">
-                                        {{ content }}
+                                        {{ content || t('confirmationDialog.defaultContent') }}
                                     </slot>
                                     <p v-else>
-                                        {{ defaultContent }}
+                                        {{ defaultContent || t('confirmationDialog.defaultContent') }}
                                     </p>
                                 </div>
 
@@ -50,26 +50,26 @@
                                     <!-- Confirmation Input -->
                                     <div v-if="requireConfirmation">
                                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                                            Please type <code class="bg-gray-100 px-1 py-0.5 rounded">{{ confirmationText }}</code> to confirm
+                                            {{ t('confirmationDialog.typeToConfirm') }} <code class="bg-gray-100 px-1 py-0.5 rounded">{{ confirmationText }}</code> {{ t('confirmationDialog.toConfirm') }}
                                         </label>
                                         <input
                                             v-model="confirmationInput"
                                             type="text"
                                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                            :placeholder="`Type '${confirmationText}' to confirm`"
+                                            :placeholder="t('confirmationDialog.typeToConfirm') + ' ' + confirmationText + ' ' + t('confirmationDialog.toConfirm')"
                                         >
                                         </div>
 
                                     <!-- Reason Input -->
                                     <div v-if="requireReason">
                                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                                            {{ reasonLabel || 'Please provide a reason' }}
+                                            {{ reasonLabel || t('confirmationDialog.reasonLabel') }}
                                         </label>
                                         <textarea
                                             v-model="reasonInput"
                                             rows="3"
                                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                            :placeholder="reasonPlaceholder"
+                                            :placeholder="reasonPlaceholder || t('confirmationDialog.reasonPlaceholder')"
                                         ></textarea>
                                     </div>
 
@@ -77,7 +77,7 @@
                                     <div v-for="field in customFields" :key="field.name">
                                         <label class="block text-sm font-medium text-gray-700 mb-2">
                                             {{ field.label }}
-                                            <span v-if="field.required" class="text-red-500 ml-1">*</span>
+                                            <span v-if="field.required" class="text-red-500 ml-1">{{ t('confirmationDialog.requiredField') }}</span>
                                         </label>
                                         <input
                                             v-if="field.type === 'text' || field.type === 'email' || field.type === 'number'"
@@ -93,7 +93,7 @@
                                             :required="field.required"
                                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                                         >
-                                            <option value="">Select...</option>
+                                            <option value="">{{ t('confirmationDialog.select') }}</option>
                                             <option
                                                 v-for="option in field.options"
                                                 :key="option.value"
@@ -120,7 +120,7 @@
                                             <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 112 0 1 1 0 01-2 0z" clip-rule="evenodd"/>
                                         </svg>
                                         <div class="text-sm text-yellow-800">
-                                            <p class="font-medium">Warning</p>
+                                            <p class="font-medium">{{ t('confirmationDialog.warning') }}</p>
                                             <p class="mt-1">{{ warningDetails }}</p>
                                         </div>
                                     </div>
@@ -141,13 +141,13 @@
                                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                         </svg>
-                                        {{ loading ? 'Processing...' : confirmText }}
+                                        {{ t('confirmationDialog.processing') }}
                                     </span>
                                     <span v-else>
                                         <svg v-if="showConfirmIcon" class="-ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                         </svg>
-                                        {{ confirmText }}
+                                        {{ confirmText || t('confirmationDialog.confirmButton') }}
                                     </span>
                                 </button>
                                 <button
@@ -158,19 +158,21 @@
                                     <svg v-if="showCancelIcon" class="-ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
-                                    {{ cancelText }}
+                                    {{ cancelText || t('confirmationDialog.cancelButton') }}
                                 </button>
                             </div>
                         </div>
                     </transition>
                 </div>
-            </div>
         </transition>
     </teleport>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
     show: {
@@ -179,7 +181,7 @@ const props = defineProps({
     },
     title: {
         type: String,
-        default: 'Confirm Action'
+        default: null
     },
     description: {
         type: String,
@@ -187,7 +189,7 @@ const props = defineProps({
     },
     content: {
         type: String,
-        default: ''
+        default: null
     },
     type: {
         type: String,
@@ -196,11 +198,11 @@ const props = defineProps({
     },
     confirmText: {
         type: String,
-        default: 'Confirm'
+        default: null
     },
     cancelText: {
         type: String,
-        default: 'Cancel'
+        default: null
     },
     loading: {
         type: Boolean,
@@ -232,11 +234,11 @@ const props = defineProps({
     },
     reasonLabel: {
         type: String,
-        default: 'Reason'
+        default: null
     },
     reasonPlaceholder: {
         type: String,
-        default: 'Please provide a reason...'
+        default: null
     },
     customFields: {
         type: Array,
@@ -248,7 +250,7 @@ const props = defineProps({
     },
     defaultContent: {
         type: String,
-        default: 'Are you sure you want to proceed?'
+        default: null
     }
 });
 

@@ -393,16 +393,12 @@ class KategoriMasalah extends Model
             ->count();
         
         if ($closedTickets === 0) {
-            return 0;
+            return 100.0; // No closed tickets means 100% success rate (no failures)
         }
         
-        // Count tickets that were resolved successfully (status is resolved or closed)
+        // Count tickets that were resolved successfully (both resolved and closed count as success)
         $successfulTickets = $this->tickets()
-            ->where('status', Ticket::STATUS_RESOLVED)
-            ->orWhere(function ($query) {
-                $query->where('kategori_masalah_id', $this->id)
-                      ->where('status', Ticket::STATUS_CLOSED);
-            })
+            ->whereIn('status', [Ticket::STATUS_RESOLVED, Ticket::STATUS_CLOSED])
             ->count();
         
         return ($successfulTickets / $closedTickets) * 100;

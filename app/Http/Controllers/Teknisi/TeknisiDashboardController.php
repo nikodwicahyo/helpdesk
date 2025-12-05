@@ -46,8 +46,9 @@ class TeknisiDashboardController extends Controller
             return $this->getTeknisiWorkloadStats($teknisi->nip, $startDate, $endDate);
         });
 
-        // Assigned tickets overview with caching
-        $assignedTickets = Cache::remember("teknisi_assigned_tickets_{$teknisi->nip}", 300, function () use ($teknisi) {
+        // Assigned tickets overview - clear old cache and get fresh data
+        Cache::forget("teknisi_assigned_tickets_{$teknisi->nip}");
+        $assignedTickets = Cache::remember("teknisi_assigned_tickets_v2_{$teknisi->nip}", 300, function () use ($teknisi) {
             return $this->getAssignedTicketsOverview($teknisi->nip);
         });
 
@@ -89,7 +90,7 @@ class TeknisiDashboardController extends Controller
         // Get current tickets for the kanban board with eager loading
         // Note: Use 'name' in select, but access as 'nama_lengkap' via accessor
         $myTicketsQuery = Ticket::where('assigned_teknisi_nip', $teknisi->nip)
-            ->whereIn('status', [Ticket::STATUS_OPEN, Ticket::STATUS_ASSIGNED, Ticket::STATUS_IN_PROGRESS, Ticket::STATUS_WAITING_RESPONSE, Ticket::STATUS_RESOLVED])
+            ->whereIn('status', [Ticket::STATUS_OPEN, Ticket::STATUS_ASSIGNED, Ticket::STATUS_IN_PROGRESS, Ticket::STATUS_WAITING_USER, Ticket::STATUS_WAITING_ADMIN, Ticket::STATUS_RESOLVED])
             ->with(['user:nip,name', 'aplikasi:id,name'])
             ->latest('updated_at')
             ->get()
@@ -136,26 +137,29 @@ class TeknisiDashboardController extends Controller
 
         // Prepare stats object for the Vue component
         $stats = [
-            'assigned_tickets' => $assignedTickets['open'],
-            'myAssignedTickets' => $assignedTickets['open'], // Add this for Vue component compatibility
-            'in_progress_tickets' => $assignedTickets['in_progress'],
+            'assigned_tickets' => $assignedTickets['assigned'] ?? 0, // Count both open + assigned status
+            'myAssignedTickets' => $assignedTickets['assigned'] ?? 0, // For Vue component compatibility
+            'in_progress_tickets' => $assignedTickets['in_progress'] ?? 0,
+            'resolved_tickets' => $assignedTickets['resolved'] ?? 0, // Total resolved tickets
             'resolved_today' => $resolvedToday,
             'resolved_today_trend' => round($resolvedTodayTrend, 1),
-            'avg_rating' => round($performanceMetrics['average_rating'], 1),
-            'avg_resolution_time' => round($workloadStats['avg_resolution_time_hours'], 1), // Average resolution time in hours
-            'waiting_response_tickets' => $assignedTickets['waiting_response'],
-            'total_resolved_period' => $workloadStats['resolved_this_period'],
+            'avg_rating' => round($performanceMetrics['average_rating'] ?? 0, 1),
+            'avg_resolution_time' => round($workloadStats['avg_resolution_time_hours'] ?? 0, 1), // Average resolution time in hours
+            'waiting_response_tickets' => $assignedTickets['waiting_response'] ?? 0,
+            'total_resolved_period' => $workloadStats['resolved_this_period'] ?? 0,
+            'urgent_tickets' => $assignedTickets['urgent'] ?? 0,
+            'overdue_tickets' => $assignedTickets['overdue'] ?? 0,
         ];
 
         // Prepare performance object
         $performance = [
-            'resolution_rate' => $workloadStats['resolution_rate'],
-            'avg_response_time' => round($performanceMetrics['avg_first_response_time_minutes'] / 60, 1), // First response time
-            'avg_resolution_time' => round($workloadStats['avg_resolution_time_hours'], 1), // Resolution time
+            'resolution_rate' => $workloadStats['resolution_rate'] ?? 0,
+            'avg_response_time' => round(($performanceMetrics['avg_first_response_time_minutes'] ?? 0) / 60, 1), // First response time
+            'avg_resolution_time' => round($workloadStats['avg_resolution_time_hours'] ?? 0, 1), // Resolution time
             'tickets_this_week' => Ticket::where('assigned_teknisi_nip', $teknisi->nip)
                 ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
                 ->count(),
-            'avg_rating' => $performanceMetrics['average_rating'],
+            'avg_rating' => $performanceMetrics['average_rating'] ?? 0,
         ];
 
         // Prepare specializations based on application expertise
@@ -212,7 +216,7 @@ class TeknisiDashboardController extends Controller
 
         $totalAssigned = Ticket::where('assigned_teknisi_nip', $teknisiNip)->count();
         $currentlyAssigned = Ticket::where('assigned_teknisi_nip', $teknisiNip)
-            ->whereIn('status', [Ticket::STATUS_OPEN, Ticket::STATUS_IN_PROGRESS, Ticket::STATUS_WAITING_RESPONSE])
+            ->whereIn('status', [Ticket::STATUS_OPEN, Ticket::STATUS_ASSIGNED, Ticket::STATUS_IN_PROGRESS, Ticket::STATUS_WAITING_USER, Ticket::STATUS_WAITING_ADMIN])
             ->count();
         $resolvedThisPeriod = Ticket::where('assigned_teknisi_nip', $teknisiNip)
             ->where('status', Ticket::STATUS_RESOLVED)
@@ -254,26 +258,42 @@ class TeknisiDashboardController extends Controller
      */
     private function getAssignedTicketsOverview(string $teknisiNip): array
     {
+        // Count individual statuses
+        $openCount = Ticket::where('assigned_teknisi_nip', $teknisiNip)
+            ->where('status', Ticket::STATUS_OPEN)
+            ->count();
+        $assignedStatusCount = Ticket::where('assigned_teknisi_nip', $teknisiNip)
+            ->where('status', Ticket::STATUS_ASSIGNED)
+            ->count();
+        $inProgressCount = Ticket::where('assigned_teknisi_nip', $teknisiNip)
+            ->where('status', Ticket::STATUS_IN_PROGRESS)
+            ->count();
+        $waitingResponseCount = Ticket::where('assigned_teknisi_nip', $teknisiNip)
+            ->whereIn('status', [Ticket::STATUS_WAITING_USER, Ticket::STATUS_WAITING_ADMIN])
+            ->count();
+        $resolvedCount = Ticket::where('assigned_teknisi_nip', $teknisiNip)
+            ->where('status', Ticket::STATUS_RESOLVED)
+            ->count();
+
         return [
-            'open' => Ticket::where('assigned_teknisi_nip', $teknisiNip)
-                ->where('status', Ticket::STATUS_OPEN)
-                ->count(),
-            'in_progress' => Ticket::where('assigned_teknisi_nip', $teknisiNip)
-                ->where('status', Ticket::STATUS_IN_PROGRESS)
-                ->count(),
-            'waiting_response' => Ticket::where('assigned_teknisi_nip', $teknisiNip)
-                ->where('status', Ticket::STATUS_WAITING_RESPONSE)
-                ->count(),
+            // "Assigned" = all active tickets (open + assigned status + in_progress)
+            // This matches TicketHandlingController's assigned_tickets count
+            'assigned' => $openCount + $assignedStatusCount + $inProgressCount,
+            'open' => $openCount,
+            'assigned_status' => $assignedStatusCount,
+            'in_progress' => $inProgressCount,
+            'waiting_response' => $waitingResponseCount,
+            'resolved' => $resolvedCount,
             'urgent' => Ticket::where('assigned_teknisi_nip', $teknisiNip)
                 ->where('priority', Ticket::PRIORITY_URGENT)
-                ->whereIn('status', [Ticket::STATUS_OPEN, Ticket::STATUS_IN_PROGRESS])
+                ->whereIn('status', [Ticket::STATUS_OPEN, Ticket::STATUS_ASSIGNED, Ticket::STATUS_IN_PROGRESS])
                 ->count(),
             'overdue' => Ticket::where('assigned_teknisi_nip', $teknisiNip)
                 ->overdue()
                 ->count(),
             'needing_response' => Ticket::where('assigned_teknisi_nip', $teknisiNip)
                 ->whereNull('first_response_at')
-                ->whereIn('status', [Ticket::STATUS_OPEN, Ticket::STATUS_IN_PROGRESS])
+                ->whereIn('status', [Ticket::STATUS_OPEN, Ticket::STATUS_ASSIGNED, Ticket::STATUS_IN_PROGRESS])
                 ->count(),
         ];
     }
@@ -409,7 +429,7 @@ class TeknisiDashboardController extends Controller
     private function getPriorityDistribution(string $teknisiNip): array
     {
         $tickets = Ticket::where('assigned_teknisi_nip', $teknisiNip)
-            ->whereIn('status', [Ticket::STATUS_OPEN, Ticket::STATUS_IN_PROGRESS, Ticket::STATUS_WAITING_RESPONSE])
+            ->whereIn('status', [Ticket::STATUS_OPEN, Ticket::STATUS_ASSIGNED, Ticket::STATUS_IN_PROGRESS, Ticket::STATUS_WAITING_USER, Ticket::STATUS_WAITING_ADMIN])
             ->select('priority', DB::raw('count(*) as count'))
             ->groupBy('priority')
             ->get()

@@ -41,7 +41,7 @@
                                 :key="teknisi.nip || teknisi.id || teknisi"
                                 :value="teknisi.nip || teknisi.value || teknisi.id || teknisi"
                             >
-                                {{ teknisi.displayName || teknisi.name || teknisi.label || 'Unknown Teknisi' }}
+                                {{ teknisi.displayName || teknisi.name || teknisi.label || t('common.unknownTeknisi') }}
                             </option>
                             <option v-if="formattedTeknisis.length === 0" disabled>
                                 {{ t('modal.assignTicketModal.noTeknisiAvailable') }}

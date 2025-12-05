@@ -9,8 +9,8 @@
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-3xl font-bold text-gray-900">Notifications</h1>
-                        <p class="text-gray-600">Manage and view your system notifications</p>
+                        <h1 class="text-3xl font-bold text-gray-900">{{ t('notificationIndex.title') }}</h1>
+                        <p class="text-gray-600">{{ t('notificationIndex.subtitle') }}</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
@@ -22,7 +22,7 @@
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
-                        Mark All as Read
+                        {{ t('notificationIndex.markAllAsRead') }}
                     </button>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                             </svg>
                         </div>
                         <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600">Total Notifications</p>
+                            <p class="text-sm font-medium text-gray-600">{{ t('notificationIndex.totalNotifications') }}</p>
                             <p class="text-2xl font-bold text-gray-900">{{ statistics.total }}</p>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                             <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
                         </div>
                         <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600">Unread</p>
+                            <p class="text-sm font-medium text-gray-600">{{ t('notificationIndex.unread') }}</p>
                             <p class="text-2xl font-bold text-red-600">{{ statistics.unread }}</p>
                         </div>
                     </div>
@@ -68,7 +68,7 @@
                             </svg>
                         </div>
                         <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600">Read</p>
+                            <p class="text-sm font-medium text-gray-600">{{ t('notificationIndex.read') }}</p>
                             <p class="text-2xl font-bold text-green-600">{{ statistics.read }}</p>
                         </div>
                     </div>
@@ -82,7 +82,7 @@
                             </svg>
                         </div>
                         <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600">Today</p>
+                            <p class="text-sm font-medium text-gray-600">{{ t('notificationIndex.today') }}</p>
                             <p class="text-2xl font-bold text-purple-600">{{ statistics.today }}</p>
                         </div>
                     </div>
@@ -92,27 +92,27 @@
             <!-- Filters -->
             <div class="bg-white shadow-lg rounded-lg mb-6">
                 <div class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Filter Notifications</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ t('notificationIndex.filterNotifications') }}</h3>
                     <div class="flex flex-wrap gap-4">
                         <select
                             v-model="filters.type"
                             class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                         >
-                            <option value="">All Types</option>
-                            <option value="ticket_created">Ticket Created</option>
-                            <option value="ticket_assigned">Ticket Assigned</option>
-                            <option value="ticket_updated">Ticket Updated</option>
-                            <option value="ticket_resolved">Ticket Resolved</option>
-                            <option value="system">System</option>
+                            <option value="">{{ t('notificationIndex.allTypes') }}</option>
+                            <option value="ticket_created">{{ t('notificationIndex.ticketCreated') }}</option>
+                            <option value="ticket_assigned">{{ t('notificationIndex.ticketAssigned') }}</option>
+                            <option value="ticket_updated">{{ t('notificationIndex.ticketUpdated') }}</option>
+                            <option value="ticket_resolved">{{ t('notificationIndex.ticketResolved') }}</option>
+                            <option value="system">{{ t('notificationIndex.system') }}</option>
                         </select>
 
                         <select
                             v-model="filters.read"
                             class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                         >
-                            <option value="">All Status</option>
-                            <option value="unread">Unread Only</option>
-                            <option value="read">Read Only</option>
+                            <option value="">{{ t('notificationIndex.allStatus') }}</option>
+                            <option value="unread">{{ t('notificationIndex.unreadOnly') }}</option>
+                            <option value="read">{{ t('notificationIndex.readOnly') }}</option>
                         </select>
                     </div>
                 </div>
@@ -124,8 +124,8 @@
                     <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13.5L18.5 15m0 0l-1.5 1.5m1.5-1.5l1.5 1.5m-1.5-1.5l-1.5-1.5M15 17h5l-1.586-1.586a2 2 0 01-2.828 0L15 17zm0 0v-2.586a2 2 0 00-.586-1.414l-1.586-1.586A2 2 0 0112 11.586V6a3 3 0 10-6 0v5.586a2 2 0 01-.586 1.414l-1.586 1.586A2 2 0 003 15.586V17h12zm0 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                     </svg>
-                    <h3 class="text-lg font-medium text-gray-900 mt-4 mb-2">No notifications found</h3>
-                    <p class="text-gray-600">You're all caught up! Check back later for new updates.</p>
+                    <h3 class="text-lg font-medium text-gray-900 mt-4 mb-2">{{ t('notificationIndex.noNotificationsFound') }}</h3>
+                    <p class="text-gray-600">{{ t('notificationIndex.allCaughtUp') }}</p>
                 </div>
 
                 <div v-else class="divide-y divide-gray-200">
@@ -175,6 +175,7 @@
                                     <!-- Delete Button -->
                                     <button
                                         @click.stop="deleteNotification(notification.id)"
+                                        :title="t('notificationIndex.deleteNotification')"
                                         class="text-red-600 hover:text-red-800 transition-colors duration-200"
                                     >
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -196,7 +197,7 @@
                                         @click.stop="viewNotification(notification.id)"
                                         class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                     >
-                                        View Details
+                                        {{ t('notificationIndex.viewDetails') }}
                                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -212,7 +213,7 @@
                 <div v-if="notifications.links.length > 3" class="mt-6">
                     <SimplePagination
                         :data="notifications"
-                        label="notifikasi"
+                        :label="t('pagination.notifications')"
                         @page-changed="handlePageChange"
                     />
                 </div>
@@ -235,6 +236,9 @@ import { Link, router } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import SimplePagination from '@/Components/Common/SimplePagination.vue';
 import NotificationDetailModal from '@/Components/Notifications/NotificationDetailModal.vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
     notifications: {
@@ -313,18 +317,18 @@ const handlePageChange = (page) => {
 
 const getNotificationTypeLabel = (type) => {
     const labels = {
-        'ticket_created': 'Ticket Created',
-        'ticket_assigned': 'Ticket Assigned',
-        'ticket_updated': 'Ticket Updated',
-        'ticket_resolved': 'Ticket Resolved',
-        'ticket_comment': 'Ticket Comment',
-        'ticket_escalated': 'Ticket Escalated',
-        'ticket_response_required': 'Response Required',
-        'urgent_ticket': 'Urgent Ticket',
-        'system_maintenance': 'System Maintenance',
-        'system_backup': 'System Backup',
-        'daily_report': 'Daily Report',
-        'system': 'System',
+        'ticket_created': t('notificationIndex.ticketCreated'),
+        'ticket_assigned': t('notificationIndex.ticketAssigned'),
+        'ticket_updated': t('notificationIndex.ticketUpdated'),
+        'ticket_resolved': t('notificationIndex.ticketResolved'),
+        'ticket_comment': t('notificationIndex.ticketComment'),
+        'ticket_escalated': t('notificationIndex.ticketEscalated'),
+        'ticket_response_required': t('notificationIndex.ticketResponseRequired'),
+        'urgent_ticket': t('notificationIndex.urgentTicket'),
+        'system_maintenance': t('notificationIndex.systemMaintenance'),
+        'system_backup': t('notificationIndex.systemBackup'),
+        'daily_report': t('notificationIndex.dailyReport'),
+        'system': t('notificationIndex.system'),
     };
     return labels[type] || type;
 };
@@ -419,16 +423,22 @@ const formatTimeAgo = (timestamp) => {
     const diffTime = Math.floor((now - date) / 1000); // Convert to seconds
 
     if (diffTime < 60) {
-        return `${diffTime} seconds ago`;
+        return t('notificationIndex.secondsAgo', { count: diffTime });
     } else if (diffTime < 3600) {
         const minutes = Math.floor(diffTime / 60);
-        return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+        return minutes === 1
+            ? t('notificationIndex.minuteAgo', { count: minutes })
+            : t('notificationIndex.minutesAgo', { count: minutes });
     } else if (diffTime < 86400) {
         const hours = Math.floor(diffTime / 3600);
-        return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+        return hours === 1
+            ? t('notificationIndex.hourAgo', { count: hours })
+            : t('notificationIndex.hoursAgo', { count: hours });
     } else {
         const days = Math.floor(diffTime / 86400);
-        return `${days} day${days > 1 ? 's' : ''} ago`;
+        return days === 1
+            ? t('notificationIndex.dayAgo', { count: days })
+            : t('notificationIndex.daysAgo', { count: days });
     }
 };
 
@@ -481,7 +491,7 @@ const markAllAsRead = async () => {
 };
 
 const deleteNotification = async (id) => {
-    if (confirm('Are you sure you want to delete this notification?')) {
+    if (confirm(t('notificationIndex.confirmDelete'))) {
         try {
             const routePrefix = getRoutePrefix();
             await router.delete(`${routePrefix}/notifications/${id}`);

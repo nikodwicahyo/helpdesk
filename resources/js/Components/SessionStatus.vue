@@ -24,12 +24,12 @@
         <!-- Content -->
         <div class="flex-1 min-w-0">
           <p class="text-sm font-medium text-gray-900">
-            Sesi {{ statusText }}
+            {{ t('session.sessionIndicator', { status: statusText }) }}
           </p>
           <p class="text-xs text-gray-600 mt-1">
-            Tersisa: <span class="font-semibold" :class="timeColorClass">{{ timeRemaining }}</span>
+            {{ t('session.timeRemaining') }} <span class="font-semibold" :class="timeColorClass">{{ timeRemaining }}</span>
           </p>
-          
+
           <!-- Quick Action Button -->
           <button
             v-if="minutesRemaining <= 10"
@@ -41,8 +41,8 @@
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <span v-if="isExtending">Memperpanjang...</span>
-            <span v-else>Perpanjang Sesi</span>
+            <span v-if="isExtending">{{ t('session.extending') }}</span>
+            <span v-else>{{ t('session.extendSession') }}</span>
           </button>
         </div>
 
@@ -75,8 +75,10 @@
 import { ref, computed, watch } from 'vue';
 import { useSession } from '../composables/useSession';
 import { formatTimeRemaining } from '../utils/dateFormatter';
+import { useI18n } from 'vue-i18n';
 
 const { sessionData, extendSession, isExtending } = useSession();
+const { t } = useI18n();
 
 const showIndicator = ref(false);
 const isDismissed = ref(false);
@@ -97,9 +99,9 @@ const progressPercentage = computed(() => {
 });
 
 const statusText = computed(() => {
-  if (minutesRemaining.value <= 5) return 'Kritis';
-  if (minutesRemaining.value <= 10) return 'Menjelang Habis';
-  return 'Akan Berakhir';
+  if (minutesRemaining.value <= 5) return t('session.statusCritical');
+  if (minutesRemaining.value <= 10) return t('session.statusNearExpiry');
+  return t('session.statusExpiring');
 });
 
 const borderColorClass = computed(() => {

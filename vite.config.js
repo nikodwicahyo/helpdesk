@@ -27,5 +27,22 @@ export default defineConfig({
         hmr: {
             overlay: true
         }
-    }
+    },
+    build: {
+        chunkSizeWarningLimit: 1000,
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    'vendor-chart': ['chart.js', 'vue-chartjs'],
+                    'vendor-lodash': ['lodash'],
+                    'vendor-ui': ['@headlessui/vue', '@heroicons/vue'],
+                    'vendor-inertia': ['@inertiajs/vue3'],
+                    'vendor-date': ['date-fns'],
+                    'vendor-i18n': ['vue-i18n'],
+                },
+                chunkFileNames: 'assets/[name]-[hash].js',
+                entryFileNames: 'assets/[name]-[hash].js',
+            },
+        },
+    },
 });

@@ -18,6 +18,7 @@ use App\Models\Aplikasi;
 use App\Models\KategoriMasalah;
 use App\Services\TicketService;
 use App\Services\AuthService;
+use App\Services\SystemSettingsService;
 use Carbon\Carbon;
 
 class TicketHandlingController extends Controller
@@ -139,7 +140,7 @@ class TicketHandlingController extends Controller
                 'attachments' => $ticket->attachments ?? [],
                 'comments_count' => $ticket->comments()->count(),
                 'can_update_status' => true,
-                'can_resolve' => in_array($ticket->status, [Ticket::STATUS_IN_PROGRESS, Ticket::STATUS_WAITING_RESPONSE]),
+                'can_resolve' => in_array($ticket->status, [Ticket::STATUS_IN_PROGRESS, Ticket::STATUS_WAITING_USER, Ticket::STATUS_WAITING_ADMIN]),
                 'can_reassign' => true,
             ];
         });
@@ -384,7 +385,7 @@ class TicketHandlingController extends Controller
             'resolution_notes' => 'required|string|max:2000',
             'technical_notes' => 'nullable|string|max:1000',
             'solution_summary' => 'required|string|max:500',
-            'files.*' => 'nullable|file|max:2048|mimes:jpeg,png,gif,webp,pdf,doc,docx,txt',
+            'files.*' => 'nullable|' . SystemSettingsService::getFileValidationString(),
         ]);
 
         if ($validator->fails()) {
@@ -397,7 +398,7 @@ class TicketHandlingController extends Controller
         try {
             $ticket = Ticket::where('id', $ticketId)
                 ->where('assigned_teknisi_nip', $teknisi->nip)
-                ->whereIn('status', [Ticket::STATUS_IN_PROGRESS, Ticket::STATUS_WAITING_RESPONSE])
+                ->whereIn('status', [Ticket::STATUS_IN_PROGRESS, Ticket::STATUS_WAITING_USER, Ticket::STATUS_WAITING_ADMIN])
                 ->firstOrFail();
 
             // Handle file uploads
@@ -557,7 +558,7 @@ class TicketHandlingController extends Controller
         $validator = Validator::make($request->all(), [
             'technical_note' => 'required|string|max:1000',
             'is_internal' => 'boolean',
-            'files.*' => 'nullable|file|max:2048|mimes:jpeg,png,gif,webp,pdf,doc,docx,txt',
+            'files.*' => 'nullable|' . SystemSettingsService::getFileValidationString(),
         ]);
 
         if ($validator->fails()) {
@@ -755,8 +756,10 @@ class TicketHandlingController extends Controller
         return [
             'statuses' => [
                 ['value' => Ticket::STATUS_OPEN, 'label' => 'Open'],
+                ['value' => Ticket::STATUS_ASSIGNED, 'label' => 'Assigned'],
                 ['value' => Ticket::STATUS_IN_PROGRESS, 'label' => 'In Progress'],
-                ['value' => Ticket::STATUS_WAITING_RESPONSE, 'label' => 'Waiting Response'],
+                ['value' => Ticket::STATUS_WAITING_USER, 'label' => 'Waiting User'],
+                ['value' => Ticket::STATUS_WAITING_ADMIN, 'label' => 'Waiting Admin'],
                 ['value' => Ticket::STATUS_RESOLVED, 'label' => 'Resolved'],
             ],
             'priorities' => [
@@ -794,7 +797,7 @@ class TicketHandlingController extends Controller
     {
         $assignedCount = Ticket::where('assigned_teknisi_nip', $teknisiNip)->count();
         $openCount = Ticket::where('assigned_teknisi_nip', $teknisiNip)
-            ->where('status', Ticket::STATUS_OPEN)->count();
+            ->whereIn('status', [Ticket::STATUS_OPEN, Ticket::STATUS_ASSIGNED])->count();
         $inProgressCount = Ticket::where('assigned_teknisi_nip', $teknisiNip)
             ->where('status', Ticket::STATUS_IN_PROGRESS)->count();
         
@@ -837,7 +840,7 @@ class TicketHandlingController extends Controller
             'open_tickets' => $openCount,
             'in_progress_tickets' => $inProgressCount,
             'waiting_response_tickets' => Ticket::where('assigned_teknisi_nip', $teknisiNip)
-                ->where('status', Ticket::STATUS_WAITING_RESPONSE)->count(),
+                ->whereIn('status', [Ticket::STATUS_WAITING_USER, Ticket::STATUS_WAITING_ADMIN])->count(),
             'resolved_today' => $resolvedToday,
             'resolved_today_trend' => round($resolvedTodayTrend, 1),
             'avg_resolution_time' => $avgResolutionTime ? round($avgResolutionTime / 60, 1) : 0, // Convert to hours
@@ -932,7 +935,7 @@ class TicketHandlingController extends Controller
                 'attachments' => $ticket->attachments ?? [],
                 'resolution_notes' => $ticket->resolution_notes,
                 'can_update_status' => true,
-                'can_resolve' => in_array($ticket->status, [Ticket::STATUS_IN_PROGRESS, Ticket::STATUS_WAITING_RESPONSE]),
+                'can_resolve' => in_array($ticket->status, [Ticket::STATUS_IN_PROGRESS, Ticket::STATUS_WAITING_USER, Ticket::STATUS_WAITING_ADMIN]),
                 'can_reassign' => true,
             ];
 
@@ -979,7 +982,7 @@ class TicketHandlingController extends Controller
                 'timeline' => $timeline,
                 'canUpdateStatus' => true,
                 'canAddComment' => true,
-                'canResolve' => in_array($ticket->status, [Ticket::STATUS_IN_PROGRESS, Ticket::STATUS_WAITING_RESPONSE]),
+                'canResolve' => in_array($ticket->status, [Ticket::STATUS_IN_PROGRESS, Ticket::STATUS_WAITING_USER, Ticket::STATUS_WAITING_ADMIN]),
             ]);
 
         } catch (\Exception $e) {
@@ -1331,7 +1334,7 @@ class TicketHandlingController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'files.*' => 'required|file|max:2048|mimes:jpeg,png,gif,webp,pdf,doc,docx,txt',
+            'files.*' => 'required|' . SystemSettingsService::getFileValidationString(),
             'description' => 'nullable|string|max:500',
         ]);
 

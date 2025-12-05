@@ -25,7 +25,7 @@
               <svg class="w-4 h-4 mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
-              <span>{{ new Date().toLocaleString('en-EN') }}</span>
+              <span>{{ new Date().toLocaleString(locale, { timeStyle: 'short', dateStyle: 'short' }) }}</span>
             </div>
             <div class="flex items-center">
               <svg class="w-4 h-4 mr-1 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,7 +56,7 @@
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
             </svg>
-            Export
+            {{ t('common.export') }}
             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
@@ -167,17 +167,17 @@
             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
           >
             <option value="">{{ t('activityLog.allEntities') }}</option>
-            <option value="Ticket">Tickets</option>
-            <option value="User">Users</option>
-            <option value="AdminHelpdesk">Admin Helpdesk</option>
-            <option value="AdminAplikasi">Admin Aplikasi</option>
-            <option value="Teknisi">Teknisi</option>
-            <option value="Aplikasi">Applications</option>
-            <option value="KategoriMasalah">Categories</option>
-            <option value="TicketComment">Comments</option>
-            <option value="Report">Reports</option>
-            <option value="ScheduledReport">Scheduled Reports</option>
-            <option value="SystemSetting">System Settings</option>
+            <option value="Ticket">{{ t('activityLog.entityTypes.ticket') }}</option>
+            <option value="User">{{ t('activityLog.entityTypes.user') }}</option>
+            <option value="AdminHelpdesk">{{ t('activityLog.entityTypes.adminHelpdesk') }}</option>
+            <option value="AdminAplikasi">{{ t('activityLog.entityTypes.adminAplikasi') }}</option>
+            <option value="Teknisi">{{ t('activityLog.entityTypes.teknisi') }}</option>
+            <option value="Aplikasi">{{ t('activityLog.entityTypes.aplikasi') }}</option>
+            <option value="KategoriMasalah">{{ t('activityLog.entityTypes.kategoriMasalah') }}</option>
+            <option value="TicketComment">{{ t('activityLog.entityTypes.ticketComment') }}</option>
+            <option value="Report">{{ t('activityLog.entityTypes.report') }}</option>
+            <option value="ScheduledReport">{{ t('activityLog.entityTypes.scheduledReport') }}</option>
+            <option value="SystemSetting">{{ t('activityLog.entityTypes.systemSetting') }}</option>
           </select>
         </div>
       </div>
@@ -287,7 +287,7 @@
           <button
             @click="viewDetails(row)"
             class="text-indigo-600 hover:text-indigo-900 transition"
-            title="View Details"
+            :title="t('common.viewDetails')"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -386,7 +386,7 @@ import DataTable from '@/Components/Common/DataTable.vue'
 import Modal from '@/Components/Common/Modal.vue'
 import Pagination from '@/Components/Common/SimplePagination.vue'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 // Props
 const props = defineProps({
@@ -434,49 +434,49 @@ const filters = reactive({
 // Action types for dropdown - updated to match backend
 const actionTypes = [
   // Basic CRUD
-  { value: 'created', label: 'Created' },
-  { value: 'updated', label: 'Updated' },
-  { value: 'deleted', label: 'Deleted' },
+  { value: 'created', label: t('actions.created') },
+  { value: 'updated', label: t('actions.updated') },
+  { value: 'deleted', label: t('actions.deleted') },
   
   // Ticket Actions
-  { value: 'assigned', label: 'Assigned' },
-  { value: 'unassigned', label: 'Unassigned' },
-  { value: 'reassigned', label: 'Reassigned' },
-  { value: 'resolved', label: 'Resolved' },
-  { value: 'closed', label: 'Closed' },
-  { value: 'reopened', label: 'Reopened' },
-  { value: 'escalated', label: 'Escalated' },
-  { value: 'commented', label: 'Commented' },
-  { value: 'status_changed', label: 'Status Changed' },
-  { value: 'priority_changed', label: 'Priority Changed' },
+  { value: 'assigned', label: t('actions.assigned') },
+  { value: 'unassigned', label: t('actions.unassigned') },
+  { value: 'reassigned', label: t('actions.reassigned') },
+  { value: 'resolved', label: t('actions.resolved') },
+  { value: 'closed', label: t('actions.closed') },
+  { value: 'reopened', label: t('actions.reopened') },
+  { value: 'escalated', label: t('actions.escalated') },
+  { value: 'commented', label: t('actions.commented') },
+  { value: 'status_changed', label: t('actions.status_changed') },
+  { value: 'priority_changed', label: t('actions.priority_changed') },
   
   // Bulk Actions
-  { value: 'bulk_assigned', label: 'Bulk Assigned' },
-  { value: 'bulk_updated', label: 'Bulk Updated' },
-  { value: 'bulk_deleted', label: 'Bulk Deleted' },
-  { value: 'bulk_activated', label: 'Bulk Activated' },
-  { value: 'bulk_deactivated', label: 'Bulk Deactivated' },
+  { value: 'bulk_assigned', label: t('actions.bulk_assigned') },
+  { value: 'bulk_updated', label: t('actions.bulk_updated') },
+  { value: 'bulk_deleted', label: t('actions.bulk_deleted') },
+  { value: 'bulk_activated', label: t('actions.bulk_activated') },
+  { value: 'bulk_deactivated', label: t('actions.bulk_deactivated') },
   
   // User Actions
-  { value: 'profile_updated', label: 'Profile Updated' },
-  { value: 'password_changed', label: 'Password Changed' },
-  { value: 'email_changed', label: 'Email Changed' },
-  { value: 'account_locked', label: 'Account Locked' },
-  { value: 'account_unlocked', label: 'Account Unlocked' },
+  { value: 'profile_updated', label: t('actions.profile_updated') },
+  { value: 'password_changed', label: t('actions.password_changed') },
+  { value: 'email_changed', label: t('actions.email_changed') },
+  { value: 'account_locked', label: t('actions.account_locked') },
+  { value: 'account_unlocked', label: t('actions.account_unlocked') },
   
   // Authentication
-  { value: 'login', label: 'Login' },
-  { value: 'logout', label: 'Logout' },
-  { value: 'login_failed', label: 'Login Failed' },
+  { value: 'login', label: t('actions.login') },
+  { value: 'logout', label: t('actions.logout') },
+  { value: 'login_failed', label: t('actions.login_failed') },
   
   // Data Operations
-  { value: 'exported', label: 'Data Exported' },
-  { value: 'imported', label: 'Data Imported' },
+  { value: 'exported', label: t('actions.exported') },
+  { value: 'imported', label: t('actions.imported') },
   
   // Reports & Settings
-  { value: 'report_generated', label: 'Report Generated' },
-  { value: 'setting_changed', label: 'Setting Changed' },
-  { value: 'config_changed', label: 'Configuration Changed' }
+  { value: 'report_generated', label: t('actions.report_generated') },
+  { value: 'setting_changed', label: t('actions.setting_changed') },
+  { value: 'config_changed', label: t('actions.config_changed') }
 ]
 
 // Table columns
@@ -655,11 +655,11 @@ const getHttpMethodClass = (method) => {
 }
 
 const generateDescription = (log) => {
-  if (!log.action) return 'Unknown action'
+  if (!log.action) return t('common.unknownAction')
 
   const action = formatAction(log.action)
-  const entity = log.entity_type || 'item'
-  const actor = log.actor_name || 'Unknown user'
+  const entity = log.entity_type || t('common.item')
+  const actor = log.actor_name || t('common.unknownUser')
 
   return `${actor} ${action.toLowerCase()} ${entity}${log.entity_id ? ` #${log.entity_id}` : ''}`
 }

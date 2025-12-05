@@ -38,6 +38,7 @@ const i18n = createI18n({
     globalInjection: true, // Inject $t, $tc, etc. globally
     silentTranslationWarn: true, // Disable warnings in development
     silentFallbackWarn: true,
+    warnHtmlInMessage: 'off', // Disable HTML message warnings
 });
 
 export default i18n;

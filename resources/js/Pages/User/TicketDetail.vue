@@ -42,7 +42,7 @@
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                         </svg>
-                        Edit Ticket
+                        {{ t("ticket.editTicket") }}
                     </Link>
                     <button
                         v-if="ticket.status === 'resolved' && !ticket.rating"
@@ -72,9 +72,7 @@
                 <!-- Ticket Details -->
                 <div class="bg-white rounded-lg shadow-md">
                     <div class="p-6 border-b border-gray-200">
-                        <h2 class="text-xl font-semibold text-gray-900">
-                            Ticket Details
-                        </h2>
+                        {{ t("ticket.ticketDetails") }}
                     </div>
 
                     <div class="p-6">
@@ -121,7 +119,7 @@
                                             d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                                         />
                                     </svg>
-                                    Download All
+                                    {{ t("ticket.downloadAll") }}
                                 </a>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -167,7 +165,7 @@
                                                 v-if="isImage(attachment.name)"
                                                 class="text-xs text-indigo-600 ml-1"
                                             >
-                                                (Click to preview)
+                                                {{ t("ticket.clickToPreview") }}
                                             </span>
                                         </p>
                                         <p class="text-xs text-gray-500">
@@ -184,9 +182,9 @@
                                             })
                                         "
                                         class="ml-3 text-indigo-600 hover:text-indigo-800"
-                                        title="Download"
                                         @click.stop
                                     >
+                                        <span class="sr-only">{{ t('ticket.download') }}</span>
                                         <svg
                                             class="w-5 h-5"
                                             fill="none"
@@ -211,14 +209,14 @@
                 <div class="bg-white rounded-lg shadow-md">
                     <div class="p-6 border-b border-gray-200">
                         <h2 class="text-xl font-semibold text-gray-900">
-                            {{ t("ticket.comments") }} & Updates
+                            {{ t("ticket.commentsAndUpdates") }}
                         </h2>
                     </div>
 
                     <!-- Comments List -->
                     <div class="divide-y divide-gray-200">
                         <div
-                            v-for="comment in ticket.comments"
+                            v-for="comment in comments"
                             :key="comment.id"
                             class="p-6"
                         >
@@ -376,14 +374,14 @@
                                         rows="4"
                                         required
                                         class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                                        placeholder="Add additional information, ask questions, or provide updates..."
+                                        :placeholder="t('ticket.commentPlaceholder')"
                                     ></textarea>
                                 </div>
 
                                 <div>
                                     <FileUpload
                                         v-model="commentForm.attachments"
-                                        label="Attach Files (Optional)"
+                                        :label="t('ticket.attachFilesOptional')"
                                         :multiple="true"
                                         accept="image/*,.pdf,.doc,.docx,.txt,.log"
                                         :max-size="5 * 1024 * 1024"
@@ -440,7 +438,7 @@
                                 t("ticket.application")
                             }}</label>
                             <p class="text-sm text-gray-900 mt-1">
-                                {{ ticket.aplikasi?.name || "N/A" }}
+                                {{ ticket.aplikasi?.name || t('common.notAvailable') }}
                             </p>
                         </div>
 
@@ -451,7 +449,7 @@
                             <p class="text-sm text-gray-900 mt-1">
                                 {{
                                     ticket.kategori_masalah?.name ||
-                                    "N/A"
+                                    t('common.notAvailable')
                                 }}
                             </p>
                         </div>
@@ -508,18 +506,18 @@
                         </div>
 
                         <div v-if="ticket.resolved_at">
-                            <label class="text-sm font-medium text-gray-500"
-                                >Resolved</label
-                            >
+                            <label class="text-sm font-medium text-gray-500">
+                                {{ t('status.resolved') }}
+                            </label>
                             <p class="text-sm text-gray-900 mt-1">
                                 {{ ticket.formatted_resolved_at }}
                             </p>
                         </div>
 
                         <div v-if="ticket.closed_at">
-                            <label class="text-sm font-medium text-gray-500"
-                                >Closed</label
-                            >
+                            <label class="text-sm font-medium text-gray-500">
+                                {{ t('status.closed') }}
+                            </label>
                             <p class="text-sm text-gray-900 mt-1">
                                 {{ ticket.formatted_closed_at }}
                             </p>
@@ -539,13 +537,13 @@
                         <div class="flow-root">
                             <ul class="-mb-8">
                                 <li
-                                    v-for="(event, index) in ticket.history"
+                                    v-for="(event, index) in history"
                                     :key="event.id"
                                     class="relative pb-8"
                                 >
                                     <div
                                         v-if="
-                                            index !== ticket.history.length - 1
+                                            index !== history.length - 1
                                         "
                                         class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200"
                                     ></div>
@@ -599,7 +597,7 @@
                 <div v-if="ticket.rating" class="bg-white rounded-lg shadow-md">
                     <div class="p-6 border-b border-gray-200">
                         <h2 class="text-lg font-semibold text-gray-900">
-                            Your Rating
+                            {{ t('ticket.yourRating') }}
                         </h2>
                     </div>
 
@@ -623,9 +621,9 @@
                                     />
                                 </svg>
                             </div>
-                            <span class="text-sm text-gray-600"
-                                >{{ ticket.rating }}/5 stars</span
-                            >
+                            <span class="text-sm text-gray-600">
+                                {{ t('ticket.ratingOutOfStars', { rating: ticket.rating }) }}
+                            </span>
                         </div>
                         <p v-if="ticket.feedback" class="text-sm text-gray-700">
                             {{ ticket.feedback }}
@@ -638,7 +636,7 @@
         <!-- Rating Modal -->
         <Modal
             v-model:show="showRatingModal"
-            title="Rate This Ticket"
+            :title="t('ticket.rateTicket')"
             size="md"
         >
             <form @submit.prevent="submitRating">
@@ -646,7 +644,7 @@
                     <div>
                         <label
                             class="block text-sm font-medium text-gray-700 mb-2"
-                            >How satisfied are you with the resolution?</label
+                            >{{ t('ticket.ratingPrompt') }}</label
                         >
                         <div class="flex items-center space-x-2">
                             <button
@@ -667,22 +665,22 @@
                                     />
                                 </svg>
                             </button>
-                            <span class="ml-2 text-sm text-gray-600"
-                                >{{ ratingForm.rating }}/5</span
-                            >
+                            <span class="ml-2 text-sm text-gray-600">
+                                {{ t('ticket.ratingOutOfStars', { rating: ratingForm.rating }) }}
+                            </span>
                         </div>
                     </div>
 
                     <div>
                         <label
                             class="block text-sm font-medium text-gray-700 mb-2"
-                            >Additional Feedback (Optional)</label
+                            >{{ t('ticket.additionalFeedbackOptional') }}</label
                         >
                         <textarea
                             v-model="ratingForm.feedback"
                             rows="3"
                             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                            placeholder="Share your experience or suggestions for improvement..."
+                            :placeholder="t('ticket.ratingFeedbackPlaceholder')"
                         ></textarea>
                     </div>
                 </div>
@@ -693,7 +691,7 @@
                     @click="showRatingModal = false"
                     class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition mr-3"
                 >
-                    Cancel
+                    {{ t('common.cancel') }}
                 </button>
                 <button
                     @click="submitRating"
@@ -709,8 +707,8 @@
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    <span v-if="!ratingForm.processing && !isLoadingRating">Submit Rating & Close</span>
-                    <span v-else>Submitting...</span>
+                    <span v-if="!ratingForm.processing && !isLoadingRating">{{ t('ticket.submitRatingAndClose') }}</span>
+                    <span v-else>{{ t('common.submitting') }}</span>
                 </button>
             </template>
         </Modal>
@@ -736,12 +734,20 @@ import ImagePreviewModal from "@/Components/Common/ImagePreviewModal.vue";
 import { useToasts } from "@/composables/useToasts";
 
 const { t } = useI18n();
-const { success, error, warning, info } = useToasts();
+const { success, error } = useToasts();
 
 const props = defineProps({
     ticket: {
         type: Object,
         required: true,
+    },
+    comments: {
+        type: Array,
+        default: () => [],
+    },
+    history: {
+        type: Array,
+        default: () => [],
     },
     focus: {
         type: String,
@@ -749,11 +755,11 @@ const props = defineProps({
     },
 });
 
-const breadcrumbs = [
-    { label: "Dashboard", href: route("user.dashboard") },
-    { label: "Tickets", href: route("user.tickets.index") },
+const breadcrumbs = computed(() => ([
+    { label: t('nav.dashboard'), href: route('user.dashboard') },
+    { label: t('nav.tickets'), href: route('user.tickets.index') },
     { label: props.ticket.ticket_number },
-];
+]));
 
 const showRatingModal = ref(false);
 const showImagePreview = ref(false);
@@ -817,15 +823,15 @@ const addComment = () => {
             commentForm.reset();
             commentForm.attachments = [];
             success({
-                title: 'Comment Added',
-                message: 'Your comment has been added successfully.',
+                title: t('ticket.commentAddedTitle'),
+                message: t('ticket.commentAddedMessage'),
             });
             isLoadingComment.value = false;
         },
         onError: () => {
             error({
-                title: 'Error',
-                message: 'Failed to add comment. Please try again.',
+                title: t('common.error'),
+                message: t('ticket.commentAddFailed'),
             });
             isLoadingComment.value = false;
         },
@@ -854,14 +860,14 @@ const updateComment = (commentId) => {
                 editingComment.value = null;
                 editForm.reset();
                 success({
-                    title: 'Comment Updated',
-                    message: 'Your comment has been updated successfully.',
+                    title: t('ticket.commentUpdatedTitle'),
+                    message: t('ticket.commentUpdatedMessage'),
                 });
             },
             onError: () => {
                 error({
-                    title: 'Error',
-                    message: 'Failed to update comment. Please try again.',
+                    title: t('common.error'),
+                    message: t('ticket.commentUpdateFailed'),
                 });
             },
         }
@@ -879,14 +885,14 @@ const deleteComment = (commentId) => {
                 preserveScroll: true,
                 onSuccess: () => {
                     success({
-                        title: 'Comment Deleted',
-                        message: 'Your comment has been deleted successfully.',
+                        title: t('ticket.commentDeletedTitle'),
+                        message: t('ticket.commentDeletedMessage'),
                     });
                 },
                 onError: () => {
                     error({
-                        title: 'Error',
-                        message: 'Failed to delete comment. Please try again.',
+                        title: t('common.error'),
+                        message: t('ticket.commentDeleteFailed'),
                     });
                 },
             }
@@ -901,36 +907,36 @@ const submitRating = () => {
             showRatingModal.value = false;
             isLoadingRating.value = false;
             success({
-                title: 'Rating Submitted',
-                message: 'Thank you for your feedback! The ticket has been closed.',
+                title: t('ticket.ratingSubmittedTitle'),
+                message: t('ticket.ratingSubmittedMessage'),
             });
         },
         onError: () => {
             isLoadingRating.value = false;
             error({
-                title: 'Error',
-                message: 'Failed to submit rating. Please try again.',
+                title: t('common.error'),
+                message: t('ticket.ratingSubmitFailed'),
             });
         },
     });
 };
 
 const closeTicket = () => {
-    if (confirm("Are you sure you want to close this ticket?")) {
+    if (confirm(t('ticket.confirmClose'))) {
         isClosingTicket.value = true;
         router.post(route("user.tickets.close", props.ticket.id), {
             onSuccess: () => {
                 isClosingTicket.value = false;
                 success({
-                    title: 'Ticket Closed',
-                    message: 'The ticket has been closed successfully.',
+                    title: t('ticket.ticketClosedTitle'),
+                    message: t('ticket.ticketClosedMessage'),
                 });
             },
             onError: () => {
                 isClosingTicket.value = false;
                 error({
-                    title: 'Error',
-                    message: 'Failed to close ticket. Please try again.',
+                    title: t('common.error'),
+                    message: t('ticket.ticketCloseFailed'),
                 });
             },
         });
@@ -977,12 +983,12 @@ const getRoleColor = (role) => {
 
 const getRoleLabel = (role) => {
     const labels = {
-        user: "User",
-        teknisi: "Teknisi",
-        admin_helpdesk: "Admin Helpdesk",
-        admin_aplikasi: "Admin Aplikasi",
+        user: t('roles.labels.user'),
+        teknisi: t('roles.labels.teknisi'),
+        admin_helpdesk: t('roles.labels.adminHelpdesk'),
+        admin_aplikasi: t('roles.labels.adminAplikasi'),
     };
-    return labels[role] || "Unknown";
+    return labels[role] || t('common.unknown');
 };
 
 const getTimelineColor = (action) => {
@@ -1014,10 +1020,17 @@ const isImage = (filename) => {
 };
 
 const formatFileSize = (bytes) => {
-    if (bytes === 0) return "0 Bytes";
+    if (bytes === 0) return `0 ${t('common.fileSize.bytes')}`;
     const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const sizeKeys = [
+        'common.fileSize.bytes',
+        'common.fileSize.kb',
+        'common.fileSize.mb',
+        'common.fileSize.gb'
+    ];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
+    const value = Math.round((bytes / Math.pow(k, i)) * 100) / 100;
+    const unitKey = sizeKeys[i] || sizeKeys[sizeKeys.length - 1];
+    return `${value} ${t(unitKey)}`;
 };
 </script>

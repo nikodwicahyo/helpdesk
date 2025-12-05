@@ -1522,7 +1522,7 @@ const assignTicket = (ticketId, teknisiId) => {
                 console.error("Failed to assign ticket:", errors);
 
                 // Extract error message
-                let errorMessage = "Failed to assign ticket. Please try again.";
+                let errorMessage = t('message.assignTicketFailed');
                 if (typeof errors === "object") {
                     if (errors.message) {
                         errorMessage = errors.message;
@@ -1570,8 +1570,7 @@ const bulkAssignTickets = () => {
                 console.error("Failed to bulk assign tickets:", errors);
 
                 // Extract error message
-                let errorMessage =
-                    "Failed to assign tickets. Please try again.";
+                let errorMessage = t('message.bulkAssignTicketFailed');
                 if (typeof errors === "object") {
                     if (errors.bulk_assign) {
                         errorMessage = errors.bulk_assign;

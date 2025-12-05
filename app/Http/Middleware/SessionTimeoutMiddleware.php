@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use App\Services\ConcurrentSessionService;
+use App\Services\SystemSettingsService;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -22,11 +23,12 @@ class SessionTimeoutMiddleware
     }
 
     /**
-     * Get session timeout from configuration
+     * Get session timeout from system settings (in seconds)
      */
     private function getSessionTimeout(): int
     {
-        return Config::get('helpdesk.security.session_timeout_minutes', 120) * 60;
+        // Get session timeout from system settings (stored in minutes, convert to seconds)
+        return SystemSettingsService::getSessionTimeout() * 60;
     }
 
     /**

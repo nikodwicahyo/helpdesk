@@ -26,13 +26,16 @@
         {{ Math.abs(trend) }}%
       </span>
       <span v-else class="text-gray-600">0%</span>
-      <span class="ml-2 text-gray-500">vs last period</span>
+      <span class="ml-2 text-gray-500">{{ t('statCard.vsLastPeriod') }}</span>
     </div>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   title: {

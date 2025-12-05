@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use App\Models\AdminHelpdesk;
 use App\Models\SystemSetting;
+use App\Models\Backup;
+use App\Services\BackupService;
 
 class SystemController extends Controller
 {
@@ -73,7 +75,7 @@ class SystemController extends Controller
                 'min_password_length' => SystemSetting::get('password_min_length', 8),
                 'password_expiry' => SystemSetting::get('password_expiry_days', 90),
                 'require_uppercase' => SystemSetting::get('password_require_uppercase', true),
-                'require_lowercase' => SystemSetting::get('password_require_uppercase', true),
+                'require_lowercase' => SystemSetting::get('password_require_lowercase', true),
                 'require_numbers' => SystemSetting::get('password_require_numbers', true),
                 'require_symbols' => SystemSetting::get('password_require_symbols', false),
                 'max_login_attempts' => SystemSetting::get('max_login_attempts', 5),
@@ -94,8 +96,23 @@ class SystemController extends Controller
         // Get recent system logs
         $recentLogs = $this->getRecentSystemLogs();
 
-        // Get backup history (empty for now, to be implemented)
-        $backupHistory = [];
+        // Get backup history from database
+        $backupHistory = Backup::orderBy('created_at', 'desc')
+            ->limit(20)
+            ->get()
+            ->map(function ($backup) {
+                return [
+                    'id' => $backup->id,
+                    'filename' => $backup->filename,
+                    'type' => $backup->type_label,
+                    'size' => $backup->size_formatted,
+                    'status' => $backup->status,
+                    'location' => $backup->location,
+                    'created_at' => $backup->created_at->toISOString(),
+                    'completed_at' => $backup->completed_at?->toISOString(),
+                ];
+            })
+            ->toArray();
 
         return Inertia::render('AdminHelpdesk/SystemSettings', [
             'settings' => $settings,
@@ -131,7 +148,7 @@ class SystemController extends Controller
             'email.mail_port' => 'nullable|integer|min:1|max:65535',
             'email.mail_username' => 'nullable|string|max:255',
             'email.mail_password' => 'nullable|string|max:255',
-            'email.mail_encryption' => 'nullable|string|in:tls,ssl,none',
+            'email.mail_encryption' => 'nullable|string|in:,tls,ssl,none',
             'email.notify_new_ticket' => 'nullable|boolean',
             'email.notify_ticket_assigned' => 'nullable|boolean',
             'email.notify_status_change' => 'nullable|boolean',
@@ -143,8 +160,8 @@ class SystemController extends Controller
             'tickets.default_priority' => 'nullable|string|in:low,medium,high,urgent',
             'tickets.auto_close_resolved_days' => 'nullable|integer|min:1|max:365',
             'tickets.max_concurrent_tickets' => 'nullable|integer|min:1|max:100',
-            'tickets.escalation_urgent_hours' => 'nullable|integer|min:1|max:168',
-            'tickets.escalation_high_hours' => 'nullable|integer|min:1|max:168',
+            'tickets.escalation_urgent_hours' => 'nullable|numeric|min:0.5|max:168',
+            'tickets.escalation_high_hours' => 'nullable|numeric|min:0.5|max:168',
             'tickets.allow_reopen' => 'nullable|string|in:disabled,within_24h,within_7d,always',
             'tickets.working_hours_start' => 'nullable|string',
             'tickets.working_hours_end' => 'nullable|string',
@@ -311,12 +328,12 @@ class SystemController extends Controller
             }
 
             if ($request->has('tickets.escalation_urgent_hours')) {
-                SystemSetting::set('escalation_urgent_hours', $request->integer('tickets.escalation_urgent_hours'), 'tickets', 'Escalate urgent tickets if unassigned after X hours');
+                SystemSetting::set('escalation_urgent_hours', (float) $request->input('tickets.escalation_urgent_hours'), 'tickets', 'Escalate urgent tickets if unassigned after X hours');
                 $updatedSettings[] = 'escalation_urgent_hours';
             }
 
             if ($request->has('tickets.escalation_high_hours')) {
-                SystemSetting::set('escalation_high_hours', $request->integer('tickets.escalation_high_hours'), 'tickets', 'Escalate high priority tickets if unassigned after X hours');
+                SystemSetting::set('escalation_high_hours', (float) $request->input('tickets.escalation_high_hours'), 'tickets', 'Escalate high priority tickets if unassigned after X hours');
                 $updatedSettings[] = 'escalation_high_hours';
             }
 

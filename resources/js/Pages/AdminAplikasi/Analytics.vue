@@ -11,25 +11,25 @@
                         </div>
                         <div>
                             <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">{{ $t('nav.analytics') }}</h1>
-                            <p class="text-gray-600 text-sm sm:text-base">{{ $t('dashboard.adminAplikasi.analyticsDescription') || 'Application performance analytics' }}</p>
+                            <p class="text-gray-600 text-sm sm:text-base">{{ $t('dashboard.adminAplikasi.analyticsDescription') }}</p>
                         </div>
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
                     <select v-model="selectedPeriod" @change="applyFilters" class="px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                        <option value="7">Last 7 days</option>
-                        <option value="30">Last 30 days</option>
-                        <option value="90">Last 90 days</option>
+                        <option value="7">{{ $t('adminAplikasi.analytics.periods.last7') }}</option>
+                        <option value="30">{{ $t('adminAplikasi.analytics.periods.last30') }}</option>
+                        <option value="90">{{ $t('adminAplikasi.analytics.periods.last90') }}</option>
                     </select>
                     <select v-model="selectedAppId" @change="applyFilters" class="px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                        <option value="">All Applications</option>
+                        <option value="">{{ $t('adminAplikasi.analytics.allApplications') }}</option>
                         <option v-for="app in applications" :key="app.id" :value="app.id">{{ app.name }}</option>
                     </select>
                     <button @click="exportData" class="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-4 py-2.5 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        Export
+                        {{ $t('common.export') }}
                     </button>
                 </div>
             </div>
@@ -51,7 +51,7 @@
                         <span class="text-sm font-medium" :class="analytics.tickets_trend > 0 ? 'text-green-300' : 'text-red-300'">{{ Math.abs(analytics.tickets_trend) }}%</span>
                     </div>
                 </div>
-                <h3 class="text-blue-100 text-sm font-medium mb-2">Total Tickets</h3>
+                <h3 class="text-blue-100 text-sm font-medium mb-2">{{ $t('dashboard.totalTickets') }}</h3>
                 <p class="text-3xl font-bold">{{ analytics.total_tickets || 0 }}</p>
             </div>
 
@@ -63,7 +63,7 @@
                         </svg>
                     </div>
                 </div>
-                <h3 class="text-green-100 text-sm font-medium mb-2">Resolved</h3>
+                <h3 class="text-green-100 text-sm font-medium mb-2">{{ $t('status.resolved') }}</h3>
                 <p class="text-3xl font-bold">{{ analytics.resolved_tickets || 0 }}</p>
             </div>
 
@@ -75,7 +75,7 @@
                         </svg>
                     </div>
                 </div>
-                <h3 class="text-yellow-100 text-sm font-medium mb-2">Open Tickets</h3>
+                <h3 class="text-yellow-100 text-sm font-medium mb-2">{{ $t('dashboard.openTickets') }}</h3>
                 <p class="text-3xl font-bold">{{ analytics.open_tickets || 0 }}</p>
             </div>
 
@@ -87,7 +87,7 @@
                         </svg>
                     </div>
                 </div>
-                <h3 class="text-purple-100 text-sm font-medium mb-2">Resolution Rate</h3>
+                <h3 class="text-purple-100 text-sm font-medium mb-2">{{ $t('dashboard.admin.resolutionRate') || $t('dashboard.user.resolutionRate') }}</h3>
                 <p class="text-3xl font-bold">{{ analytics.resolution_rate || 0 }}%</p>
             </div>
 
@@ -99,7 +99,7 @@
                         </svg>
                     </div>
                 </div>
-                <h3 class="text-indigo-100 text-sm font-medium mb-2">Avg Resolution Time</h3>
+                <h3 class="text-indigo-100 text-sm font-medium mb-2">{{ $t('dashboard.admin.avgResolutionTime') }}</h3>
                 <p class="text-3xl font-bold">{{ analytics.avg_resolution_time || 0 }}h</p>
             </div>
         </div>
@@ -108,19 +108,19 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Ticket Trends -->
             <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Ticket Trends</h3>
+                <h3 class="text-lg font-bold text-gray-900 mb-4">{{ $t('adminAplikasi.analytics.ticketTrends') }}</h3>
                 <div class="h-64">
                     <LineChart v-if="analytics.ticket_trends && analytics.ticket_trends.labels" :data="analytics.ticket_trends" />
-                    <div v-else class="h-full flex items-center justify-center text-gray-400">No data available</div>
+                    <div v-else class="h-full flex items-center justify-center text-gray-400">{{ $t('common.noData') }}</div>
                 </div>
             </div>
 
             <!-- Status Distribution -->
             <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Status Distribution</h3>
+                <h3 class="text-lg font-bold text-gray-900 mb-4">{{ $t('adminAplikasi.analytics.statusDistribution') }}</h3>
                 <div class="h-64">
                     <PieChart v-if="analytics.status_distribution && analytics.status_distribution.labels" :data="analytics.status_distribution" />
-                    <div v-else class="h-full flex items-center justify-center text-gray-400">No data available</div>
+                    <div v-else class="h-full flex items-center justify-center text-gray-400">{{ $t('common.noData') }}</div>
                 </div>
             </div>
         </div>
@@ -129,16 +129,16 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Priority Distribution -->
             <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Priority Distribution</h3>
+                <h3 class="text-lg font-bold text-gray-900 mb-4">{{ $t('adminAplikasi.analytics.priorityDistribution') }}</h3>
                 <div class="h-64">
                     <BarChart v-if="analytics.priority_distribution && analytics.priority_distribution.labels" :data="analytics.priority_distribution" />
-                    <div v-else class="h-full flex items-center justify-center text-gray-400">No data available</div>
+                    <div v-else class="h-full flex items-center justify-center text-gray-400">{{ $t('common.noData') }}</div>
                 </div>
             </div>
 
             <!-- Application Performance -->
             <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Application Performance</h3>
+                <h3 class="text-lg font-bold text-gray-900 mb-4">{{ $t('adminAplikasi.analytics.applicationPerformance') }}</h3>
                 <div class="space-y-3 max-h-64 overflow-y-auto">
                     <div v-for="app in analytics.application_stats" :key="app.id" class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                         <div class="flex items-center space-x-3">
@@ -147,16 +147,16 @@
                             </div>
                             <div>
                                 <p class="font-semibold text-gray-900 text-sm">{{ app.name }}</p>
-                                <p class="text-xs text-gray-500">{{ app.total_tickets }} tickets</p>
+                                <p class="text-xs text-gray-500">{{ $t('adminAplikasi.analytics.ticketsCount', { count: app.total_tickets }) }}</p>
                             </div>
                         </div>
                         <div class="text-right">
                             <p class="font-bold text-green-600">{{ app.resolution_rate }}%</p>
-                            <p class="text-xs text-gray-500">resolution</p>
+                            <p class="text-xs text-gray-500">{{ $t('adminAplikasi.analytics.resolution') }}</p>
                         </div>
                     </div>
                     <div v-if="!analytics.application_stats || analytics.application_stats.length === 0" class="text-center py-8 text-gray-400">
-                        No application data available
+                        {{ $t('adminAplikasi.analytics.noApplicationData') }}
                     </div>
                 </div>
             </div>
@@ -166,7 +166,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Category Statistics -->
             <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Top Categories</h3>
+                <h3 class="text-lg font-bold text-gray-900 mb-4">{{ $t('adminAplikasi.analytics.topCategories') }}</h3>
                 <div class="space-y-3 max-h-64 overflow-y-auto">
                     <div v-for="(cat, index) in analytics.category_stats" :key="cat.id" class="flex items-center justify-between p-3 bg-purple-50 rounded-xl">
                         <div class="flex items-center space-x-3">
@@ -180,18 +180,18 @@
                         </div>
                         <div class="text-right">
                             <p class="font-bold text-purple-600">{{ cat.total_tickets }}</p>
-                            <p class="text-xs text-gray-500">tickets</p>
+                            <p class="text-xs text-gray-500">{{ $t('common.tickets') }}</p>
                         </div>
                     </div>
                     <div v-if="!analytics.category_stats || analytics.category_stats.length === 0" class="text-center py-8 text-gray-400">
-                        No category data available
+                        {{ $t('adminAplikasi.analytics.noCategoryData') }}
                     </div>
                 </div>
             </div>
 
             <!-- Teknisi Performance -->
             <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Teknisi Performance</h3>
+                <h3 class="text-lg font-bold text-gray-900 mb-4">{{ $t('adminAplikasi.analytics.teknisiPerformance') }}</h3>
                 <div class="space-y-3 max-h-64 overflow-y-auto">
                     <div v-for="teknisi in analytics.teknisi_performance" :key="teknisi.nip" class="flex items-center justify-between p-3 bg-indigo-50 rounded-xl">
                         <div class="flex items-center space-x-3">
@@ -200,7 +200,7 @@
                             </div>
                             <div>
                                 <p class="font-semibold text-gray-900 text-sm">{{ teknisi.name }}</p>
-                                <p class="text-xs text-gray-500">{{ teknisi.period_resolved }} resolved this period</p>
+                                <p class="text-xs text-gray-500">{{ $t('adminAplikasi.analytics.resolvedThisPeriod', { count: teknisi.period_resolved }) }}</p>
                             </div>
                         </div>
                         <div class="text-right">
@@ -216,7 +216,7 @@
                         </div>
                     </div>
                     <div v-if="!analytics.teknisi_performance || analytics.teknisi_performance.length === 0" class="text-center py-8 text-gray-400">
-                        No teknisi data available
+                        {{ $t('adminAplikasi.analytics.noTeknisiData') }}
                     </div>
                 </div>
             </div>
@@ -270,6 +270,29 @@ const props = defineProps({
         default: 30,
     },
 });
+
+// Safe computed analytics with null checks
+const analytics = computed(() => ({
+    total_tickets: props.analytics?.total_tickets ?? 0,
+    resolved_tickets: props.analytics?.resolved_tickets ?? 0,
+    open_tickets: props.analytics?.open_tickets ?? 0,
+    resolution_rate: props.analytics?.resolution_rate ?? 0,
+    avg_resolution_time: props.analytics?.avg_resolution_time ?? 0,
+    tickets_trend: props.analytics?.tickets_trend ?? 0,
+    resolution_trend: props.analytics?.resolution_trend ?? 0,
+    ticket_trends: props.analytics?.ticket_trends && props.analytics.ticket_trends.labels?.length > 0 
+        ? props.analytics.ticket_trends 
+        : null,
+    status_distribution: props.analytics?.status_distribution && props.analytics.status_distribution.labels?.length > 0 
+        ? props.analytics.status_distribution 
+        : null,
+    priority_distribution: props.analytics?.priority_distribution && props.analytics.priority_distribution.labels?.length > 0 
+        ? props.analytics.priority_distribution 
+        : null,
+    application_stats: props.analytics?.application_stats ?? [],
+    category_stats: props.analytics?.category_stats ?? [],
+    teknisi_performance: props.analytics?.teknisi_performance ?? [],
+}));
 
 const selectedPeriod = ref(props.filters.period || props.period || 30);
 const selectedAppId = ref(props.filters.aplikasi_id || '');

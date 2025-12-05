@@ -19,7 +19,7 @@
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
                                     stroke-width="2"
-                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                                    d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"
                                 />
                             </svg>
                         </div>
@@ -27,12 +27,12 @@
                             <h1
                                 class="text-3xl sm:text-4xl font-bold text-gray-900"
                             >
-                                {{ $t('dashboard.adminAplikasi.title') }}
+                                {{ $t("dashboard.adminAplikasi.title") }}
                             </h1>
                             <p
                                 class="text-gray-600 text-sm sm:text-base animate-fadeInUp animation-delay-200"
                             >
-                                {{ $t('dashboard.adminAplikasi.description') }}
+                                {{ $t("dashboard.adminAplikasi.description") }}
                             </p>
                         </div>
                     </div>
@@ -43,9 +43,12 @@
                             <div
                                 class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"
                             ></div>
-                            <span
-                                >{{ $t('dashboard.adminAplikasi.online', { active: stats.active_applications || 0, total: stats.total_applications || 0 }) }}</span
-                            >
+                            <span>{{
+                                $t("dashboard.adminAplikasi.online", {
+                                    active: stats.active_applications || 0,
+                                    total: stats.total_applications || 0,
+                                })
+                            }}</span>
                         </div>
                         <div class="flex items-center">
                             <svg
@@ -62,7 +65,7 @@
                                 />
                             </svg>
                             <span>{{
-                                new Date().toLocaleString(t('time.locale'), {
+                                new Date().toLocaleString(t("time.locale"), {
                                     weekday: "long",
                                     hour: "2-digit",
                                     minute: "2-digit",
@@ -80,12 +83,14 @@
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
                                     stroke-width="2"
-                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
                                 />
                             </svg>
-                            <span
-                                >{{ $t('dashboard.adminAplikasi.categoriesCount', { count: stats.total_categories || 0 }) }}</span
-                            >
+                            <span>{{
+                                $t("dashboard.adminAplikasi.categoriesCount", {
+                                    count: stats.total_categories || 0,
+                                })
+                            }}</span>
                         </div>
                     </div>
                 </div>
@@ -104,14 +109,16 @@
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                                 stroke-width="2"
-                                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-1M3 13l3 3m-3 4l3-3m-3-4l3 3"
+                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
                             />
                         </svg>
-                        <span class="hidden sm:inline">{{ $t('dashboard.adminAplikasi.categories') }}</span>
-                        <span class="sm:hidden">📁</span>
+                        <span class="hidden sm:inline">{{
+                            $t("dashboard.adminAplikasi.categories")
+                        }}</span>
+                        <span class="sm:hidden">🏷️</span>
                     </Link>
                     <Link
-                        href="/admin-aplikasi/applications/create"
+                        href="/admin-aplikasi/applications"
                         class="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center group"
                     >
                         <svg
@@ -124,10 +131,12 @@
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                                 stroke-width="2"
-                                d="M12 6v6m0 0v6m0 0h6m-6 0h6m-6 0V6m0 0v6m0 0h6m-6 0v6m0 0h6"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
                             />
                         </svg>
-                        <span class="hidden sm:inline">{{ $t('dashboard.adminAplikasi.addApplication') }}</span>
+                        <span class="hidden sm:inline">{{
+                            $t("dashboard.adminAplikasi.applications")
+                        }}</span>
                         <span class="sm:hidden">➕</span>
                     </Link>
                 </div>
@@ -156,7 +165,7 @@
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                                 stroke-width="2.5"
-                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                                d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
                             />
                         </svg>
                     </div>
@@ -198,8 +207,10 @@
                         </span>
                     </div>
                 </div>
-                <h3 class="text-white text-xs font-semibold mb-2 uppercase tracking-wide opacity-90">
-                    {{ $t('dashboard.adminAplikasi.totalApplications') }}
+                <h3
+                    class="text-white text-xs font-semibold mb-2 uppercase tracking-wide opacity-90"
+                >
+                    {{ $t("dashboard.adminAplikasi.totalApplications") }}
                 </h3>
                 <AnimatedNumber
                     :target="stats.total_applications"
@@ -227,7 +238,7 @@
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                                 stroke-width="2.5"
-                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                d="M13 10V3L4 14h7v7l9-11h-7z"
                             />
                         </svg>
                     </div>
@@ -235,8 +246,10 @@
                         class="w-2.5 h-2.5 bg-white rounded-full animate-pulse shadow-lg"
                     ></div>
                 </div>
-                <h3 class="text-white text-xs font-semibold mb-2 uppercase tracking-wide opacity-90">
-                    {{ $t('dashboard.adminAplikasi.activeApplications') }}
+                <h3
+                    class="text-white text-xs font-semibold mb-2 uppercase tracking-wide opacity-90"
+                >
+                    {{ $t("dashboard.adminAplikasi.activeApplications") }}
                 </h3>
                 <div class="text-3xl sm:text-4xl font-extrabold drop-shadow-lg">
                     <AnimatedNumber
@@ -245,7 +258,9 @@
                         :delay="400"
                     />
                 </div>
-                <p class="text-white text-xs mt-2 font-medium opacity-90">{{ $t('dashboard.adminAplikasi.currentlyAvailable') }}</p>
+                <p class="text-white text-xs mt-2 font-medium opacity-90">
+                    {{ $t("dashboard.adminAplikasi.currentlyAvailable") }}
+                </p>
             </div>
 
             <!-- Categories -->
@@ -266,11 +281,13 @@
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                                 stroke-width="2.5"
-                                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-1M3 13l3 3m-3 4l3-3m-3-4l3 3"
+                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
                             />
                         </svg>
                     </div>
-                    <div class="flex items-center space-x-1 bg-white/20 backdrop-blur-sm rounded-full px-2 py-1">
+                    <div
+                        class="flex items-center space-x-1 bg-white/20 backdrop-blur-sm rounded-full px-2 py-1"
+                    >
                         <div
                             class="w-1.5 h-1.5 bg-white rounded-full animate-bounce animation-delay-200"
                         ></div>
@@ -282,8 +299,10 @@
                         ></div>
                     </div>
                 </div>
-                <h3 class="text-white text-xs font-semibold mb-2 uppercase tracking-wide opacity-90">
-                    {{ $t('dashboard.adminAplikasi.categories') }}
+                <h3
+                    class="text-white text-xs font-semibold mb-2 uppercase tracking-wide opacity-90"
+                >
+                    {{ $t("dashboard.adminAplikasi.categories") }}
                 </h3>
                 <div class="text-3xl sm:text-4xl font-extrabold drop-shadow-lg">
                     <AnimatedNumber
@@ -292,7 +311,9 @@
                         :delay="600"
                     />
                 </div>
-                <p class="text-white text-xs mt-2 font-medium opacity-90">{{ $t('dashboard.adminAplikasi.problemCategories') }}</p>
+                <p class="text-white text-xs mt-2 font-medium opacity-90">
+                    {{ $t("dashboard.adminAplikasi.problemCategories") }}
+                </p>
             </div>
 
             <!-- Tickets This Month -->
@@ -313,7 +334,7 @@
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                                 stroke-width="2.5"
-                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                                d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"
                             />
                         </svg>
                     </div>
@@ -355,8 +376,10 @@
                         </span>
                     </div>
                 </div>
-                <h3 class="text-white text-xs font-semibold mb-2 uppercase tracking-wide opacity-90">
-                    {{ $t('dashboard.adminAplikasi.ticketsThisMonth') }}
+                <h3
+                    class="text-white text-xs font-semibold mb-2 uppercase tracking-wide opacity-90"
+                >
+                    {{ $t("dashboard.adminAplikasi.ticketsThisMonth") }}
                 </h3>
                 <div class="text-3xl sm:text-4xl font-extrabold drop-shadow-lg">
                     <AnimatedNumber
@@ -400,10 +423,14 @@
                                 </div>
                                 <div>
                                     <h2 class="text-xl font-bold text-gray-900">
-                                        {{ $t('nav.applications') }}
+                                        {{ $t("nav.applications") }}
                                     </h2>
                                     <p class="text-sm text-gray-500">
-                                        {{ $t('dashboard.adminAplikasi.manageApplicationCatalog') }}
+                                        {{
+                                            $t(
+                                                "dashboard.adminAplikasi.manageApplicationCatalog"
+                                            )
+                                        }}
                                     </p>
                                 </div>
                             </div>
@@ -414,7 +441,11 @@
                                     <input
                                         v-model="searchQuery"
                                         type="text"
-                                        :placeholder="$t('dashboard.adminAplikasi.searchApplicationsPlaceholder')"
+                                        :placeholder="
+                                            $t(
+                                                'dashboard.adminAplikasi.searchApplicationsPlaceholder'
+                                            )
+                                        "
                                         class="w-full sm:w-64 pl-10 pr-4 py-2.5 bg-gray-50/50 border border-gray-200/50 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:bg-white transition-all duration-200"
                                     />
                                     <svg
@@ -435,7 +466,7 @@
                                     href="/admin-aplikasi/applications"
                                     class="inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 group"
                                 >
-                                    {{ $t('action.viewAll') }}
+                                    {{ $t("action.viewAll") }}
                                     <svg
                                         class="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform duration-200"
                                         fill="none"
@@ -471,15 +502,23 @@
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
                                     stroke-width="2"
-                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
                                 />
                             </svg>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">
-                            {{ $t('dashboard.adminAplikasi.noApplicationsFound') }}
+                            {{
+                                $t(
+                                    "dashboard.adminAplikasi.noApplicationsFound"
+                                )
+                            }}
                         </h3>
                         <p class="text-gray-500 mb-4">
-                            {{ $t('dashboard.adminAplikasi.createFirstApplication') }}
+                            {{
+                                $t(
+                                    "dashboard.adminAplikasi.createFirstApplication"
+                                )
+                            }}
                         </p>
                         <Link
                             href="/admin-aplikasi/applications/create"
@@ -495,10 +534,12 @@
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
                                     stroke-width="2"
-                                    d="M12 6v6m0 0v6m0 0h6m-6 0h6m-6 0V6m0 0v6m0 0h6m-6 0v6m0 0h6"
+                                    d="M12 4v16m8-8H4"
                                 />
                             </svg>
-                            {{ $t('dashboard.adminAplikasi.createApplication') }}
+                            {{
+                                $t("dashboard.adminAplikasi.createApplication")
+                            }}
                         </Link>
                     </div>
 
@@ -592,10 +633,8 @@
                                                         d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-1M3 13l3 3m-3 4l3-3m-3-4l3 3"
                                                     />
                                                 </svg>
-                                                {{
-                                                    app.categories_count
-                                                }}
-                                                {{ $t('common.categories') }}
+                                                {{ app.categories_count }}
+                                                {{ $t("common.categories") }}
                                             </div>
                                             <div
                                                 class="flex items-center text-gray-500"
@@ -613,7 +652,8 @@
                                                         d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
                                                     />
                                                 </svg>
-                                                {{ app.tickets_count }} {{ $t('common.tickets') }}
+                                                {{ app.tickets_count }}
+                                                {{ $t("common.tickets") }}
                                             </div>
                                         </div>
                                     </div>
@@ -624,7 +664,11 @@
                                     <Link
                                         :href="`/admin-aplikasi/applications/${app.id}/edit`"
                                         class="group/btn p-2.5 bg-blue-50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 rounded-xl transition-all duration-200 hover:scale-110"
-                                        :title="$t('dashboard.adminAplikasi.editApplication')"
+                                        :title="
+                                            $t(
+                                                'dashboard.adminAplikasi.editApplication'
+                                            )
+                                        "
                                     >
                                         <svg
                                             class="w-5 h-5"
@@ -643,7 +687,11 @@
                                     <button
                                         @click="viewApplicationStats(app.id)"
                                         class="group/btn p-2.5 bg-green-50 hover:bg-green-100 text-green-600 hover:text-green-700 rounded-xl transition-all duration-200 hover:scale-110"
-                                        :title="$t('dashboard.adminAplikasi.viewStatistics')"
+                                        :title="
+                                            $t(
+                                                'dashboard.adminAplikasi.viewStatistics'
+                                            )
+                                        "
                                     >
                                         <svg
                                             class="w-5 h-5"
@@ -685,16 +733,24 @@
                                             stroke-linecap="round"
                                             stroke-linejoin="round"
                                             stroke-width="2"
-                                            d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-1M3 13l3 3m-3 4l3-3m-3-4l3 3"
+                                            d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
                                         />
                                     </svg>
                                 </div>
                                 <div>
                                     <h2 class="text-xl font-bold text-gray-900">
-                                        {{ $t('dashboard.adminAplikasi.problemCategories') }}
+                                        {{
+                                            $t(
+                                                "dashboard.adminAplikasi.problemCategories"
+                                            )
+                                        }}
                                     </h2>
                                     <p class="text-sm text-gray-500">
-                                        {{ $t('dashboard.adminAplikasi.manageProblemTypes') }}
+                                        {{
+                                            $t(
+                                                "dashboard.adminAplikasi.manageProblemTypes"
+                                            )
+                                        }}
                                     </p>
                                 </div>
                             </div>
@@ -712,10 +768,10 @@
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
                                         stroke-width="2"
-                                        d="M12 6v6m0 0v6m0 0h6m-6 0h6m-6 0V6m0 0v6m0 0h6m-6 0v6m0 0h6"
+                                        d="M12 4v16m8-8H4"
                                     />
                                 </svg>
-                                {{ $t('dashboard.adminAplikasi.addCategory') }}
+                                {{ $t("dashboard.adminAplikasi.addCategory") }}
                             </button>
                         </div>
                     </div>
@@ -787,10 +843,8 @@
                                                         d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
                                                     />
                                                 </svg>
-                                                {{
-                                                    category.tickets_count
-                                                }}
-                                                {{ $t('common.tickets') }}
+                                                {{ category.tickets_count }}
+                                                {{ $t("common.tickets") }}
                                             </div>
                                         </div>
                                     </div>
@@ -855,17 +909,25 @@
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
                                         stroke-width="2"
-                                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-1M3 13l3 3m-3 4l3-3m-3-4l3 3"
+                                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
                                     />
                                 </svg>
                             </div>
                             <h3
                                 class="text-lg font-semibold text-gray-900 mb-2"
                             >
-                                {{ $t('dashboard.adminAplikasi.noCategoriesYet') }}
+                                {{
+                                    $t(
+                                        "dashboard.adminAplikasi.noCategoriesYet"
+                                    )
+                                }}
                             </h3>
                             <p class="text-gray-500 mb-4">
-                                {{ $t('dashboard.adminAplikasi.createFirstCategory') }}
+                                {{
+                                    $t(
+                                        "dashboard.adminAplikasi.createFirstCategory"
+                                    )
+                                }}
                             </p>
                             <button
                                 @click="showAddCategoryModal = true"
@@ -881,10 +943,10 @@
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
                                         stroke-width="2"
-                                        d="M12 6v6m0 0v6m0 0h6m-6 0h6m-6 0V6m0 0v6m0 0h6m-6 0v6m0 0h6"
+                                        d="M12 4v16m8-8H4"
                                     />
                                 </svg>
-                                {{ $t('dashboard.adminAplikasi.addCategory') }}
+                                {{ $t("dashboard.adminAplikasi.addCategory") }}
                             </button>
                         </div>
                     </div>
@@ -917,7 +979,11 @@
                                 </svg>
                             </div>
                             <h2 class="text-lg font-bold text-gray-900">
-                                {{ $t('dashboard.adminAplikasi.topApplications') }}
+                                {{
+                                    $t(
+                                        "dashboard.adminAplikasi.topApplications"
+                                    )
+                                }}
                             </h2>
                         </div>
                     </div>
@@ -959,7 +1025,9 @@
                                         :delay="index * 100"
                                     />
                                 </div>
-                                <p class="text-xs text-gray-500">{{ $t('dashboard.adminAplikasi.tickets') }}</p>
+                                <p class="text-xs text-gray-500">
+                                    {{ $t("dashboard.adminAplikasi.tickets") }}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -989,7 +1057,7 @@
                                 </svg>
                             </div>
                             <h2 class="text-lg font-bold text-gray-900">
-                                {{ $t('dashboard.adminAplikasi.teknisiTeam') }}
+                                {{ $t("dashboard.adminAplikasi.teknisiTeam") }}
                             </h2>
                         </div>
                     </div>
@@ -1032,19 +1100,15 @@
                                 >
                                     <AnimatedNumber
                                         :target="
-                                            teknisi.assigned_applications_count
+                                            teknisi.active_tickets_count || 0
                                         "
                                         :duration="1500"
                                         :delay="index * 120"
                                     />
                                 </div>
-                                <p class="text-xs text-gray-500">{{ $t('dashboard.adminAplikasi.apps') }}</p>
-                                <button
-                                    @click="manageTeknisiApps(teknisi.id)"
-                                    class="text-xs text-indigo-600 hover:text-indigo-800 font-medium mt-1 hover:underline"
-                                >
-                                    {{ $t('dashboard.adminAplikasi.manage') }}
-                                </button>
+                                <p class="text-xs text-gray-500">
+                                    {{ $t("dashboard.adminAplikasi.tickets") }}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -1075,7 +1139,11 @@
                                     </svg>
                                 </div>
                                 <h2 class="text-lg font-bold text-gray-900">
-                                    {{ $t('dashboard.adminAplikasi.recentActivity') }}
+                                    {{
+                                        $t(
+                                            "dashboard.adminAplikasi.recentActivity"
+                                        )
+                                    }}
                                 </h2>
                             </div>
                         </div>
@@ -1151,7 +1219,7 @@
                                 </svg>
                             </div>
                             <h2 class="text-lg font-bold text-gray-900">
-                                {{ $t('dashboard.adminAplikasi.systemStatus') }}
+                                {{ $t("dashboard.adminAplikasi.systemStatus") }}
                             </h2>
                         </div>
                     </div>
@@ -1166,7 +1234,11 @@
                                 ></div>
                                 <span
                                     class="text-sm font-semibold text-gray-900"
-                                    >{{ $t('dashboard.adminAplikasi.onlineStatus') }}</span
+                                    >{{
+                                        $t(
+                                            "dashboard.adminAplikasi.onlineStatus"
+                                        )
+                                    }}</span
                                 >
                             </div>
                             <div class="flex items-center space-x-2">
@@ -1189,7 +1261,11 @@
                                 ></div>
                                 <span
                                     class="text-sm font-semibold text-gray-900"
-                                    >{{ $t('dashboard.adminAplikasi.maintenanceStatus') }}</span
+                                    >{{
+                                        $t(
+                                            "dashboard.adminAplikasi.maintenanceStatus"
+                                        )
+                                    }}</span
                                 >
                             </div>
                             <span class="font-bold text-yellow-600">{{
@@ -1206,7 +1282,11 @@
                                 ></div>
                                 <span
                                     class="text-sm font-semibold text-gray-900"
-                                    >{{ $t('dashboard.adminAplikasi.deprecatedStatus') }}</span
+                                    >{{
+                                        $t(
+                                            "dashboard.adminAplikasi.deprecatedStatus"
+                                        )
+                                    }}</span
                                 >
                             </div>
                             <span class="font-bold text-red-600">{{
@@ -1247,14 +1327,20 @@
                                     />
                                 </svg>
                             </div>
-                            {{ $t('dashboard.adminAplikasi.applicationLabel') }}
+                            {{ $t("dashboard.adminAplikasi.applicationLabel") }}
                         </label>
                         <select
                             v-model="newCategory.aplikasi_id"
                             required
                             class="w-full border-2 border-gray-200/50 bg-gray-50/50 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:bg-white transition-all duration-200"
                         >
-                            <option value="">{{ $t('dashboard.adminAplikasi.selectApplication') }}</option>
+                            <option value="">
+                                {{
+                                    $t(
+                                        "dashboard.adminAplikasi.selectApplication"
+                                    )
+                                }}
+                            </option>
                             <option
                                 v-for="app in props.applications"
                                 :key="app.id"
@@ -1286,14 +1372,20 @@
                                     />
                                 </svg>
                             </div>
-                            {{ $t('dashboard.adminAplikasi.categoryNameLabel') }}
+                            {{
+                                $t("dashboard.adminAplikasi.categoryNameLabel")
+                            }}
                         </label>
                         <input
                             v-model="newCategory.nama_kategori"
                             type="text"
                             required
                             class="w-full border-2 border-gray-200/50 bg-gray-50/50 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:bg-white transition-all duration-200"
-                            :placeholder="$t('dashboard.adminAplikasi.enterCategoryNamePlaceholder')"
+                            :placeholder="
+                                $t(
+                                    'dashboard.adminAplikasi.enterCategoryNamePlaceholder'
+                                )
+                            "
                         />
                     </div>
 
@@ -1318,13 +1410,17 @@
                                     />
                                 </svg>
                             </div>
-                            {{ $t('dashboard.adminAplikasi.descriptionLabel') }}
+                            {{ $t("dashboard.adminAplikasi.descriptionLabel") }}
                         </label>
                         <textarea
                             v-model="newCategory.deskripsi"
                             rows="4"
                             class="w-full border-2 border-gray-200/50 bg-gray-50/50 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:bg-white transition-all duration-200 resize-none"
-                            :placeholder="$t('dashboard.adminAplikasi.enterCategoryDescriptionPlaceholder')"
+                            :placeholder="
+                                $t(
+                                    'dashboard.adminAplikasi.enterCategoryDescriptionPlaceholder'
+                                )
+                            "
                         ></textarea>
                     </div>
                 </div>
@@ -1336,7 +1432,7 @@
                         @click="showAddCategoryModal = false"
                         class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition-all duration-200 hover:scale-105"
                     >
-                        {{ $t('dashboard.adminAplikasi.cancel') }}
+                        {{ $t("dashboard.adminAplikasi.cancel") }}
                     </button>
                     <button
                         @click="addCategory"
@@ -1352,10 +1448,10 @@
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                                 stroke-width="2"
-                                d="M12 6v6m0 0v6m0 0h6m-6 0h6m-6 0V6m0 0v6m0 0h6m-6 0v6m0 0h6"
+                                d="M12 4v16m8-8H4"
                             />
                         </svg>
-                        {{ $t('dashboard.adminAplikasi.addCategory') }}
+                        {{ $t("dashboard.adminAplikasi.addCategory") }}
                     </button>
                 </div>
             </template>
@@ -1390,14 +1486,20 @@
                                     />
                                 </svg>
                             </div>
-                            {{ $t('dashboard.adminAplikasi.applicationLabel') }}
+                            {{ $t("dashboard.adminAplikasi.applicationLabel") }}
                         </label>
                         <select
                             v-model="editingCategory.aplikasi_id"
                             required
                             class="w-full border-2 border-gray-200/50 bg-gray-50/50 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:bg-white transition-all duration-200"
                         >
-                            <option value="">{{ $t('dashboard.adminAplikasi.selectApplication') }}</option>
+                            <option value="">
+                                {{
+                                    $t(
+                                        "dashboard.adminAplikasi.selectApplication"
+                                    )
+                                }}
+                            </option>
                             <option
                                 v-for="app in props.applications"
                                 :key="app.id"
@@ -1429,14 +1531,20 @@
                                     />
                                 </svg>
                             </div>
-                            {{ $t('dashboard.adminAplikasi.categoryNameLabel') }}
+                            {{
+                                $t("dashboard.adminAplikasi.categoryNameLabel")
+                            }}
                         </label>
                         <input
                             v-model="editingCategory.nama_kategori"
                             type="text"
                             required
                             class="w-full border-2 border-gray-200/50 bg-gray-50/50 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:bg-white transition-all duration-200"
-                            :placeholder="$t('dashboard.adminAplikasi.enterCategoryNamePlaceholder')"
+                            :placeholder="
+                                $t(
+                                    'dashboard.adminAplikasi.enterCategoryNamePlaceholder'
+                                )
+                            "
                         />
                     </div>
 
@@ -1461,13 +1569,17 @@
                                     />
                                 </svg>
                             </div>
-                            {{ $t('dashboard.adminAplikasi.descriptionLabel') }}
+                            {{ $t("dashboard.adminAplikasi.descriptionLabel") }}
                         </label>
                         <textarea
                             v-model="editingCategory.deskripsi"
                             rows="4"
                             class="w-full border-2 border-gray-200/50 bg-gray-50/50 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:bg-white transition-all duration-200 resize-none"
-                            :placeholder="$t('dashboard.adminAplikasi.enterCategoryDescriptionPlaceholder')"
+                            :placeholder="
+                                $t(
+                                    'dashboard.adminAplikasi.enterCategoryDescriptionPlaceholder'
+                                )
+                            "
                         ></textarea>
                     </div>
                 </div>
@@ -1479,7 +1591,7 @@
                         @click="closeEditModal"
                         class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition-all duration-200 hover:scale-105"
                     >
-                        {{ $t('dashboard.adminAplikasi.cancel') }}
+                        {{ $t("dashboard.adminAplikasi.cancel") }}
                     </button>
                     <button
                         @click="updateCategory"
@@ -1498,7 +1610,7 @@
                                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                             />
                         </svg>
-                        {{ $t('dashboard.adminAplikasi.updateCategory') }}
+                        {{ $t("dashboard.adminAplikasi.updateCategory") }}
                     </button>
                 </div>
             </template>
@@ -1514,7 +1626,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import StatCard from "@/Components/Common/StatCard.vue";
 import Modal from "@/Components/Common/Modal.vue";
 import AnimatedNumber from "@/Components/UI/AnimatedNumber.vue";
-import { useI18n } from 'vue-i18n';
+import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
 
@@ -1633,7 +1745,7 @@ const closeEditModal = () => {
 };
 
 const deleteCategory = (categoryId) => {
-    if (confirm(t('dashboard.adminAplikasi.confirmDeleteCategory'))) {
+    if (confirm(t("dashboard.adminAplikasi.confirmDeleteCategory"))) {
         router.delete(`/admin-aplikasi/categories/${categoryId}`);
     }
 };
@@ -1711,7 +1823,8 @@ const getActivityColor = (type) => {
 }
 
 @keyframes float {
-    0%, 100% {
+    0%,
+    100% {
         transform: translateY(0px);
     }
     50% {
@@ -1720,7 +1833,8 @@ const getActivityColor = (type) => {
 }
 
 @keyframes pulse-soft {
-    0%, 100% {
+    0%,
+    100% {
         opacity: 1;
     }
     50% {
@@ -1729,7 +1843,8 @@ const getActivityColor = (type) => {
 }
 
 @keyframes glow {
-    0%, 100% {
+    0%,
+    100% {
         box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
     }
     50% {
@@ -1833,20 +1948,16 @@ const getActivityColor = (type) => {
 
 /* ==================== Professional Card Shadows ==================== */
 .shadow-professional {
-    box-shadow: 
-        0 1px 3px 0 rgba(0, 0, 0, 0.1),
-        0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 
 .shadow-professional-lg {
-    box-shadow: 
-        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
         0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .shadow-professional-xl {
-    box-shadow: 
-        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
         0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
@@ -1861,8 +1972,7 @@ const getActivityColor = (type) => {
 
 .hover-lift:hover {
     transform: translateY(-4px);
-    box-shadow: 
-        0 20px 25px -5px rgba(0, 0, 0, 0.15),
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15),
         0 10px 10px -5px rgba(0, 0, 0, 0.08);
 }
 
@@ -1881,7 +1991,7 @@ const getActivityColor = (type) => {
 }
 
 .stat-card::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -1896,7 +2006,7 @@ const getActivityColor = (type) => {
 }
 
 .stat-card::after {
-    content: '';
+    content: "";
     position: absolute;
     top: -50%;
     left: -50%;
@@ -1924,7 +2034,7 @@ const getActivityColor = (type) => {
 }
 
 .btn-professional::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     left: 50%;
@@ -1948,8 +2058,7 @@ const getActivityColor = (type) => {
 }
 
 .card-glow:hover {
-    box-shadow: 
-        0 0 20px rgba(99, 102, 241, 0.3),
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3),
         0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
@@ -1960,8 +2069,7 @@ const getActivityColor = (type) => {
 
 .input-professional:focus {
     transform: translateY(-1px);
-    box-shadow: 
-        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
         0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
@@ -1984,8 +2092,7 @@ const getActivityColor = (type) => {
 /* ==================== Professional Focus States ==================== */
 .focus-professional:focus {
     outline: none;
-    box-shadow: 
-        0 0 0 3px rgba(99, 102, 241, 0.1),
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1),
         0 0 0 1px rgba(99, 102, 241, 0.3);
 }
 
@@ -2010,12 +2117,7 @@ const getActivityColor = (type) => {
 
 /* ==================== Loading Skeleton ==================== */
 .skeleton {
-    background: linear-gradient(
-        90deg,
-        #f0f0f0 25%,
-        #e0e0e0 50%,
-        #f0f0f0 75%
-    );
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
     border-radius: 0.5rem;
@@ -2048,6 +2150,7 @@ const getActivityColor = (type) => {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    line-clamp: 2;
     overflow: hidden;
 }
 
@@ -2055,6 +2158,7 @@ const getActivityColor = (type) => {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
+    line-clamp: 3;
     overflow: hidden;
 }
 
@@ -2080,7 +2184,7 @@ const getActivityColor = (type) => {
         opacity: 1;
         transform: none;
     }
-    
+
     .hover-lift:hover,
     .hover-scale:hover {
         transform: none;

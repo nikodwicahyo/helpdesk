@@ -27,12 +27,12 @@
                             <h1
                                 class="text-3xl sm:text-4xl font-bold text-gray-900"
                             >
-                                Ticket Management
+                                {{ t('nav.ticketManagement') }}
                             </h1>
                             <p
                                 class="text-gray-600 text-sm sm:text-base animate-fadeInUp animation-delay-200"
                             >
-                                Manage all tickets with full control
+                                {{ t('adminHelpdesk.ticketManagement.description') }}
                             </p>
                         </div>
                     </div>
@@ -43,7 +43,7 @@
                             <div
                                 class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"
                             ></div>
-                            <span>System Online</span>
+                            <span>{{ t('dashboard.admin.systemOnline') }}</span>
                         </div>
                         <div class="flex items-center">
                             <svg
@@ -60,7 +60,7 @@
                                 />
                             </svg>
                             <span>{{
-                                new Date().toLocaleString("en-EN", {
+                                new Date().toLocaleString(locale, {
                                     weekday: "long",
                                     hour: "2-digit",
                                     minute: "2-digit",
@@ -87,7 +87,7 @@
                                 d="M12 4v16m8-8H4"
                             />
                         </svg>
-                        Add New Ticket
+                        {{ t('ticket.createNewTicket') }}
                     </button>
                 </div>
             </div>
@@ -95,19 +95,17 @@
 
         <!-- Filters -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">Filters</h2>
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ t('activityLog.filters') }}</h2>
             <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4">
                 <!-- Status Filter -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2"
-                        >Status</label
-                    >
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('ticket.status') }}</label>
                     <select
                         v-model="filters.status"
                         @change="applyFilters"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     >
-                        <option value="">All Status</option>
+                        <option value="">{{ t('common.allStatuses') }}</option>
                         <option
                             v-for="status in filterOptions.statuses"
                             :key="status.value"
@@ -120,15 +118,13 @@
 
                 <!-- Priority Filter -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2"
-                        >Priority</label
-                    >
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('ticket.priority') }}</label>
                     <select
                         v-model="filters.priority"
                         @change="applyFilters"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     >
-                        <option value="">All Priority</option>
+                        <option value="">{{ t('common.allPriority') }}</option>
                         <option
                             v-for="priority in filterOptions.priorities"
                             :key="priority.value"
@@ -141,15 +137,13 @@
 
                 <!-- Application Filter -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2"
-                        >Application</label
-                    >
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('ticket.application') }}</label>
                     <select
                         v-model="filters.aplikasi_id"
                         @change="applyFilters"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     >
-                        <option value="">All Applications</option>
+                        <option value="">{{ t('common.allApplications') }}</option>
                         <option
                             v-for="app in filterOptions.applications"
                             :key="app.value"
@@ -162,15 +156,13 @@
 
                 <!-- Teknisi Filter -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2"
-                        >Teknisi</label
-                    >
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('nav.teknisi') }}</label>
                     <select
                         v-model="filters.assigned_teknisi_nip"
                         @change="applyFilters"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     >
-                        <option value="">All Teknisi</option>
+                        <option value="">{{ t('common.allTeknisi') }}</option>
                         <option
                             v-for="teknisi in filterOptions.teknisi"
                             :key="teknisi.value"
@@ -183,9 +175,7 @@
 
                 <!-- Date From Filter -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2"
-                        >Date From</label
-                    >
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('time.dateFrom') }}</label>
                     <input
                         v-model="filters.date_from"
                         @change="applyFilters"
@@ -196,9 +186,7 @@
 
                 <!-- Date To Filter -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2"
-                        >Date To</label
-                    >
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('time.dateTo') }}</label>
                     <input
                         v-model="filters.date_to"
                         @change="applyFilters"
@@ -215,7 +203,7 @@
                         v-model="filters.search"
                         @input="debounceSearch"
                         type="text"
-                        placeholder="Search tickets..."
+                        :placeholder="t('search.searchTickets')"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     />
                 </div>
@@ -223,7 +211,7 @@
                     @click="clearFilters"
                     class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
                 >
-                    Clear Filters
+                    {{ t('common.clearFilters') }}
                 </button>
             </div>
         </div>
@@ -233,7 +221,7 @@
             <div class="px-6 py-4 border-b border-gray-200">
                 <div class="flex items-center justify-between">
                     <h2 class="text-xl font-semibold text-gray-900">
-                        Tickets ({{ tickets.total }})
+                        {{ t('nav.tickets') }} ({{ tickets.total }})
                     </h2>
                     <div class="flex items-center space-x-2">
                         <label class="flex items-center">
@@ -244,7 +232,7 @@
                                 class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                             />
                             <span class="ml-2 text-sm text-gray-600"
-                                >Select All</span
+                                >{{ t('common.selectAll') }}</span
                             >
                         </label>
                         <button
@@ -252,7 +240,7 @@
                             @click="showBulkActionModal = true"
                             class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
                         >
-                            Bulk Actions ({{ selectedTickets.length }})
+                            {{ t('common.bulkActions') }} ({{ selectedTickets.length }})
                         </button>
                     </div>
                 </div>
@@ -276,47 +264,47 @@
                             <th
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Ticket Number
+                                {{ t('ticket.ticketNumber') }}
                             </th>
                             <th
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Title
+                                {{ t('ticket.ticketTitle') }}
                             </th>
                             <th
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                User
+                                {{ t('common.user') }}
                             </th>
                             <th
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Status
+                                {{ t('ticket.status') }}
                             </th>
                             <th
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Priority
+                                {{ t('ticket.priority') }}
                             </th>
                             <th
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Application
+                                {{ t('ticket.application') }}
                             </th>
                             <th
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Assigned To
+                                {{ t('ticket.assignedTo') }}
                             </th>
                             <th
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Created
+                                {{ t('common.created') }}
                             </th>
                             <th
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Actions
+                                {{ t('action.actions') }}
                             </th>
                         </tr>
                     </thead>
@@ -377,7 +365,7 @@
                             <td
                                 class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                             >
-                                {{ ticket.assigned_teknisi?.name || "-" }}
+                                {{ ticket.assigned_teknisi?.name || t('common.unassigned') }}
                             </td>
                             <td
                                 class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
@@ -391,7 +379,7 @@
                                     <button
                                         @click.stop="viewTicket(ticket.id)"
                                         class="text-indigo-600 hover:text-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded p-1"
-                                        title="View"
+                                        :title="t('common.view')"
                                     >
                                         <svg
                                             class="w-5 h-5"
@@ -416,7 +404,7 @@
                                     <button
                                         @click.stop="editTicket(ticket)"
                                         class="text-blue-600 hover:text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded p-1"
-                                        title="Edit"
+                                        :title="t('common.edit')"
                                     >
                                         <svg
                                             class="w-5 h-5"
@@ -435,7 +423,7 @@
                                     <button
                                         @click.stop="assignTicket(ticket)"
                                         class="text-green-600 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 rounded p-1"
-                                        title="Assign"
+                                        :title="t('ticket.assignTicket')"
                                     >
                                         <svg
                                             class="w-5 h-5"
@@ -461,7 +449,7 @@
             <!-- Pagination -->
             <SimplePagination
                 :data="tickets"
-                label="tiket"
+                :label="t('common.tickets')"
                 @page-changed="handlePageChange"
             />
         </div>
@@ -493,7 +481,7 @@
                                         <h3
                                             class="text-lg font-medium text-gray-900"
                                         >
-                                            Create New Ticket
+                                            {{ t('ticket.createNewTicket') }}
                                         </h3>
                                         <button
                                             type="button"
@@ -526,7 +514,7 @@
                                         <div>
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                                >User *</label
+                                                >{{ t('common.user') }} *</label
                                             >
                                             <select
                                                 v-model="newTicket.user_nip"
@@ -534,7 +522,7 @@
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                                             >
                                                 <option value="">
-                                                    Select User
+                                                    {{ t('modal.selectUser') }}
                                                 </option>
                                                 <option
                                                     v-for="user in users"
@@ -552,7 +540,7 @@
                                         <div>
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                                >Application *</label
+                                                >{{ t('ticket.application') }} *</label
                                             >
                                             <select
                                                 v-model="newTicket.aplikasi_id"
@@ -561,7 +549,7 @@
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                                             >
                                                 <option value="">
-                                                    Select Application
+                                                    {{ t('ticket.selectApplication') }}
                                                 </option>
                                                 <option
                                                     v-for="app in applications"
@@ -579,7 +567,7 @@
                                         <div>
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                                >Category *</label
+                                                >{{ t('ticket.category') }} *</label
                                             >
                                             <select
                                                 v-model="
@@ -592,7 +580,7 @@
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100"
                                             >
                                                 <option value="">
-                                                    Select Category
+                                                    {{ t('ticket.selectCategory') }}
                                                 </option>
                                                 <option
                                                     v-for="category in availableCategories"
@@ -608,7 +596,7 @@
                                         <div>
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                                >Title *</label
+                                                >{{ t('ticket.ticketTitle') }} *</label
                                             >
                                             <input
                                                 v-model="newTicket.title"
@@ -616,7 +604,7 @@
                                                 type="text"
                                                 maxlength="255"
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                                                placeholder="Enter ticket title"
+                                                :placeholder="t('ticket.issueTitlePlaceholder')"
                                             />
                                         </div>
 
@@ -624,14 +612,14 @@
                                         <div>
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                                >Description *</label
+                                                >{{ t('ticket.description') }} *</label
                                             >
                                             <textarea
                                                 v-model="newTicket.description"
                                                 required
                                                 rows="4"
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                                                placeholder="Describe the issue..."
+                                                :placeholder="t('ticket.detailedDescriptionPlaceholder')"
                                             ></textarea>
                                         </div>
 
@@ -640,7 +628,7 @@
                                             <div>
                                                 <label
                                                     class="block text-sm font-medium text-gray-700 mb-2"
-                                                    >Priority *</label
+                                                    >{{ t('ticket.priority') }} *</label
                                                 >
                                                 <select
                                                     v-model="newTicket.priority"
@@ -648,26 +636,26 @@
                                                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                                                 >
                                                     <option value="">
-                                                        Select Priority
+                                                        {{ t('modal.selectPriority') }}
                                                     </option>
                                                     <option value="low">
-                                                        Low
+                                                        {{ t('priority.low') }}
                                                     </option>
                                                     <option value="medium">
-                                                        Medium
+                                                        {{ t('priority.medium') }}
                                                     </option>
                                                     <option value="high">
-                                                        High
+                                                        {{ t('priority.high') }}
                                                     </option>
                                                     <option value="urgent">
-                                                        Urgent
+                                                        {{ t('priority.urgent') }}
                                                     </option>
                                                 </select>
                                             </div>
                                             <div>
                                                 <label
                                                     class="block text-sm font-medium text-gray-700 mb-2"
-                                                    >Assign to Teknisi</label
+                                                    >{{ t('ticket.assignTo') }} {{ t('nav.teknisi') }}</label
                                                 >
                                                 <select
                                                     v-model="
@@ -676,7 +664,7 @@
                                                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                                                 >
                                                     <option value="">
-                                                        Select Teknisi
+                                                        {{ t('modal.assignTicketModal.selectTeknisi') }}
                                                     </option>
                                                     <option
                                                         v-for="teknisi in teknisis"
@@ -695,14 +683,14 @@
                                         <div>
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                                >Location</label
+                                                >{{ t('ticket.location') }}</label
                                             >
                                             <input
                                                 v-model="newTicket.location"
                                                 type="text"
                                                 maxlength="255"
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                                                placeholder="Office location or room number"
+                                                :placeholder="t('ticket.locationPlaceholder')"
                                             />
                                         </div>
                                     </div>
@@ -717,15 +705,15 @@
                                         @click="showCreateModal = false"
                                         class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                                     >
-                                        Cancel
+                                        {{ t('common.cancel') }}
                                     </button>
                                     <button
                                         type="submit"
                                         :disabled="creating"
                                         class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
                                     >
-                                        <span v-if="creating">Creating...</span>
-                                        <span v-else>Create Ticket</span>
+                                        <span v-if="creating">{{ t('common.creating') }}</span>
+                                        <span v-else>{{ t('ticket.createTicket') }}</span>
                                     </button>
                                 </div>
                             </form>
@@ -762,7 +750,7 @@
                                         <h3
                                             class="text-lg font-medium text-gray-900"
                                         >
-                                            Edit Ticket
+                                            {{ t('ticket.editTicket') }}
                                         </h3>
                                         <button
                                             type="button"
@@ -792,40 +780,40 @@
                                         <div>
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                                >Status</label
+                                                >{{ t('ticket.status') }}</label
                                             >
                                             <select
                                                 v-model="editingTicket.status"
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                                             >
                                                 <option value="open">
-                                                    Open
+                                                    {{ t('status.open') }}
                                                 </option>
                                                 <option value="assigned">
-                                                    Assigned
+                                                    {{ t('status.assigned') }}
                                                 </option>
                                                 <option value="in_progress">
-                                                    In Progress
+                                                    {{ t('status.inProgress') }}
                                                 </option>
                                                 <option value="waiting_user">
-                                                    Waiting User
+                                                    {{ t('status.waitingUser') }}
                                                 </option>
                                                 <option value="waiting_admin">
-                                                    Waiting Admin
+                                                    {{ t('status.waitingAdmin') }}
                                                 </option>
                                                 <option
                                                     value="waiting_response"
                                                 >
-                                                    Waiting Response
+                                                    {{ t('status.waitingResponse') }}
                                                 </option>
                                                 <option value="resolved">
-                                                    Resolved
+                                                    {{ t('status.resolved') }}
                                                 </option>
                                                 <option value="closed">
-                                                    Closed
+                                                    {{ t('status.closed') }}
                                                 </option>
                                                 <option value="cancelled">
-                                                    Cancelled
+                                                    {{ t('status.cancelled') }}
                                                 </option>
                                             </select>
                                         </div>
@@ -833,21 +821,21 @@
                                         <div>
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                                >Priority</label
+                                                >{{ t('ticket.priority') }}</label
                                             >
                                             <select
                                                 v-model="editingTicket.priority"
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                                             >
-                                                <option value="low">Low</option>
+                                                <option value="low">{{ t('priority.low') }}</option>
                                                 <option value="medium">
-                                                    Medium
+                                                    {{ t('priority.medium') }}
                                                 </option>
                                                 <option value="high">
-                                                    High
+                                                    {{ t('priority.high') }}
                                                 </option>
                                                 <option value="urgent">
-                                                    Urgent
+                                                    {{ t('priority.urgent') }}
                                                 </option>
                                             </select>
                                         </div>
@@ -855,7 +843,7 @@
                                         <div>
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                                >Assign to Teknisi</label
+                                                >{{ t('ticket.assignTo') }} {{ t('nav.teknisi') }}</label
                                             >
                                             <select
                                                 v-model="
@@ -864,7 +852,7 @@
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                                             >
                                                 <option value="">
-                                                    Unassigned
+                                                    {{ t('common.unassigned') }}
                                                 </option>
                                                 <option
                                                     v-for="teknisi in teknisis"
@@ -881,13 +869,13 @@
                                         <div>
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                                >Notes</label
+                                                >{{ t('ticket.notes') }}</label
                                             >
                                             <textarea
                                                 v-model="editingTicket.notes"
                                                 rows="3"
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                                                placeholder="Add notes about this change..."
+                                                :placeholder="t('ticket.addNotesPlaceholder')"
                                             ></textarea>
                                         </div>
                                     </div>
@@ -902,15 +890,15 @@
                                         @click="showEditModal = false"
                                         class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                                     >
-                                        Cancel
+                                        {{ t('common.cancel') }}
                                     </button>
                                     <button
                                         type="submit"
                                         :disabled="updating"
                                         class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
                                     >
-                                        <span v-if="updating">Updating...</span>
-                                        <span v-else>Update Ticket</span>
+                                        <span v-if="updating">{{ t('common.updating') }}</span>
+                                        <span v-else>{{ t('ticket.updateTicket') }}</span>
                                     </button>
                                 </div>
                             </form>
@@ -947,7 +935,7 @@
                                         <h3
                                             class="text-lg font-medium text-gray-900"
                                         >
-                                            Assign Ticket
+                                            {{ t('ticket.assignTicket') }}
                                         </h3>
                                         <button
                                             type="button"
@@ -977,7 +965,7 @@
                                         <div>
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                                >Ticket</label
+                                                >{{ t('ticket.ticket') }}</label
                                             >
                                             <div
                                                 class="p-3 bg-gray-50 rounded-md"
@@ -1000,7 +988,7 @@
                                         <div>
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                                >Assign to Teknisi *</label
+                                                >{{ t('ticket.assignTo') }} {{ t('nav.teknisi') }} *</label
                                             >
                                             <select
                                                 v-model="
@@ -1010,7 +998,7 @@
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                                             >
                                                 <option value="">
-                                                    Select Teknisi
+                                                    {{ t('modal.assignTicketModal.selectTeknisi') }}
                                                 </option>
                                                 <option
                                                     v-for="teknisi in teknisis"
@@ -1028,13 +1016,13 @@
                                         <div>
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                                >Assignment Notes</label
+                                                >{{ t('modal.assignTicketModal.assignmentNotes') }}</label
                                             >
                                             <textarea
                                                 v-model="assignmentData.notes"
                                                 rows="3"
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                                                placeholder="Add notes about this assignment..."
+                                                :placeholder="t('modal.assignTicketModal.addNotesPlaceholder')"
                                             ></textarea>
                                         </div>
                                     </div>
@@ -1049,7 +1037,7 @@
                                         @click="showAssignModal = false"
                                         class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                                     >
-                                        Cancel
+                                        {{ t('common.cancel') }}
                                     </button>
                                     <button
                                         type="submit"
@@ -1057,9 +1045,9 @@
                                         class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
                                     >
                                         <span v-if="assigning"
-                                            >Assigning...</span
+                                            >{{ t('ticket.assigning') }}</span
                                         >
-                                        <span v-else>Assign Ticket</span>
+                                        <span v-else>{{ t('ticket.assignTicket') }}</span>
                                     </button>
                                 </div>
                             </form>
@@ -1096,7 +1084,7 @@
                                         <h3
                                             class="text-lg font-medium text-gray-900"
                                         >
-                                            Bulk Actions
+                                            {{ t('common.bulkActions') }}
                                         </h3>
                                         <button
                                             type="button"
@@ -1126,7 +1114,7 @@
                                         <div>
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                                >Action</label
+                                                >{{ t('action.actions') }}</label
                                             >
                                             <select
                                                 v-model="bulkAction.action"
@@ -1134,19 +1122,19 @@
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                                             >
                                                 <option value="">
-                                                    Select Action
+                                                    {{ t('common.selectAction') }}
                                                 </option>
                                                 <option value="assign">
-                                                    Assign to Teknisi
+                                                    {{ t('actions.assignToTeknisi') }}
                                                 </option>
                                                 <option value="update_status">
-                                                    Update Status
+                                                    {{ t('actions.updateStatus') }}
                                                 </option>
                                                 <option value="update_priority">
-                                                    Update Priority
+                                                    {{ t('actions.updatePriority') }}
                                                 </option>
                                                 <option value="close">
-                                                    Close Tickets
+                                                    {{ t('actions.closeTickets') }}
                                                 </option>
                                             </select>
                                         </div>
@@ -1159,14 +1147,14 @@
                                         >
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                                >Teknisi</label
+                                                >{{ t('nav.teknisi') }}</label
                                             >
                                             <select
                                                 v-model="bulkAction.teknisi_nip"
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                                             >
                                                 <option value="">
-                                                    Select Teknisi
+                                                    {{ t('modal.assignTicketModal.selectTeknisi') }}
                                                 </option>
                                                 <option
                                                     v-for="teknisi in teknisis"
@@ -1188,40 +1176,40 @@
                                         >
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                                >Status</label
+                                                >{{ t('ticket.status') }}</label
                                             >
                                             <select
                                                 v-model="bulkAction.status"
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                                             >
                                                 <option value="open">
-                                                    Open
+                                                    {{ t('status.open') }}
                                                 </option>
                                                 <option value="assigned">
-                                                    Assigned
+                                                    {{ t('status.assigned') }}
                                                 </option>
                                                 <option value="in_progress">
-                                                    In Progress
+                                                    {{ t('status.inProgress') }}
                                                 </option>
                                                 <option value="waiting_user">
-                                                    Waiting User
+                                                    {{ t('status.waitingUser') }}
                                                 </option>
                                                 <option value="waiting_admin">
-                                                    Waiting Admin
+                                                    {{ t('status.waitingAdmin') }}
                                                 </option>
                                                 <option
                                                     value="waiting_response"
                                                 >
-                                                    Waiting Response
+                                                    {{ t('status.waitingResponse') }}
                                                 </option>
                                                 <option value="resolved">
-                                                    Resolved
+                                                    {{ t('status.resolved') }}
                                                 </option>
                                                 <option value="closed">
-                                                    Closed
+                                                    {{ t('status.closed') }}
                                                 </option>
                                                 <option value="cancelled">
-                                                    Cancelled
+                                                    {{ t('status.cancelled') }}
                                                 </option>
                                             </select>
                                         </div>
@@ -1234,21 +1222,21 @@
                                         >
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                                >Priority</label
+                                                >{{ t('ticket.priority') }}</label
                                             >
                                             <select
                                                 v-model="bulkAction.priority"
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                                             >
-                                                <option value="low">Low</option>
+                                                <option value="low">{{ t('priority.low') }}</option>
                                                 <option value="medium">
-                                                    Medium
+                                                    {{ t('priority.medium') }}
                                                 </option>
                                                 <option value="high">
-                                                    High
+                                                    {{ t('priority.high') }}
                                                 </option>
                                                 <option value="urgent">
-                                                    Urgent
+                                                    {{ t('priority.urgent') }}
                                                 </option>
                                             </select>
                                         </div>
@@ -1256,23 +1244,19 @@
                                         <div>
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                                >Notes</label
+                                                >{{ t('ticket.notes') }}</label
                                             >
                                             <textarea
                                                 v-model="bulkAction.notes"
                                                 rows="3"
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                                                placeholder="Add notes about this action..."
+                                                :placeholder="t('ticket.addNotesPlaceholder')"
                                             ></textarea>
                                         </div>
 
                                         <div class="p-3 bg-blue-50 rounded-md">
                                             <p class="text-sm text-blue-800">
-                                                This action will be applied to
-                                                {{
-                                                    selectedTickets.length
-                                                }}
-                                                selected tickets.
+                                                {{ t('modal.bulkActionModal.description', { count: selectedTickets.length }) }}
                                             </p>
                                         </div>
                                     </div>
@@ -1287,7 +1271,7 @@
                                         @click="showBulkActionModal = false"
                                         class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                                     >
-                                        Cancel
+                                        {{ t('common.cancel') }}
                                     </button>
                                     <button
                                         type="submit"
@@ -1295,9 +1279,9 @@
                                         class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
                                     >
                                         <span v-if="processingBulk"
-                                            >Processing...</span
+                                            >{{ t('common.processing') }}</span
                                         >
-                                        <span v-else>Apply Action</span>
+                                        <span v-else>{{ t('common.applyAction') }}</span>
                                     </button>
                                 </div>
                             </form>
@@ -1313,8 +1297,11 @@
 import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { Link, router } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
+import { useI18n } from "vue-i18n";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import SimplePagination from "@/Components/Common/SimplePagination.vue";
+
+const { t, locale } = useI18n();
 
 const props = defineProps({
     tickets: {
@@ -1517,13 +1504,13 @@ const createTicket = async () => {
             });
         } else {
             alert(
-                "Failed to create ticket: " +
-                    (data.errors?.join(", ") || "Unknown error")
+                t('message.createTicketFailed') +
+                    (data.errors?.join(", ") || t('message.unknownError'))
             );
         }
     } catch (error) {
         console.error("Error creating ticket:", error);
-        alert("Failed to create ticket. Please try again.");
+        alert(t('message.createTicketGenericFailed'));
     } finally {
         creating.value = false;
     }
@@ -1557,13 +1544,13 @@ const updateTicket = async () => {
             });
         } else {
             alert(
-                "Failed to update ticket: " +
-                    (data.errors?.join(", ") || "Unknown error")
+                t('message.updateTicketFailed') +
+                    (data.errors?.join(", ") || t('message.unknownError'))
             );
         }
     } catch (error) {
         console.error("Error updating ticket:", error);
-        alert("Failed to update ticket. Please try again.");
+        alert(t('message.updateTicketGenericFailed'));
     } finally {
         updating.value = false;
     }
@@ -1597,13 +1584,13 @@ const performAssignment = async () => {
             });
         } else {
             alert(
-                "Failed to assign ticket: " +
-                    (data.errors?.join(", ") || "Unknown error")
+                t('message.assignTicketFailed') +
+                    (data.errors?.join(", ") || t('message.unknownError'))
             );
         }
     } catch (error) {
         console.error("Error assigning ticket:", error);
-        alert("Failed to assign ticket. Please try again.");
+        alert(t('message.assignTicketGenericFailed'));
     } finally {
         assigning.value = false;
     }
@@ -1646,20 +1633,21 @@ const performBulkAction = async () => {
             // Show detailed success message
             if (data.summary) {
                 const successMsg =
-                    `Bulk action completed successfully!\n` +
-                    `Total: ${data.summary.total} tickets\n` +
-                    `Successful: ${data.summary.successful} tickets\n` +
-                    `Failed: ${data.summary.failed} tickets`;
+                    t('message.bulkActionSummary', {
+                        total: data.summary.total,
+                        successful: data.summary.successful,
+                        failed: data.summary.failed
+                    });
                 alert(successMsg);
             } else {
-                alert(data.message || "Bulk action completed successfully");
+                alert(data.message || t('message.bulkActionCompleted'));
             }
         } else {
             // Handle different types of errors
-            let errorMessage = "Failed to perform bulk action";
+            let errorMessage = t('message.bulkActionFailed');
 
             if (!response.ok) {
-                errorMessage = `Server error: ${response.status} ${response.statusText}`;
+                errorMessage = t('message.serverErrorBulkAction', { status: response.status, statusText: response.statusText });
             } else if (data.errors && Array.isArray(data.errors)) {
                 errorMessage =
                     "Failed to perform bulk action:\n" + data.errors.join("\n");
@@ -1678,7 +1666,7 @@ const performBulkAction = async () => {
     } catch (error) {
         console.error("Error performing bulk action:", error);
         alert(
-            "Network error: Failed to perform bulk action. Please check your connection and try again."
+            t('message.networkErrorBulkAction')
         );
     } finally {
         processingBulk.value = false;

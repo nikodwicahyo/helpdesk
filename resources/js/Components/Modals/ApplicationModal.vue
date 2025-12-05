@@ -310,7 +310,7 @@ const submit = async () => {
 };
 
 const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
+    if (!dateString) return t('common.notAvailable');
     const lang = document.documentElement.lang;
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     

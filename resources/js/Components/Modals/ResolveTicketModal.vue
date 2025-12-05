@@ -35,7 +35,7 @@
                                             </svg>
                                         </div>
                                         <DialogTitle as="h3" class="ml-4 text-xl font-semibold leading-6 text-gray-900">
-                                            Resolve Ticket
+                                            {{ t('modal.resolveTicket.title') }}
                                         </DialogTitle>
                                     </div>
                                     <button
@@ -66,7 +66,7 @@
                                     <!-- Resolution Notes -->
                                     <div>
                                         <label for="resolution_notes" class="block text-sm font-medium text-gray-700 mb-2">
-                                            Resolution Notes <span class="text-red-500">*</span>
+                                            {{ t('modal.resolveTicket.resolutionNotes') }} <span class="text-red-500">*</span>
                                         </label>
                                         <textarea
                                             v-model="form.resolution_notes"
@@ -74,7 +74,7 @@
                                             rows="4"
                                             required
                                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
-                                            placeholder="Describe the steps taken to resolve the issue..."
+                                            :placeholder="t('modal.resolveTicket.resolutionNotesPlaceholder')"
                                         ></textarea>
                                         <p v-if="errors.resolution_notes" class="mt-1 text-sm text-red-600">{{ errors.resolution_notes }}</p>
                                     </div>
@@ -82,7 +82,7 @@
                                     <!-- Solution Summary -->
                                     <div>
                                         <label for="solution_summary" class="block text-sm font-medium text-gray-700 mb-2">
-                                            Solution Summary <span class="text-red-500">*</span>
+                                            {{ t('modal.resolveTicket.solutionSummary') }} <span class="text-red-500">*</span>
                                         </label>
                                         <textarea
                                             v-model="form.solution_summary"
@@ -91,17 +91,17 @@
                                             required
                                             maxlength="500"
                                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
-                                            placeholder="Brief summary of the solution for the user..."
+                                            :placeholder="t('modal.resolveTicket.solutionSummaryPlaceholder')"
                                         ></textarea>
-                                        <p class="mt-1 text-xs text-gray-500">{{ form.solution_summary?.length || 0 }}/500 characters</p>
+                                        <p class="mt-1 text-xs text-gray-500">{{ form.solution_summary?.length || 0 }}/500 {{ t('common.characters') }}</p>
                                         <p v-if="errors.solution_summary" class="mt-1 text-sm text-red-600">{{ errors.solution_summary }}</p>
                                     </div>
 
                                     <!-- Technical Notes (Internal) -->
                                     <div>
                                         <label for="technical_notes" class="block text-sm font-medium text-gray-700 mb-2">
-                                            Technical Notes
-                                            <span class="text-gray-400 text-xs ml-1">(Internal - not visible to user)</span>
+                                            {{ t('modal.resolveTicket.technicalNotes') }}
+                                            <span class="text-gray-400 text-xs ml-1">{{ t('modal.resolveTicket.technicalNotesHint') }}</span>
                                         </label>
                                         <textarea
                                             v-model="form.technical_notes"
@@ -109,15 +109,15 @@
                                             rows="3"
                                             maxlength="1000"
                                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
-                                            placeholder="Technical details for future reference..."
+                                            :placeholder="t('modal.resolveTicket.technicalNotesPlaceholder')"
                                         ></textarea>
                                     </div>
 
                                     <!-- File Upload -->
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                                            Solution Documentation
-                                            <span class="text-gray-400 text-xs ml-1">(Optional - screenshots, documents)</span>
+                                            {{ t('modal.resolveTicket.solutionDocumentation') }}
+                                            <span class="text-gray-400 text-xs ml-1">{{ t('modal.resolveTicket.solutionDocumentationHint') }}</span>
                                         </label>
                                         <div
                                             class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-green-400 transition-colors"
@@ -130,7 +130,7 @@
                                                 </svg>
                                                 <div class="flex text-sm text-gray-600">
                                                     <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-green-600 hover:text-green-500 focus-within:outline-none">
-                                                        <span>Upload files</span>
+                                                        <span>{{ t('modal.resolveTicket.uploadFiles') }}</span>
                                                         <input
                                                             id="file-upload"
                                                             type="file"
@@ -140,9 +140,9 @@
                                                             @change="handleFileSelect"
                                                         />
                                                     </label>
-                                                    <p class="pl-1">or drag and drop</p>
+                                                    <p class="pl-1">{{ t('modal.resolveTicket.orDragAndDrop') }}</p>
                                                 </div>
-                                                <p class="text-xs text-gray-500">PNG, JPG, PDF, DOC up to 2MB each</p>
+                                                <p class="text-xs text-gray-500">{{ t('modal.resolveTicket.fileUploadHint') }}</p>
                                             </div>
                                         </div>
 
@@ -182,7 +182,7 @@
                                             class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                                         />
                                         <label for="add_to_kb" class="ml-2 block text-sm text-gray-900">
-                                            Add solution to Knowledge Base
+                                            {{ t('modal.resolveTicket.addSolutionToKb') }}
                                         </label>
                                     </div>
 
@@ -214,7 +214,7 @@
                                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
-                                    {{ submitting ? 'Resolving...' : 'Resolve Ticket' }}
+                                    {{ submitting ? t('modal.resolveTicket.resolving') : t('modal.resolveTicket.resolveTicketButton') }}
                                 </button>
                                 <button
                                     type="button"
@@ -222,7 +222,7 @@
                                     :disabled="submitting"
                                     class="mt-3 inline-flex w-full justify-center rounded-lg bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                                 >
-                                    Cancel
+                                    {{ t('common.cancel') }}
                                 </button>
                             </div>
                         </DialogPanel>
@@ -237,6 +237,9 @@
 import { ref, computed, watch } from 'vue';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import axios from 'axios';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
     show: {
@@ -298,23 +301,22 @@ const addFiles = (files) => {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'];
     const maxSize = 2 * 1024 * 1024; // 2MB
 
-    files.forEach(file => {
-        if (!allowedTypes.includes(file.type)) {
-            errors.value.files = `File type not allowed: ${file.name}`;
-            return;
-        }
-        if (file.size > maxSize) {
-            errors.value.files = `File too large: ${file.name} (max 2MB)`;
-            return;
-        }
-        if (selectedFiles.value.length >= 5) {
-            errors.value.files = 'Maximum 5 files allowed';
-            return;
-        }
-        selectedFiles.value.push(file);
-    });
-};
-
+            files.forEach(file => {
+                if (!allowedTypes.includes(file.type)) {
+                    errors.value.files = t('modal.resolveTicket.fileTypeNotAllowed', { fileName: file.name });
+                    return;
+                }
+                if (file.size > maxSize) {
+                    errors.value.files = t('modal.resolveTicket.fileTooLarge', { fileName: file.name, maxSize: formatFileSize(maxSize) });
+                    return;
+                }
+                if (selectedFiles.value.length >= 5) {
+                    errors.value.files = t('modal.resolveTicket.maxFilesAllowed', { maxFiles: 5 });
+                    return;
+                }
+                selectedFiles.value.push(file);
+            });
+        };
 const removeFile = (index) => {
     selectedFiles.value.splice(index, 1);
     delete errors.value.files;
@@ -371,10 +373,10 @@ const handleSubmit = async () => {
             if (Array.isArray(responseErrors)) {
                 errors.value = { general: responseErrors.join(', ') };
             } else {
-                errors.value = responseErrors || { general: 'Validation failed' };
+                errors.value = responseErrors || { general: t('modal.resolveTicket.validationFailed') };
             }
         } else {
-            errors.value = { general: error.response?.data?.message || 'Failed to resolve ticket. Please try again.' };
+            errors.value = { general: error.response?.data?.message || t('modal.resolveTicket.failedToResolve') };
         }
     } finally {
         submitting.value = false;

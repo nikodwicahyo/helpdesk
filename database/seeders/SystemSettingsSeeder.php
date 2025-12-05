@@ -49,7 +49,7 @@ class SystemSettingsSeeder extends Seeder
             ['key' => 'max_concurrent_tickets', 'value' => '10', 'type' => 'integer', 'category' => 'tickets', 'description' => 'Max concurrent tickets per teknisi', 'is_public' => false],
             ['key' => 'escalation_urgent_hours', 'value' => '2', 'type' => 'integer', 'category' => 'tickets', 'description' => 'Escalate urgent tickets if unassigned after X hours', 'is_public' => false],
             ['key' => 'escalation_high_hours', 'value' => '4', 'type' => 'integer', 'category' => 'tickets', 'description' => 'Escalate high priority tickets if unassigned after X hours', 'is_public' => false],
-            ['key' => 'allow_reopening', 'value' => '1', 'type' => 'boolean', 'category' => 'tickets', 'description' => 'Allow users to reopen closed tickets', 'is_public' => false],
+            ['key' => 'allow_reopening', 'value' => 'within_7d', 'type' => 'string', 'category' => 'tickets', 'description' => 'Allow users to reopen closed tickets (disabled, within_24h, within_7d, always)', 'is_public' => false],
             ['key' => 'require_category', 'value' => '1', 'type' => 'boolean', 'category' => 'tickets', 'description' => 'Require category selection for tickets', 'is_public' => false],
             ['key' => 'allow_attachments', 'value' => '1', 'type' => 'boolean', 'category' => 'tickets', 'description' => 'Allow file attachments on tickets', 'is_public' => false],
 

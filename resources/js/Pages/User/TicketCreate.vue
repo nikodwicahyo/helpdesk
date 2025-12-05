@@ -428,11 +428,11 @@ const props = defineProps({
     },
 });
 
-const breadcrumbs = [
-    { label: "Dashboard", href: route("user.dashboard") },
-    { label: "Tickets", href: route("user.tickets.index") },
-    { label: t("ticket.createNewTicket") },
-];
+const breadcrumbs = computed(() => ([
+    { label: t('nav.dashboard'), href: route('user.dashboard') },
+    { label: t('nav.tickets'), href: route('user.tickets.index') },
+    { label: t('ticket.createNewTicket') },
+]));
 
 const availableCategories = ref([]);
 const loadingCategories = ref(false);

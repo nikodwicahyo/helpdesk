@@ -7,7 +7,7 @@
                         {{ t('nav.applications') }}
                     </h1>
                     <p class="text-gray-600 mt-1">
-                        {{ t('activityLog.description') }}
+                        {{ t('adminHelpdesk.applications.description') }}
                     </p>
                 </div>
                 <div class="flex items-center space-x-4">
@@ -46,7 +46,7 @@
         <!-- Statistics Overview -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <StatCard
-                :title="t('activityLog.totalActivities')"
+                :title="t('applications.stats.totalApplications')"
                 :value="stats.total_applications"
                 icon="💻"
                 color="blue"
@@ -175,7 +175,7 @@
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h2 class="text-lg font-semibold text-gray-900">
-                    {{ t('activityLog.title') }}
+                    {{ t('nav.applications') }}
                 </h2>
             </div>
 
@@ -282,7 +282,7 @@
                                     </div>
                                 </div>
                                 <span v-else class="text-sm text-gray-400"
-                                    >Not assigned</span
+                                    >{{ t('common.notAssigned') }}</span
                                 >
                             </td>
                             <td class="px-6 py-4">
@@ -297,14 +297,14 @@
                                     </div>
                                     <div class="text-xs text-gray-500">
                                         <span class="text-yellow-600"
-                                            >{{ app.open_tickets }} open</span
+                                            >{{ app.open_tickets }} {{ t('status.open') }}</span
                                         >
                                         /
                                         <span class="text-green-600"
                                             >{{
                                                 app.resolved_tickets
                                             }}
-                                            resolved</span
+                                            {{ t('status.resolved') }}</span
                                         >
                                     </div>
                                 </div>
@@ -335,7 +335,7 @@
                                     <button
                                         @click="editApplication(app)"
                                         class="text-blue-600 hover:text-blue-800"
-                                        title="Edit Application"
+                                        :title="t('common.edit') + ' ' + t('nav.applications')"
                                     >
                                         <svg
                                             class="w-5 h-5"
@@ -354,7 +354,7 @@
                                     <button
                                         @click="viewApplication(app.id)"
                                         class="text-indigo-600 hover:text-indigo-800"
-                                        title="View Details"
+                                        :title="t('common.viewDetails')"
                                     >
                                         <svg
                                             class="w-5 h-5"
@@ -385,8 +385,8 @@
                                         "
                                         :title="
                                             app.status === 'active'
-                                                ? 'Deactivate'
-                                                : 'Activate'
+                                                ? t('common.deactivate')
+                                                : t('common.activate')
                                         "
                                     >
                                         <svg
@@ -444,7 +444,7 @@
         <!-- Application Details Modal -->
         <Modal
             v-model:show="showApplicationModal"
-            title="Application Details"
+            :title="t('common.applicationDetails')"
             size="xl"
             @close="closeApplicationModal"
         >
@@ -660,13 +660,12 @@ const exportApplications = async () => {
         // Show success notification
         const successDiv = document.createElement('div');
         successDiv.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center';
-        successDiv.innerHTML = `
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-            Export started! Download will begin shortly.
-        `;
-        document.body.appendChild(successDiv);
+                    successDiv.innerHTML = `
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    ${t('message.exportStarted')}
+                `;        document.body.appendChild(successDiv);
 
         setTimeout(() => {
             if (document.body.contains(successDiv)) {
@@ -678,14 +677,14 @@ const exportApplications = async () => {
         console.error('Export failed:', error);
 
         // Show error notification
-        const errorMessage = error.message || 'Unknown error occurred during export';
+        const errorMessage = error.message || t('message.unknownExportError');
         const errorDiv = document.createElement('div');
         errorDiv.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center';
         errorDiv.innerHTML = `
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
-            Export failed: ${errorMessage}
+            ${t('message.exportFailed')}: ${errorMessage}
         `;
         document.body.appendChild(errorDiv);
 

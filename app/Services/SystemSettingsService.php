@@ -353,4 +353,192 @@ class SystemSettingsService
         $value = SystemSetting::get($key, $default);
         return is_array($value) ? $value : $default;
     }
+
+    /**
+     * Get password validation rules based on system settings.
+     */
+    public static function getPasswordValidationRules(bool $required = true): array
+    {
+        $minLength = SystemSetting::get('password_min_length', 8);
+        $requireUppercase = SystemSetting::get('password_require_uppercase', true);
+        $requireLowercase = SystemSetting::get('password_require_lowercase', true);
+        $requireNumbers = SystemSetting::get('password_require_numbers', true);
+        $requireSymbols = SystemSetting::get('password_require_symbols', false);
+
+        $rules = [];
+
+        if ($required) {
+            $rules[] = 'required';
+        } else {
+            $rules[] = 'nullable';
+        }
+
+        $rules[] = 'string';
+        $rules[] = "min:{$minLength}";
+        $rules[] = 'max:128';
+
+        // Build regex pattern based on requirements
+        $regexParts = [];
+
+        if ($requireUppercase) {
+            $regexParts[] = '(?=.*[A-Z])';
+        }
+
+        if ($requireLowercase) {
+            $regexParts[] = '(?=.*[a-z])';
+        }
+
+        if ($requireNumbers) {
+            $regexParts[] = '(?=.*\d)';
+        }
+
+        if ($requireSymbols) {
+            $regexParts[] = '(?=.*[@$!%*?&])';
+        }
+
+        if (!empty($regexParts)) {
+            $regex = '/^' . implode('', $regexParts) . '.+$/';
+            $rules[] = "regex:{$regex}";
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Get password validation rules as a string (for simple validation).
+     */
+    public static function getPasswordValidationString(bool $required = true): string
+    {
+        return implode('|', self::getPasswordValidationRules($required));
+    }
+
+    /**
+     * Get file upload validation rules based on system settings.
+     */
+    public static function getFileValidationRules(): array
+    {
+        $maxSizeKb = SystemSetting::get('max_file_size', 2) * 1024; // Convert MB to KB
+        $allowedTypes = SystemSetting::get('allowed_file_types', 'pdf,doc,docx,jpg,jpeg,png');
+
+        return [
+            'file',
+            "max:{$maxSizeKb}",
+            "mimes:{$allowedTypes}",
+        ];
+    }
+
+    /**
+     * Get file upload validation rules as a string.
+     */
+    public static function getFileValidationString(): string
+    {
+        return implode('|', self::getFileValidationRules());
+    }
+
+    /**
+     * Get maximum files per ticket.
+     */
+    public static function getMaxFilesPerTicket(): int
+    {
+        return (int) SystemSetting::get('max_files_per_ticket', 5);
+    }
+
+    /**
+     * Get maximum file size in MB.
+     */
+    public static function getMaxFileSize(): int
+    {
+        return (int) SystemSetting::get('max_file_size', 2);
+    }
+
+    /**
+     * Get allowed file types as array.
+     */
+    public static function getAllowedFileTypes(): array
+    {
+        $types = SystemSetting::get('allowed_file_types', 'pdf,doc,docx,jpg,jpeg,png');
+        return array_map('trim', explode(',', $types));
+    }
+
+    /**
+     * Get items per page setting.
+     */
+    public static function getItemsPerPage(): int
+    {
+        return (int) SystemSetting::get('items_per_page', 15);
+    }
+
+    /**
+     * Get session timeout in minutes.
+     */
+    public static function getSessionTimeout(): int
+    {
+        return (int) SystemSetting::get('session_timeout', 120);
+    }
+
+    /**
+     * Get SLA settings for a specific priority.
+     */
+    public static function getSlaForPriority(string $priority): array
+    {
+        $priority = strtolower($priority);
+
+        return [
+            'response_hours' => (int) SystemSetting::get("sla_{$priority}_response", match ($priority) {
+                'urgent' => 2,
+                'high' => 4,
+                'medium' => 8,
+                'low' => 24,
+                default => 8,
+            }),
+            'resolution_hours' => (int) SystemSetting::get("sla_{$priority}_resolution", match ($priority) {
+                'urgent' => 8,
+                'high' => 24,
+                'medium' => 48,
+                'low' => 120,
+                default => 48,
+            }),
+        ];
+    }
+
+    /**
+     * Check if auto-assignment is enabled.
+     */
+    public static function isAutoAssignEnabled(): bool
+    {
+        return (bool) SystemSetting::get('auto_assign_enabled', false);
+    }
+
+    /**
+     * Get auto-assignment algorithm.
+     */
+    public static function getAutoAssignAlgorithm(): string
+    {
+        return (string) SystemSetting::get('auto_assign_algorithm', 'load_balanced');
+    }
+
+    /**
+     * Get working hours configuration.
+     */
+    public static function getWorkingHours(): array
+    {
+        return [
+            'start' => SystemSetting::get('working_hours_start', '08:00'),
+            'end' => SystemSetting::get('working_hours_end', '17:00'),
+            'days' => SystemSetting::get('working_days', [1, 2, 3, 4, 5]),
+        ];
+    }
+
+    /**
+     * Get security settings for login.
+     */
+    public static function getLoginSecuritySettings(): array
+    {
+        return [
+            'max_attempts' => (int) SystemSetting::get('max_login_attempts', 5),
+            'lockout_duration' => (int) SystemSetting::get('lockout_duration', 15),
+            'enable_two_factor' => (bool) SystemSetting::get('enable_two_factor', false),
+            'login_notifications' => (bool) SystemSetting::get('login_notifications', false),
+        ];
+    }
 }

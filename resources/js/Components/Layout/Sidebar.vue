@@ -101,7 +101,6 @@ const menuItems = computed(() => {
       { name: t('nav.reports'), href: '/admin/reports', icon: '📊', badge: null },
       { name: t('nav.analytics'), href: '/admin/analytics', icon: '📈', badge: null },
       { name: t('nav.activityLog'), href: '/admin/activity-log', icon: '📝', badge: null },
-      { name: t('nav.systemSettings'), href: '/admin/system-settings', icon: '⚙️', badge: null }
     ],
     'admin_aplikasi': [
       { name: t('nav.dashboard'), href: '/admin-aplikasi/dashboard', icon: '🏠', badge: null },
@@ -134,26 +133,26 @@ const menuItems = computed(() => {
 });
 
 const secondaryMenuItems = computed(() => {
-  // Remove Settings from secondary if it's already in main menu
-  const mainItems = menuItems.value;
-  const hasSettingsInMain = mainItems.some(item => item.name.toLowerCase().includes('settings'));
-
   const items = [];
 
   // Support for legacy role mapping
   const roleKey = props.role === 'admin' ? 'admin_helpdesk' : props.role;
 
-  if (!hasSettingsInMain) {
-    // Add settings based on role
-    let settingsUrl;
-    if (roleKey === 'admin_helpdesk') {
-      settingsUrl = '/admin/system-settings';
-    } else if (roleKey === 'admin_aplikasi') {
-      settingsUrl = '/admin-aplikasi/profile';
-    } else {
-      settingsUrl = `/${roleKey}/profile`;
-    }
-    items.push({ name: t('nav.settings'), href: settingsUrl, icon: '⚙️' });
+  // Add 'Profile' for every role
+  let profileUrl;
+  if (roleKey === 'admin_helpdesk') {
+    profileUrl = '/admin/profile';
+  } else if (roleKey === 'admin_aplikasi') {
+    profileUrl = '/admin-aplikasi/profile';
+  } else {
+    profileUrl = `/${roleKey}/profile`;
+  }
+  items.push({ name: t('nav.myProfile'), href: profileUrl, icon: '👤' });
+
+  // Add 'Settings' only for admin_helpdesk
+  const hasSettingsInMain = menuItems.value.some(item => item.name.toLowerCase().includes('settings'));
+  if (roleKey === 'admin_helpdesk' && !hasSettingsInMain) {
+    items.push({ name: t('nav.systemSettings'), href: '/admin/system-settings', icon: '⚙️' });
   }
 
   return items;

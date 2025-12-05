@@ -10,8 +10,8 @@
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-3xl font-bold text-gray-900">Analytics Dashboard</h1>
-                        <p class="text-gray-600">System performance and ticket analysis</p>
+                        <h1 class="text-3xl font-bold text-gray-900">{{ t('analytics.pageTitle') }}</h1>
+                        <p class="text-gray-600">{{ t('analytics.subtitle') }}</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
@@ -22,7 +22,7 @@
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 4l4 4v8h8l-4-4V6a2 2 0 01-2 2v6a2 2 0 002-2z"/>
                         </svg>
-                        Export JSON
+                        {{ t('analytics.exportJson') }}
                     </button>
                     <button
                         @click="exportData('csv')"
@@ -31,7 +31,7 @@
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 4l4 4v8h8l-4-4V6a2 2 0 01-2 2v6a2 2 0 002-2z"/>
                         </svg>
-                        Export CSV
+                        {{ t('analytics.exportCsv') }}
                     </button>
                 </div>
             </div>
@@ -50,7 +50,7 @@
                     </div>
                     <div class="ml-4">
                         <h3 class="text-2xl font-bold text-gray-900">{{ analytics.overview.total_tickets.toLocaleString() }}</h3>
-                        <p class="text-gray-600 mt-1">Total Tickets</p>
+                        <p class="text-gray-600 mt-1">{{ t('analytics.totalTickets') }}</p>
                         <div class="mt-2">
                             <div class="w-full bg-gray-200 rounded-full h-2">
                                 <div 
@@ -72,7 +72,7 @@
                     </div>
                     <div class="ml-4">
                         <h3 class="text-2xl font-bold text-yellow-600">{{ analytics.overview.open_tickets.toLocaleString() }}</h3>
-                        <p class="text-gray-600 mt-1">Open Tickets</p>
+                        <p class="text-gray-600 mt-1">{{ t('analytics.openTickets') }}</p>
                         <div class="mt-2">
                             <div class="w-full bg-gray-200 rounded-full h-2">
                                 <div 
@@ -94,7 +94,7 @@
                     </div>
                     <div class="ml-4">
                         <h3 class="text-2xl font-bold text-blue-600">{{ analytics.overview.in_progress_tickets.toLocaleString() }}</h3>
-                        <p class="text-gray-600 mt-1">In Progress</p>
+                        <p class="text-gray-600 mt-1">{{ t('analytics.inProgress') }}</p>
                         <div class="mt-2">
                             <div class="w-full bg-gray-200 rounded-full h-2">
                                 <div 
@@ -116,7 +116,7 @@
                     </div>
                     <div class="ml-4">
                         <h3 class="text-2xl font-bold text-green-600">{{ analytics.overview.resolved_today.toLocaleString() }}</h3>
-                        <p class="text-gray-600 mt-1">Resolved Today</p>
+                        <p class="text-gray-600 mt-1">{{ t('analytics.resolvedToday') }}</p>
                         <div class="mt-2">
                             <div class="w-full bg-gray-200 rounded-full h-2">
                                 <div 
@@ -133,9 +133,9 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 <!-- Status Distribution Chart -->
                 <div class="bg-white shadow-lg rounded-xl p-6 border border-gray-100">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Ticket Status Distribution</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ t('analytics.ticketStatusDistribution') }}</h3>
                     <div class="h-64 flex items-center justify-center" v-if="!hasStatusData">
-                        <p class="text-gray-500 italic">No status data available</p>
+                        <p class="text-gray-500 italic">{{ t('analytics.noStatusData') }}</p>
                     </div>
                     <div class="h-64" v-else>
                         <canvas ref="statusChart"></canvas>
@@ -144,9 +144,9 @@
 
                 <!-- Priority Distribution Chart -->
                 <div class="bg-white shadow-lg rounded-xl p-6 border border-gray-100">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Priority Distribution</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ t('analytics.priorityDistribution') }}</h3>
                     <div class="h-64 flex items-center justify-center" v-if="!hasPriorityData">
-                        <p class="text-gray-500 italic">No priority data available</p>
+                        <p class="text-gray-500 italic">{{ t('analytics.noPriorityData') }}</p>
                     </div>
                     <div class="h-64" v-else>
                         <canvas ref="priorityChart"></canvas>
@@ -156,7 +156,7 @@
 
             <!-- Application Breakdown -->
             <div class="bg-white shadow-lg rounded-xl p-6 border border-gray-100 mb-8">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Applications by Tickets</h3>
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ t('analytics.topApplicationsByTickets') }}</h3>
                 <div class="space-y-3" v-if="analytics.trends.application_breakdown.length > 0">
                     <div
                         v-for="item in analytics.trends.application_breakdown"
@@ -167,7 +167,7 @@
                             <span class="font-medium text-gray-900 truncate">{{ item.name }}</span>
                         </div>
                         <div class="w-2/3 flex items-center">
-                            <div class="text-sm text-gray-600 w-16">{{ item.count }} tickets</div>
+                            <div class="text-sm text-gray-600 w-16">{{ item.count }} {{ t('analytics.tickets') }}</div>
                             <div class="flex-1 ml-4">
                                 <div class="w-full bg-gray-200 rounded-full h-2">
                                     <div class="bg-blue-600 h-2 rounded-full transition-all duration-500"
@@ -178,7 +178,7 @@
                     </div>
                 </div>
                 <div v-else class="text-center py-8 text-gray-500 italic">
-                    No application breakdown data available
+                    {{ t('analytics.noApplicationBreakdown') }}
                 </div>
             </div>
 
@@ -186,13 +186,13 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 <!-- Top Users -->
                 <div class="bg-white shadow-lg rounded-xl p-6 border border-gray-100">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Users by Tickets</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ t('analytics.topUsersByTickets') }}</h3>
                     <div class="overflow-x-auto" v-if="Object.keys(analytics.performance.top_users).length > 0">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tickets</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('common.name') }}</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('analytics.tickets') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
@@ -204,21 +204,21 @@
                         </table>
                     </div>
                     <div v-else class="text-center py-8 text-gray-500 italic">
-                        No user data available
+                        {{ t('analytics.noUserData') }}
                     </div>
                 </div>
 
                 <!-- Top Teknisi -->
                 <div class="bg-white shadow-lg rounded-xl p-6 border border-gray-100">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Teknisi Performance</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ t('analytics.teknisiPerformance') }}</h3>
                     <div class="overflow-x-auto" v-if="analytics.performance.top_teknisi.length > 0">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teknisi</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resolved</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rate</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('analytics.teknisi') }}</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('analytics.assigned') }}</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('analytics.resolved') }}</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('analytics.rate') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
@@ -232,7 +232,7 @@
                         </table>
                     </div>
                     <div v-else class="text-center py-8 text-gray-500 italic">
-                        No teknisi performance data available
+                        {{ t('analytics.noTeknisiPerformance') }}
                     </div>
                 </div>
             </div>
@@ -243,7 +243,10 @@
 <script setup>
 import { ref, onMounted, nextTick, computed } from 'vue';
 import { Link, router } from '@inertiajs/vue3';
+import { useI18n } from 'vue-i18n';
 import AppLayout from '@/Layouts/AppLayout.vue';
+
+const { t } = useI18n();
 
 const props = defineProps({
     analytics: {

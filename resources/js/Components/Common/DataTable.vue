@@ -7,7 +7,7 @@
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Search..."
+            :placeholder="t('dataTable.searchPlaceholder')"
             class="w-full md:w-64 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
           />
         </div>
@@ -23,7 +23,7 @@
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              Export
+              {{ t('dataTable.export') }}
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
               </svg>
@@ -38,7 +38,7 @@
                 <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-5L9 2H4z" clip-rule="evenodd"/>
                 </svg>
-                Export as Excel
+                {{ t('dataTable.exportExcel') }}
               </button>
               <button
                 @click="exportData('pdf')"
@@ -47,7 +47,7 @@
                 <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-5L9 2H4z" clip-rule="evenodd"/>
                 </svg>
-                Export as PDF
+                {{ t('dataTable.exportPdf') }}
               </button>
             </div>
           </div>
@@ -106,7 +106,7 @@
                 </div>
               </th>
               <th v-if="hasActions" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
+                {{ t('common.actions') }}
               </th>
             </tr>
           </thead>
@@ -159,7 +159,7 @@
                   <svg class="w-12 h-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
                   </svg>
-                  <p>No data available</p>
+                  <p>{{ t('dataTable.noDataAvailable') }}</p>
                 </div>
               </td>
             </tr>
@@ -190,7 +190,11 @@
     <div v-if="showPagination && filteredData.length > perPage" class="px-6 py-4 border-t border-gray-200 bg-gray-50">
       <div class="flex items-center justify-between">
         <div class="text-sm text-gray-700">
-          Showing {{ ((currentPage - 1) * perPage) + 1 }} to {{ Math.min(currentPage * perPage, filteredData.length) }} of {{ filteredData.length }} results
+          {{ t('dataTable.pageOfTotal', {
+            from: ((currentPage - 1) * perPage) + 1,
+            to: Math.min(currentPage * perPage, filteredData.length),
+            total: filteredData.length
+          }) }}
         </div>
         <div class="flex gap-2">
           <button
@@ -198,7 +202,7 @@
             :disabled="currentPage === 1"
             class="px-3 py-1 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition"
           >
-            Previous
+            {{ t('dataTable.previous') }}
           </button>
           <button
             v-for="page in totalPages"
@@ -218,7 +222,7 @@
             :disabled="currentPage === totalPages"
             class="px-3 py-1 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition"
           >
-            Next
+            {{ t('dataTable.next') }}
           </button>
         </div>
       </div>
@@ -228,6 +232,9 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   columns: {

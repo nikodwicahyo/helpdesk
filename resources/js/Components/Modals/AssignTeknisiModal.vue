@@ -36,13 +36,13 @@
                                         <div class="flex flex-wrap gap-2">
                                             <span
                                                 v-for="teknisi in currentlyAssigned"
-                                                :key="teknisi.id"
+                                                :key="teknisi.nip"
                                                 class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800"
                                             >
                                                 {{ teknisi.name }}
                                                 <button
                                                     type="button"
-                                                    @click="removeTeknisi(teknisi.id)"
+                                                    @click="removeTeknisi(teknisi.nip)"
                                                     class="ml-2 text-blue-600 hover:text-blue-800"
                                                 >
                                                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
@@ -71,13 +71,13 @@
                                             <div class="divide-y divide-gray-200">
                                                 <label
                                                     v-for="teknisi in filteredTeknisis"
-                                                    :key="teknisi.id"
+                                                    :key="teknisi.nip"
                                                     class="flex items-center p-3 hover:bg-gray-50 cursor-pointer"
                                                 >
                                                     <input
                                                         type="checkbox"
-                                                        :checked="isTeknisiSelected(teknisi.id)"
-                                                        @change="toggleTeknisi(teknisi.id)"
+                                                        :checked="isTeknisiSelected(teknisi.nip)"
+                                                        @change="toggleTeknisi(teknisi.nip)"
                                                         class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                                                     >
                                                     <div class="ml-3 flex-1">
@@ -178,25 +178,25 @@ const selectedTeknisis = ref([]);
 const currentlyAssigned = ref([]);
 
 const form = useForm({
-    teknisi_ids: []
+    teknisi_nips: []
 });
 
 // Initialize with currently assigned teknisi
 watch(() => props.application, (app) => {
     if (app) {
         currentlyAssigned.value = app.assigned_teknisis || [];
-        selectedTeknisis.value = (app.assigned_teknisis || []).map(t => t.id);
+        selectedTeknisis.value = (app.assigned_teknisis || []).map(t => t.nip);
     }
 }, { immediate: true });
 
 const filteredTeknisis = computed(() => {
     if (!searchTerm.value) {
-        return props.teknisis.filter(t => !selectedTeknisis.value.includes(t.id));
+        return props.teknisis.filter(t => !selectedTeknisis.value.includes(t.nip));
     }
 
     const search = searchTerm.value.toLowerCase();
     return props.teknisis.filter(teknisi => {
-        const isNotSelected = !selectedTeknisis.value.includes(teknisi.id);
+        const isNotSelected = !selectedTeknisis.value.includes(teknisi.nip);
         const matchesSearch =
             teknisi.name.toLowerCase().includes(search) ||
             (teknisi.email && teknisi.email.toLowerCase().includes(search)) ||
@@ -207,36 +207,47 @@ const filteredTeknisis = computed(() => {
     });
 });
 
-const isTeknisiSelected = (teknisiId) => {
-    return selectedTeknisis.value.includes(teknisiId);
+const isTeknisiSelected = (teknisiNip) => {
+    return selectedTeknisis.value.includes(teknisiNip);
 };
 
-const toggleTeknisi = (teknisiId) => {
-    const index = selectedTeknisis.value.indexOf(teknisiId);
+const toggleTeknisi = (teknisiNip) => {
+    const index = selectedTeknisis.value.indexOf(teknisiNip);
     if (index > -1) {
         selectedTeknisis.value.splice(index, 1);
     } else {
-        selectedTeknisis.value.push(teknisiId);
+        selectedTeknisis.value.push(teknisiNip);
     }
 };
 
-const removeTeknisi = (teknisiId) => {
-    const index = selectedTeknisis.value.indexOf(teknisiId);
+const removeTeknisi = (teknisiNip) => {
+    const index = selectedTeknisis.value.indexOf(teknisiNip);
     if (index > -1) {
         selectedTeknisis.value.splice(index, 1);
     }
 
-    const currentlyIndex = currentlyAssigned.value.findIndex(t => t.id === teknisiId);
+    const currentlyIndex = currentlyAssigned.value.findIndex(t => t.nip === teknisiNip);
     if (currentlyIndex > -1) {
         currentlyAssigned.value.splice(currentlyIndex, 1);
     }
 };
 
 const submit = () => {
+    // Removed validation to allow removing all assignments if empty array is sent?
+    // Backend handles empty array by detaching all.
+    // But frontend UI button is disabled if length == 0.
+    // The UI requirement says "disabled=selectedTeknisis.length === 0".
+    // So we can't unassign everyone using this modal if button is disabled.
+    // However, removing from "currently assigned" removes from "selectedTeknisis".
+    // If I remove everyone, selectedTeknisis is empty. Button disabled.
+    // This means I can't save "no assignments".
+    // This seems to be a flaw in the original modal design or intended behavior (must have at least one?)
+    // The backend supports empty array.
+    // I will respect the existing UI logic for now (button disabled if empty).
     if (selectedTeknisis.value.length === 0) return;
 
     processing.value = true;
-    form.teknisi_ids = selectedTeknisis.value;
+    form.teknisi_nips = selectedTeknisis.value;
 
     form.post(route('admin-aplikasi.applications.assign-teknisi', props.application.id), {
         onSuccess: () => {

@@ -69,10 +69,11 @@ class UserDashboardController extends Controller
         // Handle different user types
         if ($user instanceof User) {
             // Regular users have tickets they created - use single query with eager loading
+            // Active tickets include: open, assigned, in_progress, waiting_user, waiting_admin
             $ticketStats = $user->tickets()
                 ->selectRaw('
                     COUNT(*) as total_tickets,
-                    COUNT(CASE WHEN status IN (?, ?, ?) THEN 1 END) as active_tickets,
+                    COUNT(CASE WHEN status IN (?, ?, ?, ?, ?) THEN 1 END) as active_tickets,
                     COUNT(CASE WHEN status = ? AND resolved_at >= ? THEN 1 END) as resolved_tickets,
                     COUNT(CASE WHEN status = ? AND closed_at >= ? THEN 1 END) as closed_tickets,
                     COUNT(CASE WHEN status IN (?, ?) THEN 1 END) as resolved_total,
@@ -80,8 +81,10 @@ class UserDashboardController extends Controller
                     COUNT(CASE WHEN MONTH(created_at) = ? AND YEAR(created_at) = ? THEN 1 END) as tickets_this_month
                 ', [
                     Ticket::STATUS_OPEN,
+                    Ticket::STATUS_ASSIGNED,
                     Ticket::STATUS_IN_PROGRESS,
-                    Ticket::STATUS_WAITING_RESPONSE,
+                    Ticket::STATUS_WAITING_USER,
+                    Ticket::STATUS_WAITING_ADMIN,
                     Ticket::STATUS_RESOLVED,
                     Carbon::now()->subDays(30)->toDateString(),
                     Ticket::STATUS_CLOSED,
@@ -356,17 +359,18 @@ class UserDashboardController extends Controller
                     $last7Days[$date] = 0;
                 }
                 
-                // Get actual ticket counts
+                // Get actual ticket counts - use DATE_FORMAT for consistent string format
                 $actualCounts = $user->tickets()
-                    ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+                    ->selectRaw('DATE_FORMAT(created_at, "%Y-%m-%d") as date, COUNT(*) as count')
                     ->where('created_at', '>=', Carbon::now()->subDays(6)->startOfDay())
                     ->groupBy('date')
                     ->orderBy('date')
                     ->get()
                     ->pluck('count', 'date')
+                    ->map(fn($count) => (int) $count)
                     ->toArray();
                 
-                // Merge actual counts with default zeros
+                // Merge actual counts with default zeros (actual counts overwrite zeros)
                 $weeklyActivity = array_merge($last7Days, $actualCounts);
 
                 return [

@@ -10,10 +10,10 @@
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                         </svg>
-                        Back to Tickets
+                        {{ t('ticket.backToTicket') }}
                     </button>
                     <div>
-                        <h1 class="text-3xl font-bold text-gray-900">Ticket #{{ ticket.ticket_number }}</h1>
+                        <h1 class="text-3xl font-bold text-gray-900">{{ t('ticket.ticketNumberShort') }}{{ ticket.ticket_number }}</h1>
                         <p class="text-gray-600 mt-1">{{ ticket.title }}</p>
                     </div>
                 </div>
@@ -22,26 +22,26 @@
                         @click="showAssignmentModal = true"
                         class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition"
                     >
-                        Assign to Teknisi
+                        {{ t('ticket.assignTicket') }}
                     </button>
                     <button
                         @click="showPriorityModal = true"
                         class="bg-orange-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-orange-700 transition"
                     >
-                        Update Priority
+                        {{ t('ticket.updatePriority') }}
                     </button>
                     <button
                         @click="showStatusModal = true"
                         class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition"
                     >
-                        Update Status
+                        {{ t('ticket.updateStatus') }}
                     </button>
                     <button
                         v-if="ticket.status !== 'closed'"
                         @click="showCloseModal = true"
                         class="bg-red-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition"
                     >
-                        Close Ticket
+                        {{ t('ticket.closeTicket') }}
                     </button>
                 </div>
             </div>
@@ -52,48 +52,48 @@
             <div class="lg:col-span-2 space-y-6">
                 <!-- Ticket Information -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Ticket Information</h2>
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ t('ticket.ticketInformation') }}</h2>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Status</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ t('ticket.status') }}</label>
                             <span :class="['px-2 py-1 text-xs font-medium rounded-full mt-1 inline-block', getStatusColor(ticket.status)]">
                                 {{ ticket.status_label }}
                             </span>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Priority</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ t('ticket.priority') }}</label>
                             <span :class="['px-2 py-1 text-xs font-medium rounded-full mt-1 inline-block', getPriorityColor(ticket.priority)]">
                                 {{ ticket.priority_label }}
                             </span>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Created</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ t('common.created') }}</label>
                             <p class="text-gray-900">{{ ticket.formatted_created_at }}</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Last Updated</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ t('common.lastUpdated') }}</label>
                             <p class="text-gray-900">{{ ticket.formatted_updated_at }}</p>
                         </div>
                         <div v-if="ticket.resolved_at">
-                            <label class="block text-sm font-medium text-gray-700">Resolved At</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ t('ticket.resolvedAt') }}</label>
                             <p class="text-gray-900">{{ ticket.formatted_resolved_at }}</p>
                         </div>
                         <div v-if="ticket.resolution_time_minutes">
-                            <label class="block text-sm font-medium text-gray-700">Resolution Time</label>
-                            <p class="text-gray-900">{{ Math.round(ticket.resolution_time_minutes / 60) }} hours</p>
+                            <label class="block text-sm font-medium text-gray-700">{{ t('ticket.resolutionTime') }}</label>
+                            <p class="text-gray-900">{{ Math.round(ticket.resolution_time_minutes / 60) }} {{ t('common.hours') }}</p>
                         </div>
                     </div>
 
                     <div class="mt-6">
-                        <label class="block text-sm font-medium text-gray-700">Description</label>
+                        <label class="block text-sm font-medium text-gray-700">{{ t('ticket.description') }}</label>
                         <div class="mt-2 p-4 bg-gray-50 rounded-lg text-gray-900 whitespace-pre-wrap">
                             {{ ticket.description }}
                         </div>
                     </div>
 
                     <div v-if="ticket.attachments && ticket.attachments.length > 0" class="mt-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Attachments</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('ticket.attachments') }}</label>
                         <div class="space-y-2">
                             <div v-for="attachment in ticket.attachments" :key="attachment.id" class="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg">
                                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -109,10 +109,10 @@
 
                 <!-- Comments -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Comments</h2>
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ t('ticket.comments') }}</h2>
 
                     <div v-if="comments.length === 0" class="text-center py-8 text-gray-500">
-                        No comments yet
+                        {{ t('common.noCommentsYet') }}
                     </div>
 
                     <div v-else class="space-y-4">
@@ -130,7 +130,7 @@
                                     </div>
                                 </div>
                                 <span v-if="comment.is_internal" class="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">
-                                    Internal
+                                    {{ t('common.internal') }}
                                 </span>
                             </div>
                             <div class="mt-2 text-gray-900 whitespace-pre-wrap">{{ comment.comment }}</div>
@@ -140,12 +140,12 @@
                     <!-- Add Comment Form -->
                     <div class="mt-6">
                         <form @submit.prevent="addComment">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Add Comment</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('common.addComment') }}</label>
                             <textarea
                                 v-model="newComment"
                                 rows="3"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                                placeholder="Enter your comment..."
+                                :placeholder="t('ticket.commentPlaceholder')"
                             ></textarea>
                             <div class="mt-3 flex items-center space-x-3">
                                 <label class="flex items-center">
@@ -154,14 +154,14 @@
                                         v-model="isInternalComment"
                                         class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                                     >
-                                    <span class="ml-2 text-sm text-gray-700">Internal comment</span>
+                                    <span class="ml-2 text-sm text-gray-700">{{ t('common.internalComment') }}</span>
                                 </label>
                                 <button
                                     type="submit"
                                     :disabled="!newComment.trim()"
                                     class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    Add Comment
+                                    {{ t('common.addComment') }}
                                 </button>
                             </div>
                         </form>
@@ -173,22 +173,22 @@
             <div class="space-y-6">
                 <!-- User Information -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">User Information</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ t('modal.userModal.basicInfo') }}</h3>
                     <div class="space-y-3">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Name</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ t('user.name') }}</label>
                             <p class="text-gray-900">{{ ticket.user?.name }}</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">NIP</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ t('user.nip') }}</label>
                             <p class="text-gray-900">{{ ticket.user?.nip }}</p>
                         </div>
                         <div v-if="ticket.user?.department">
-                            <label class="block text-sm font-medium text-gray-700">Department</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ t('user.department') }}</label>
                             <p class="text-gray-900">{{ ticket.user?.department }}</p>
                         </div>
                         <div v-if="ticket.user?.email">
-                            <label class="block text-sm font-medium text-gray-700">Email</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ t('user.email') }}</label>
                             <p class="text-gray-900">{{ ticket.user?.email }}</p>
                         </div>
                     </div>
@@ -196,44 +196,44 @@
 
                 <!-- Assignment Information -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Assignment Information</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ t('modal.assignTicketModal.assignmentInfo') }}</h3>
                     <div v-if="ticket.assigned_teknisi" class="space-y-3">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Assigned To</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ t('ticket.assignedTo') }}</label>
                             <p class="text-gray-900">{{ ticket.assigned_teknisi.name }}</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">NIP</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ t('user.nip') }}</label>
                             <p class="text-gray-900">{{ ticket.assigned_teknisi.nip }}</p>
                         </div>
                         <div v-if="ticket.assigned_teknisi.department">
-                            <label class="block text-sm font-medium text-gray-700">Department</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ t('user.department') }}</label>
                             <p class="text-gray-900">{{ ticket.assigned_teknisi.department }}</p>
                         </div>
                     </div>
                     <div v-else class="text-gray-500">
-                        Not assigned yet
+                        {{ t('common.notAssignedYet') }}
                     </div>
                 </div>
 
                 <!-- Application Information -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Application Information</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ t('common.applicationInformation') }}</h3>
                     <div class="space-y-3">
                         <div v-if="ticket.aplikasi">
-                            <label class="block text-sm font-medium text-gray-700">Application</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ t('ticket.application') }}</label>
                             <p class="text-gray-900">{{ ticket.aplikasi.name }}</p>
                         </div>
                         <div v-if="ticket.kategori_masalah">
-                            <label class="block text-sm font-medium text-gray-700">Category</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ t('ticket.category') }}</label>
                             <p class="text-gray-900">{{ ticket.kategori_masalah.name }}</p>
                         </div>
                         <div v-if="ticket.location">
-                            <label class="block text-sm font-medium text-gray-700">Location</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ t('ticket.location') }}</label>
                             <p class="text-gray-900">{{ ticket.location }}</p>
                         </div>
                         <div v-if="ticket.ip_address">
-                            <label class="block text-sm font-medium text-gray-700">IP Address</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ t('activityLog.ipAddress') }}</label>
                             <p class="text-gray-900">{{ ticket.ip_address }}</p>
                         </div>
                     </div>
@@ -280,11 +280,14 @@
 import { ref, onMounted } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
+import { useI18n } from 'vue-i18n';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import AssignmentModal from '@/Components/Modals/AssignmentModal.vue';
 import PriorityModal from '@/Components/Modals/PriorityModal.vue';
 import StatusModal from '@/Components/Modals/StatusModal.vue';
 import CloseModal from '@/Components/Modals/CloseModal.vue';
+
+const { t } = useI18n();
 
 const props = defineProps({
     ticket: {

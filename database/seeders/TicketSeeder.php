@@ -18,17 +18,12 @@ class TicketSeeder extends Seeder
      */
     public function run(): void
     {
-        // Clear memory before starting
-        gc_collect_cycles();
+        $users = User::all();
+        $applications = Aplikasi::all();
+        $categories = KategoriMasalah::all();
+        $adminHelpdesks = AdminHelpdesk::all();
+        $teknisis = Teknisi::all();
 
-        // Use efficient queries with specific fields to reduce memory usage
-        $users = User::select('nip', 'name')->get();
-        $applications = Aplikasi::select('id', 'code')->get();
-        $categories = KategoriMasalah::select('id', 'name')->get();
-        $adminHelpdesks = AdminHelpdesk::select('nip')->get();
-        $teknisis = Teknisi::select('nip', 'name')->get();
-
-        // Check if required dependencies exist
         if ($users->isEmpty() || $applications->isEmpty() || $categories->isEmpty() || $adminHelpdesks->isEmpty() || $teknisis->isEmpty()) {
             $this->command->warn('Missing required data. Please run UserSeeder, AplikasiSeeder, KategoriMasalahSeeder, AdminHelpdeskSeeder, and TeknisiSeeder first.');
             return;
@@ -87,7 +82,7 @@ class TicketSeeder extends Seeder
                 'aplikasi_id' => $applications->where('code', 'SIAN')->first()?->id ?? $applications->skip(2)->first()->id,
                 'kategori_masalah_id' => $categories->where('name', 'Upload Dokumen Gagal')->first()?->id ?? $categories->skip(2)->first()->id,
                 'assigned_teknisi_nip' => $teknisis->where('name', 'Budi Santoso, S.T.')->first()?->nip ?? $teknisis->skip(2)->first()->nip,
-                'assigned_by_nip' => $adminHelpdesks->skip(1)->first()?->nip,
+                'assigned_by_nip' => $adminHelpdesks->skip(1)->first()?->nip ?? $adminHelpdesks->first()?->nip,
                 'title' => 'Upload dokumen rahasia selalu gagal',
                 'description' => 'Setiap kali saya mencoba upload dokumen dengan klasifikasi RAHASIA, proses selalu gagal di tengah jalan. File size sekitar 15MB, format PDF. Error message: "Upload timeout". Sudah coba beberapa kali dengan koneksi berbeda tapi hasilnya sama.',
                 'priority' => 'urgent',
@@ -127,7 +122,7 @@ class TicketSeeder extends Seeder
                 'aplikasi_id' => $applications->where('code', 'SIKEU')->first()?->id ?? $applications->skip(4)->first()->id,
                 'kategori_masalah_id' => $categories->where('name', 'Anggaran Tidak Balance')->first()?->id ?? $categories->skip(4)->first()->id,
                 'assigned_teknisi_nip' => $teknisis->where('name', 'Gita Permata, S.Kom.')->first()?->nip ?? $teknisis->skip(4)->first()->nip,
-                'assigned_by_nip' => $adminHelpdesks->skip(1)->first()?->nip,
+                'assigned_by_nip' => $adminHelpdesks->skip(1)->first()?->nip ?? $adminHelpdesks->first()?->nip,
                 'title' => 'Laporan anggaran bulan ini tidak balance',
                 'description' => 'Laporan anggaran untuk bulan Oktober 2025 menunjukkan ketidaksesuaian antara pemasukan dan pengeluaran. Total pengeluaran lebih besar Rp 50.000.000 dari yang seharusnya. Perlu dicek apakah ada transaksi yang double entry atau kesalahan input.',
                 'priority' => 'high',
@@ -142,11 +137,11 @@ class TicketSeeder extends Seeder
                 'updated_at' => Carbon::now()->subHours(3),
             ],
             [
-                'ticket_number' => 'TKT-2025109-0001',
-                'user_nip' => $users->where('name', 'Maya Sari Dewi')->first()?->nip ?? $users->skip(4)->first()->nip,
-                'aplikasi_id' => $applications->where('code', 'SIKON')->first()?->id ?? $applications->skip(0)->first()->id,
-                'kategori_masalah_id' => $categories->where('name', 'Data WNI Tidak Ditemukan')->first()?->id ?? $categories->skip(0)->first()->id,
-                'assigned_teknisi_nip' => $teknisis->where('name', 'Hadi Saputra, S.T.')->first()?->nip ?? $teknisis->skip(0)->first()->nip,
+                'ticket_number' => 'TKT-20251009-0001',
+                'user_nip' => $users->where('name', 'Maya Sari Dewi')->first()?->nip ?? $users->skip(5)->first()?->nip ?? $users->first()->nip,
+                'aplikasi_id' => $applications->where('code', 'SIKON')->first()?->id ?? $applications->first()->id,
+                'kategori_masalah_id' => $categories->where('name', 'Data WNI Tidak Ditemukan')->first()?->id ?? $categories->first()->id,
+                'assigned_teknisi_nip' => $teknisis->where('name', 'Hadi Saputra, S.T.')->first()?->nip ?? $teknisis->first()->nip,
                 'assigned_by_nip' => $adminHelpdesks->first()?->nip,
                 'title' => 'Data WNI di Jeddah tidak ditemukan dalam sistem',
                 'description' => 'Saya mencoba mencari data WNI atas nama Ahmad Hassan yang sedang berada di Jeddah, Saudi Arabia untuk keperluan konsuler, tapi data tidak ditemukan dalam sistem SIKON. Padahal menurut informasi dari keluarga, yang bersangkutan sudah melapor ke KJRI Jeddah bulan lalu.',
@@ -163,11 +158,11 @@ class TicketSeeder extends Seeder
             ],
             [
                 'ticket_number' => 'TKT-20251009-0002',
-                'user_nip' => $users->where('name', 'Hendro Wicaksono')->first()?->nip ?? $users->skip(0)->first()->nip,
+                'user_nip' => $users->where('name', 'Hendro Wicaksono')->first()?->nip ?? $users->skip(6)->first()?->nip ?? $users->first()->nip,
                 'aplikasi_id' => $applications->where('code', 'SIMONAS')->first()?->id ?? $applications->skip(1)->first()->id,
                 'kategori_masalah_id' => $categories->where('name', 'QR Code Tidak Bisa Scan')->first()?->id ?? $categories->skip(1)->first()->id,
                 'assigned_teknisi_nip' => $teknisis->where('name', 'Indah Lestari, S.Kom.')->first()?->nip ?? $teknisis->skip(1)->first()->nip,
-                'assigned_by_nip' => $adminHelpdesks->skip(1)->first()?->nip,
+                'assigned_by_nip' => $adminHelpdesks->skip(1)->first()?->nip ?? $adminHelpdesks->first()?->nip,
                 'title' => 'QR Code asset inventaris tidak terbaca',
                 'description' => 'Aplikasi SIMONAS di smartphone tidak bisa scan QR code untuk asset inventaris nomor INV-2025-0456. QR code terlihat jelas dan tidak rusak, tapi aplikasi selalu gagal mendeteksi. Sudah coba restart aplikasi dan clear cache tapi masih sama.',
                 'priority' => 'low',
@@ -182,7 +177,7 @@ class TicketSeeder extends Seeder
             ],
             [
                 'ticket_number' => 'TKT-20251010-0001',
-                'user_nip' => $users->where('name', 'Tina Agustina')->first()?->nip ?? $users->skip(1)->first()->nip,
+                'user_nip' => $users->where('name', 'Tina Agustina')->first()?->nip ?? $users->skip(7)->first()?->nip ?? $users->skip(1)->first()->nip,
                 'aplikasi_id' => $applications->where('code', 'E-LEARN')->first()?->id ?? $applications->skip(2)->first()->id,
                 'kategori_masalah_id' => $categories->where('name', 'Video Tidak Bisa Diputar')->first()?->id ?? $categories->skip(2)->first()->id,
                 'assigned_teknisi_nip' => $teknisis->where('name', 'Joko Susilo, S.T.')->first()?->nip ?? $teknisis->skip(2)->first()->nip,
@@ -208,11 +203,11 @@ class TicketSeeder extends Seeder
             ],
             [
                 'ticket_number' => 'TKT-20251010-0002',
-                'user_nip' => $users->where('name', 'Ahmad Fauzi Rahman')->first()?->nip ?? $users->skip(2)->first()->nip,
+                'user_nip' => $users->where('name', 'Ahmad Fauzi Rahman')->first()?->nip ?? $users->skip(8)->first()?->nip ?? $users->skip(2)->first()->nip,
                 'aplikasi_id' => $applications->where('code', 'HELPDESK')->first()?->id ?? $applications->skip(3)->first()->id,
                 'kategori_masalah_id' => $categories->where('name', 'Tidak Bisa Buat Tiket')->first()?->id ?? $categories->skip(3)->first()->id,
                 'assigned_teknisi_nip' => $teknisis->where('name', 'Eva Sari Dewi, S.Kom.')->first()?->nip ?? $teknisis->skip(3)->first()->nip,
-                'assigned_by_nip' => $adminHelpdesks->skip(1)->first()?->nip,
+                'assigned_by_nip' => $adminHelpdesks->skip(1)->first()?->nip ?? $adminHelpdesks->first()?->nip,
                 'title' => 'Form pembuatan tiket tidak muncul',
                 'description' => 'Ketika saya klik tombol "Buat Tiket Baru" di halaman helpdesk, form untuk pengisian tiket tidak muncul sama sekali. Halaman hanya loading sebentar lalu kembali ke halaman list tiket. Sudah coba dengan beberapa browser berbeda tapi hasilnya sama.',
                 'priority' => 'high',
@@ -228,7 +223,7 @@ class TicketSeeder extends Seeder
             ],
             [
                 'ticket_number' => 'TKT-20251011-0001',
-                'user_nip' => $users->where('name', 'Rina Wijaya Sari')->first()?->nip ?? $users->skip(3)->first()->nip,
+                'user_nip' => $users->where('name', 'Rina Wijaya Sari')->first()?->nip ?? $users->skip(9)->first()?->nip ?? $users->skip(3)->first()->nip,
                 'aplikasi_id' => $applications->where('code', 'APD')->first()?->id ?? $applications->skip(4)->first()->id,
                 'kategori_masalah_id' => $categories->where('name', 'Jadwal Protokol Bentrok')->first()?->id ?? $categories->skip(4)->first()->id,
                 'assigned_teknisi_nip' => $teknisis->where('name', 'Fajar Nugroho, S.T.')->first()?->nip ?? $teknisis->skip(4)->first()->nip,
@@ -248,21 +243,11 @@ class TicketSeeder extends Seeder
             ],
         ];
 
-        // Process in chunks to save memory
         foreach ($tickets as $ticket) {
             Ticket::firstOrCreate(
                 ['ticket_number' => $ticket['ticket_number']],
                 $ticket
             );
-
-            // Free memory after each insert
-            unset($ticket);
         }
-
-        // Final garbage collection
-        gc_collect_cycles();
-
-        // Clear large collections from memory
-        unset($users, $applications, $categories, $adminHelpdesks, $teknisis, $tickets);
     }
 }

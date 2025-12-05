@@ -121,14 +121,14 @@
                             :class="form.errors.category ? 'border-red-300 focus:ring-red-500' : ''"
                         >
                             <option value="">{{ t('modal.applicationModal.selectCategory') }}</option>
-                            <option value="web">Web Application</option>
-                            <option value="desktop">Desktop Application</option>
-                            <option value="mobile">Mobile Application</option>
-                            <option value="service">Service</option>
-                            <option value="database">Database</option>
-                            <option value="network">Network</option>
-                            <option value="security">Security</option>
-                            <option value="business">Business Application</option>
+                            <option value="web">{{ t('modal.applicationModal.categoryTypes.web') }}</option>
+                            <option value="desktop">{{ t('modal.applicationModal.categoryTypes.desktop') }}</option>
+                            <option value="mobile">{{ t('modal.applicationModal.categoryTypes.mobile') }}</option>
+                            <option value="service">{{ t('modal.applicationModal.categoryTypes.service') }}</option>
+                            <option value="database">{{ t('modal.applicationModal.categoryTypes.database') }}</option>
+                            <option value="network">{{ t('modal.applicationModal.categoryTypes.network') }}</option>
+                            <option value="security">{{ t('modal.applicationModal.categoryTypes.security') }}</option>
+                            <option value="business">{{ t('modal.applicationModal.categoryTypes.business') }}</option>
                         </select>
                         <p v-if="form.errors.category" class="mt-1 text-sm text-red-600">{{ form.errors.category }}</p>
                     </div>
@@ -237,50 +237,38 @@ watch(() => props.application, (app) => {
     }
 }, { immediate: true });
 
-const submit = async () => {
+const submit = () => {
     processing.value = true;
 
-    const url = props.mode === 'create'
-        ? route('admin-aplikasi.applications.store')
-        : route('admin-aplikasi.applications.update', props.application.id);
-
-    const method = props.mode === 'create' ? 'POST' : 'PUT';
-
-    try {
-        const response = await fetch(url, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            },
-            body: JSON.stringify(form.data()),
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
+    const options = {
+        preserveScroll: true,
+        onSuccess: () => {
+            processing.value = false;
             emit('saved');
             emit('close');
-            router.reload({ preserveScroll: true });
-        } else {
-            if (data.errors) {
-                Object.keys(data.errors).forEach(key => {
-                    form.setError(key, Array.isArray(data.errors[key]) ? data.errors[key][0] : data.errors[key]);
+        },
+        onError: (errors) => {
+            processing.value = false;
+            if (errors) {
+                Object.keys(errors).forEach(key => {
+                    form.setError(key, Array.isArray(errors[key]) ? errors[key][0] : errors[key]);
                 });
-            } else if (data.message) {
-                alert(data.message);
             }
+        },
+        onFinish: () => {
+            processing.value = false;
         }
-    } catch (error) {
-        console.error('Error submitting form:', error);
-        alert(t('errors.formSubmitError'));
-    } finally {
-        processing.value = false;
+    };
+
+    if (props.mode === 'create') {
+        form.post(route('admin-aplikasi.applications.store'), options);
+    } else {
+        form.put(route('admin-aplikasi.applications.update', props.application.id), options);
     }
 };
 
 const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
+    if (!dateString) return t('common.notAvailable');
     const lang = document.documentElement.lang;
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     

@@ -1,12 +1,20 @@
 <?php
 
+/**
+ * Helpdesk Configuration
+ * 
+ * Note: Most of these settings can be dynamically overridden via System Settings in the admin panel.
+ * The values here serve as defaults when database settings are not available.
+ * Use App\Services\SystemSettingsService to access settings in code.
+ */
+
 return [
-    // Auto-assignment settings
+    // Auto-assignment settings (can be configured via System Settings)
     'auto_assign_tickets' => env('HELPDESK_AUTO_ASSIGN', false),
     'auto_assign_algorithm' => env('HELPDESK_AUTO_ASSIGN_ALGORITHM', 'load_balanced'),
     'max_concurrent_tickets' => env('HELPDESK_MAX_CONCURRENT_TICKETS', 10),
 
-    // SLA settings (in hours)
+    // SLA settings (in hours) - can be configured via System Settings
     'sla' => [
         'urgent' => [
             'response' => env('HELPDESK_SLA_URGENT_RESPONSE', 2),
@@ -26,26 +34,26 @@ return [
         ],
     ],
 
-    // Escalation settings
+    // Escalation settings - can be configured via System Settings
     'escalation' => [
         'urgent_unassigned_hours' => env('HELPDESK_ESCALATION_URGENT', 2),
         'high_unassigned_hours' => env('HELPDESK_ESCALATION_HIGH', 4),
     ],
 
-    // Ticket settings
+    // Ticket settings - can be configured via System Settings
     'default_priority' => env('HELPDESK_DEFAULT_PRIORITY', 'medium'),
     'auto_close_resolved_days' => env('HELPDESK_AUTO_CLOSE_DAYS', 7),
     'max_file_size_mb' => env('HELPDESK_MAX_FILE_SIZE_MB', 2),
     'max_files_per_ticket' => env('HELPDESK_MAX_FILES_PER_TICKET', 5),
 
-    // Working hours for SLA calculations
+    // Working hours for SLA calculations - can be configured via System Settings
     'working_hours' => [
         'start' => env('HELPDESK_WORKING_HOURS_START', '08:00'),
         'end' => env('HELPDESK_WORKING_HOURS_END', '17:00'),
         'days' => [1, 2, 3, 4, 5], // Monday-Friday
     ],
 
-    // Security settings
+    // Security settings - can be configured via System Settings
     'security' => [
         'session_timeout_minutes' => env('HELPDESK_SESSION_TIMEOUT', 120),
         'login_max_attempts' => env('HELPDESK_LOGIN_MAX_ATTEMPTS', 5),

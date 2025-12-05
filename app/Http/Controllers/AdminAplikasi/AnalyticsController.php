@@ -115,24 +115,74 @@ class AnalyticsController extends Controller
         }
 
         $admin = AdminAplikasi::where('nip', $nip)->first();
+        if (!$admin) {
+            return response()->json(['error' => 'Admin not found'], 404);
+        }
+
         $managedAppIds = $this->getManagedAppIds($admin);
+        $selectedAppId = $request->get('aplikasi_id');
+
+        // Filter by selected application if provided
+        $appIds = $selectedAppId && in_array($selectedAppId, $managedAppIds) 
+            ? [$selectedAppId] 
+            : $managedAppIds;
 
         $period = $request->get('period', 30);
         $startDate = Carbon::now()->subDays($period)->startOfDay();
         $endDate = Carbon::now()->endOfDay();
 
+        // Get overview stats
+        $overview = $this->getOverviewStats($appIds, $startDate, $endDate);
+
         // Get applications with stats
-        $applications = Aplikasi::whereIn('id', $managedAppIds)
+        $applications = Aplikasi::whereIn('id', $appIds)
             ->withCount([
                 'tickets',
+                'tickets as period_tickets_count' => function ($query) use ($startDate, $endDate) {
+                    $query->whereBetween('created_at', [$startDate, $endDate]);
+                },
                 'tickets as open_tickets_count' => function ($query) {
                     $query->whereIn('status', ['open', 'assigned', 'in_progress']);
                 },
                 'tickets as resolved_tickets_count' => function ($query) {
-                    $query->where('status', 'resolved');
+                    $query->where('status', Ticket::STATUS_RESOLVED);
                 },
             ])
             ->get();
+
+        // Get category stats
+        $categories = KategoriMasalah::whereIn('aplikasi_id', $appIds)
+            ->with('aplikasi:id,name')
+            ->withCount([
+                'tickets',
+                'tickets as period_tickets_count' => function ($query) use ($startDate, $endDate) {
+                    $query->whereBetween('created_at', [$startDate, $endDate]);
+                },
+            ])
+            ->orderBy('tickets_count', 'desc')
+            ->get();
+
+        // Get teknisi performance
+        $teknisiNips = Ticket::whereIn('aplikasi_id', $appIds)
+            ->whereNotNull('assigned_teknisi_nip')
+            ->distinct()
+            ->pluck('assigned_teknisi_nip')
+            ->toArray();
+
+        $teknisis = [];
+        if (!empty($teknisiNips)) {
+            $teknisis = Teknisi::whereIn('nip', $teknisiNips)
+                ->withCount([
+                    'assignedTickets as total_tickets' => function ($query) use ($appIds) {
+                        $query->whereIn('aplikasi_id', $appIds);
+                    },
+                    'assignedTickets as resolved_tickets' => function ($query) use ($appIds) {
+                        $query->whereIn('aplikasi_id', $appIds)
+                            ->where('status', Ticket::STATUS_RESOLVED);
+                    },
+                ])
+                ->get();
+        }
 
         $filename = 'analytics_export_' . date('Y-m-d_H-i-s') . '.csv';
         $headers = [
@@ -140,18 +190,29 @@ class AnalyticsController extends Controller
             'Content-Disposition' => "attachment; filename=\"{$filename}\"",
         ];
 
-        $callback = function () use ($applications, $startDate, $endDate) {
+        $callback = function () use ($overview, $applications, $categories, $teknisis, $startDate, $endDate, $period) {
             if (ob_get_level()) ob_end_clean();
             $file = fopen('php://output', 'w');
 
             // Report header
-            fputcsv($file, ['Analytics Report']);
-            fputcsv($file, ['Period', $startDate->format('d M Y') . ' - ' . $endDate->format('d M Y')]);
+            fputcsv($file, ['Analytics Report - Admin Aplikasi']);
+            fputcsv($file, ['Generated', date('d M Y H:i:s')]);
+            fputcsv($file, ['Period', $startDate->format('d M Y') . ' - ' . $endDate->format('d M Y') . ' (' . $period . ' days)']);
             fputcsv($file, []);
 
-            // Application summary
-            fputcsv($file, ['Application Performance']);
-            fputcsv($file, ['Application', 'Code', 'Total Tickets', 'Open Tickets', 'Resolved Tickets', 'Resolution Rate']);
+            // Overview Summary
+            fputcsv($file, ['=== OVERVIEW SUMMARY ===']);
+            fputcsv($file, ['Metric', 'Value']);
+            fputcsv($file, ['Total Tickets (Period)', $overview['total_tickets']]);
+            fputcsv($file, ['Resolved Tickets', $overview['resolved_tickets']]);
+            fputcsv($file, ['Open Tickets', $overview['open_tickets']]);
+            fputcsv($file, ['Resolution Rate', $overview['resolution_rate'] . '%']);
+            fputcsv($file, ['Avg Resolution Time', $overview['avg_resolution_time'] . ' hours']);
+            fputcsv($file, []);
+
+            // Application Performance
+            fputcsv($file, ['=== APPLICATION PERFORMANCE ===']);
+            fputcsv($file, ['Application', 'Code', 'Total Tickets', 'Period Tickets', 'Open', 'Resolved', 'Resolution Rate']);
 
             foreach ($applications as $app) {
                 $resolutionRate = $app->tickets_count > 0 
@@ -162,9 +223,44 @@ class AnalyticsController extends Controller
                     $app->name,
                     $app->code,
                     $app->tickets_count,
+                    $app->period_tickets_count,
                     $app->open_tickets_count,
                     $app->resolved_tickets_count,
                     $resolutionRate . '%',
+                ]);
+            }
+            fputcsv($file, []);
+
+            // Category Performance
+            fputcsv($file, ['=== CATEGORY PERFORMANCE ===']);
+            fputcsv($file, ['Category', 'Application', 'Total Tickets', 'Period Tickets']);
+
+            foreach ($categories as $cat) {
+                fputcsv($file, [
+                    $cat->name,
+                    $cat->aplikasi ? $cat->aplikasi->name : 'Unknown',
+                    $cat->tickets_count,
+                    $cat->period_tickets_count,
+                ]);
+            }
+            fputcsv($file, []);
+
+            // Teknisi Performance
+            fputcsv($file, ['=== TEKNISI PERFORMANCE ===']);
+            fputcsv($file, ['NIP', 'Name', 'Total Tickets', 'Resolved Tickets', 'Resolution Rate', 'Rating']);
+
+            foreach ($teknisis as $teknisi) {
+                $resRate = $teknisi->total_tickets > 0 
+                    ? round(($teknisi->resolved_tickets / $teknisi->total_tickets) * 100, 1) 
+                    : 0;
+
+                fputcsv($file, [
+                    $teknisi->nip,
+                    $teknisi->name,
+                    $teknisi->total_tickets,
+                    $teknisi->resolved_tickets,
+                    $resRate . '%',
+                    $teknisi->rating ?? 'N/A',
                 ]);
             }
 
@@ -176,19 +272,14 @@ class AnalyticsController extends Controller
 
     /**
      * Get managed application IDs for this admin.
+     * Always use database relationship (admin_aplikasi_nip and backup_admin_nip) as the source of truth.
      */
     private function getManagedAppIds(AdminAplikasi $admin): array
     {
-        $managedAppIds = $admin->managed_applications ?? [];
-        
-        if (count($managedAppIds) > 0) {
-            return $managedAppIds;
-        }
-
-        return Aplikasi::where('admin_aplikasi_nip', $admin->nip)
-            ->orWhere('backup_admin_nip', $admin->nip)
-            ->pluck('id')
-            ->toArray();
+        return Aplikasi::where(function($q) use ($admin) {
+            $q->where('admin_aplikasi_nip', $admin->nip)
+              ->orWhere('backup_admin_nip', $admin->nip);
+        })->pluck('id')->toArray();
     }
 
     /**

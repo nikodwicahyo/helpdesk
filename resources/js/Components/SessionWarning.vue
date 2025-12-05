@@ -37,30 +37,34 @@
                 </div>
                 <div>
                   <DialogTitle as="h3" class="text-lg font-semibold text-gray-900">
-                    Sesi Akan Berakhir
+                    {{ $t('session.timeoutWarning.title') }}
                   </DialogTitle>
-                  <p class="text-sm text-gray-500">Session Timeout Warning</p>
+                  <p class="text-sm text-gray-500">{{ $t('session.timeoutWarning.subtitle') }}</p>
                 </div>
               </div>
 
               <!-- Warning Message -->
               <div class="mb-6">
                 <p class="text-sm text-gray-700 mb-4">
-                  Sesi Anda akan berakhir dalam <span class="font-bold text-yellow-600">{{ timeDisplay }}</span> karena tidak ada aktivitas.
+                  {{ $t('session.timeoutWarning.messageStart') }}
+                  <span class="font-bold text-yellow-600">{{ timeDisplay }}</span>
+                  {{ $t('session.timeoutWarning.messageEnd') }}
                 </p>
                 <p class="text-xs text-gray-600">
-                  Silakan klik "Perpanjang Sesi" untuk tetap login, atau Anda akan otomatis logout.
+                  {{ $t('session.timeoutWarning.instructionsStart') }}
+                  <strong>{{ $t('session.timeoutWarning.extendSession') }}</strong>
+                  {{ $t('session.timeoutWarning.instructionsMiddle') }}
                 </p>
               </div>
 
               <!-- Countdown Progress Bar -->
               <div class="mb-6">
                 <div class="flex justify-between items-center mb-2">
-                  <span class="text-xs font-medium text-gray-600">Waktu tersisa</span>
+                  <span class="text-xs font-medium text-gray-600">{{ $t('session.timeoutWarning.timeRemaining') }}</span>
                   <span class="text-xs font-bold" :class="progressColorClass">{{ timeDisplay }}</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-2">
-                  <div 
+                  <div
                     class="h-2 rounded-full transition-all duration-1000"
                     :class="progressBarClass"
                     :style="{ width: `${progressPercentage}%` }"
@@ -79,8 +83,8 @@
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  <span v-if="isExtending">Memperpanjang...</span>
-                  <span v-else>Perpanjang Sesi</span>
+                  <span v-if="isExtending">{{ $t('session.timeoutWarning.extending') }}</span>
+                  <span v-else>{{ $t('session.timeoutWarning.extendSession') }}</span>
                 </button>
                 
                 <button
@@ -88,14 +92,14 @@
                   :disabled="isExtending"
                   class="flex-1 inline-flex justify-center items-center px-4 py-2.5 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                 >
-                  Logout Sekarang
+                  {{ $t('session.timeoutWarning.logoutNow') }}
                 </button>
               </div>
 
               <!-- Auto-logout notification -->
               <div v-if="secondsRemaining <= 60" class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                 <p class="text-xs text-red-800 text-center font-medium">
-                  ⚠️ Anda akan otomatis logout dalam {{ secondsRemaining }} detik
+                  {{ $t('session.timeoutWarning.autoLogoutWarning', { seconds: secondsRemaining }) }}
                 </p>
               </div>
             </DialogPanel>

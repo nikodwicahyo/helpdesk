@@ -54,13 +54,12 @@
                                                 />
                                             </svg>
                                         </div>
-                                        <DialogTitle
-                                            as="h3"
-                                            class="ml-4 text-xl font-semibold leading-6 text-gray-900"
-                                        >
-                                            Request Reassignment
-                                        </DialogTitle>
-                                    </div>
+                                                                                    <DialogTitle
+                                                                                        as="h3"
+                                                                                        class="ml-4 text-xl font-semibold leading-6 text-gray-900"
+                                                                                    >
+                                                                                        {{ t('modal.reassignmentRequest.title') }}
+                                                                                    </DialogTitle>                                    </div>
                                     <button
                                         @click="$emit('close')"
                                         class="text-gray-400 hover:text-gray-500 focus:outline-none"
@@ -100,13 +99,9 @@
                                             />
                                         </svg>
                                         <div class="text-sm text-yellow-700">
-                                            <p class="font-medium">Note</p>
+                                            <p class="font-medium">{{ t('modal.reassignmentRequest.noteTitle') }}</p>
                                             <p class="mt-1">
-                                                This request will be sent to the
-                                                Admin Helpdesk for review. The
-                                                ticket will remain assigned to
-                                                you until the request is
-                                                approved.
+                                                {{ t('modal.reassignmentRequest.noteDescription') }}
                                             </p>
                                         </div>
                                     </div>
@@ -159,7 +154,7 @@
                                             for="reason"
                                             class="block text-sm font-medium text-gray-700 mb-2"
                                         >
-                                            Reason for Reassignment
+                                            {{ t('modal.reassignmentRequest.reasonLabel') }}
                                             <span class="text-red-500">*</span>
                                         </label>
                                         <textarea
@@ -169,11 +164,11 @@
                                             required
                                             maxlength="500"
                                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent resize-none"
-                                            placeholder="Explain why this ticket should be reassigned..."
+                                            :placeholder="t('modal.reassignmentRequest.reasonPlaceholder')"
                                         ></textarea>
                                         <p class="mt-1 text-xs text-gray-500">
                                             {{ form.reason?.length || 0 }}/500
-                                            characters
+                                            {{ t('common.characters') }}
                                         </p>
                                         <p
                                             v-if="errors.reason"
@@ -189,10 +184,10 @@
                                             for="suggested_teknisi"
                                             class="block text-sm font-medium text-gray-700 mb-2"
                                         >
-                                            Suggest Another Teknisi
+                                            {{ t('modal.reassignmentRequest.suggestedTeknisiLabel') }}
                                             <span
                                                 class="text-gray-400 text-xs ml-1"
-                                                >(Optional)</span
+                                            >({{ t('modal.reassignmentRequest.suggestedTeknisiHint') }})</span
                                             >
                                         </label>
                                         <select
@@ -201,7 +196,7 @@
                                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                                         >
                                             <option value="">
-                                                -- No suggestion --
+                                                {{ t('modal.reassignmentRequest.noSuggestion') }}
                                             </option>
                                             <option
                                                 v-for="teknisi in availableTeknisis"
@@ -209,13 +204,12 @@
                                                 :value="teknisi.nip"
                                             >
                                                 {{ teknisi.name }} ({{
-                                                    teknisi.department || "N/A"
+                                                    teknisi.department || t('common.notAvailable')
                                                 }})
                                             </option>
                                         </select>
                                         <p class="mt-1 text-xs text-gray-500">
-                                            If you know a teknisi better suited
-                                            for this ticket
+                                            {{ t('modal.reassignmentRequest.suggestedTeknisiHintBelow') }}
                                         </p>
                                     </div>
 
@@ -223,7 +217,7 @@
                                     <div>
                                         <label
                                             class="block text-sm font-medium text-gray-700 mb-2"
-                                            >Reason Category</label
+                                            >{{ t('modal.reassignmentRequest.reasonCategoryLabel') }}</label
                                         >
                                         <div class="space-y-2">
                                             <label class="flex items-center">
@@ -235,8 +229,7 @@
                                                 />
                                                 <span
                                                     class="ml-2 text-sm text-gray-700"
-                                                    >Requires different
-                                                    expertise</span
+                                                    >{{ t('modal.reassignmentRequest.reasonCategoryExpertise') }}</span
                                                 >
                                             </label>
                                             <label class="flex items-center">
@@ -248,8 +241,7 @@
                                                 />
                                                 <span
                                                     class="ml-2 text-sm text-gray-700"
-                                                    >High workload /
-                                                    availability issue</span
+                                                    >{{ t('modal.reassignmentRequest.reasonCategoryWorkload') }}</span
                                                 >
                                             </label>
                                             <label class="flex items-center">
@@ -261,8 +253,7 @@
                                                 />
                                                 <span
                                                     class="ml-2 text-sm text-gray-700"
-                                                    >Needs escalation to senior
-                                                    teknisi</span
+                                                    >{{ t('modal.reassignmentRequest.reasonCategoryEscalation') }}</span
                                                 >
                                             </label>
                                             <label class="flex items-center">
@@ -274,7 +265,7 @@
                                                 />
                                                 <span
                                                     class="ml-2 text-sm text-gray-700"
-                                                    >Other reason</span
+                                                    >{{ t('modal.reassignmentRequest.reasonCategoryOther') }}</span
                                                 >
                                             </label>
                                         </div>
@@ -350,8 +341,8 @@
                                     </svg>
                                     {{
                                         submitting
-                                            ? "Submitting..."
-                                            : "Submit Request"
+                                            ? t('common.submitting')
+                                            : t('modal.reassignmentRequest.submitRequest')
                                     }}
                                 </button>
                                 <button
@@ -360,7 +351,7 @@
                                     :disabled="submitting"
                                     class="mt-3 inline-flex w-full justify-center rounded-lg bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                                 >
-                                    Cancel
+                                    {{ t('common.cancel') }}
                                 </button>
                             </div>
                         </DialogPanel>
@@ -383,6 +374,9 @@ import {
 import { route } from "ziggy-js";
 import { Ziggy } from "@/ziggy";
 import axios from "axios";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const props = defineProps({
     show: {
@@ -490,7 +484,7 @@ const handleSubmit = async () => {
                 errors.value = { general: responseErrors.join(", ") };
             } else {
                 errors.value = responseErrors || {
-                    general: "Validation failed",
+                    general: t('modal.reassignmentRequest.validationFailed'),
                 };
             }
         } else if (error.response?.status === 403) {
@@ -499,15 +493,14 @@ const handleSubmit = async () => {
                 errors.value = { general: responseErrors.join(", ") };
             } else {
                 errors.value = {
-                    general: "You are not authorized to perform this action.",
+                    general: t('modal.reassignmentRequest.notAuthorized'),
                 };
             }
         } else {
             errors.value = {
-                general:
-                    error.response?.data?.message ||
-                    "Failed to submit request. Please try again.",
-            };
+                                    general:
+                                        error.response?.data?.message ||
+                                        t('modal.reassignmentRequest.failedToSubmitRequest'),            };
         }
     } finally {
         submitting.value = false;

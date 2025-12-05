@@ -8,10 +8,10 @@
             <div>
               <h1 class="text-2xl font-bold text-gray-900 flex items-center">
                 <SearchIcon class="h-6 w-6 mr-2 text-indigo-600" />
-                Ticket Search
+                {{ t('search.title') }}
               </h1>
               <p class="mt-1 text-sm text-gray-600">
-                Search and filter helpdesk tickets with advanced options
+                {{ t('search.subtitle') }}
               </p>
             </div>
             <div class="flex items-center space-x-3">
@@ -20,7 +20,7 @@
                 class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 <AdjustmentsHorizontalIcon class="h-4 w-4 mr-2" />
-                {{ showFilters ? 'Hide Filters' : 'Show Filters' }}
+                {{ showFilters ? t('search.hideFilters') : t('search.showFilters') }}
                 <span v-if="activeFiltersCount > 0" class="ml-2 px-2 py-0.5 text-xs font-medium bg-indigo-100 text-indigo-800 rounded-full">
                   {{ activeFiltersCount }}
                 </span>
@@ -31,7 +31,7 @@
                 class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <DocumentArrowDownIcon class="h-4 w-4 mr-2" />
-                Export
+                {{ t('search.export') }}
               </button>
             </div>
           </div>
@@ -65,12 +65,13 @@
                   @keydown.enter="performSearch"
                   type="text"
                   class="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-lg"
-                  placeholder="Search tickets by title, description, ticket number..."
+                  :placeholder="t('search.searchPlaceholder')"
                 />
                 <div class="absolute inset-y-0 right-0 flex items-center">
                   <button
                     @click="clearSearch"
                     v-if="searchQuery"
+                    :title="t('search.clearSearch')"
                     class="p-1 mr-2 text-gray-400 hover:text-gray-600"
                   >
                     <XMarkIcon class="h-5 w-5" />
@@ -79,7 +80,7 @@
                     @click="performSearch"
                     class="inline-flex items-center px-4 py-2 border border-transparent rounded-r-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
-                    Search
+                    {{ t('search.searchButton') }}
                   </button>
                 </div>
               </div>
@@ -100,7 +101,7 @@
 
               <!-- Popular Searches -->
               <div v-if="!searchQuery && popularSearches.length > 0" class="mt-4">
-                <p class="text-sm text-gray-600 mb-2">Popular searches:</p>
+                <p class="text-sm text-gray-600 mb-2">{{ t('search.popularSearches') }}</p>
                 <div class="flex flex-wrap gap-2">
                   <button
                     v-for="term in popularSearches"
@@ -118,7 +119,7 @@
             <div v-if="appliedFilters.length > 0" class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
               <div class="flex items-center justify-between">
                 <div class="flex flex-wrap gap-2">
-                  <span class="text-sm font-medium text-blue-900">Active filters:</span>
+                  <span class="text-sm font-medium text-blue-900">{{ t('search.activeFilters') }}</span>
                   <span
                     v-for="filter in appliedFilters"
                     :key="filter.label"
@@ -131,7 +132,7 @@
                   @click="resetFilters"
                   class="text-sm text-blue-600 hover:text-blue-800 font-medium"
                 >
-                  Clear all
+                  {{ t('search.clearAll') }}
                 </button>
               </div>
             </div>
@@ -144,8 +145,8 @@
                   <div>
                     <p class="text-sm text-gray-700">
                       <span class="font-medium">{{ pagination.total }}</span>
-                      results found
-                      <span v-if="searchQuery"> for "{{ searchQuery }}"</span>
+                      {{ t('search.resultsFound') }}
+                      <span v-if="searchQuery"> {{ t('search.resultsFor') }} "{{ searchQuery }}"</span>
                     </p>
                   </div>
                   <div class="flex items-center space-x-4">
@@ -154,22 +155,22 @@
                       @change="performSearch"
                       class="text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                     >
-                      <option value="10">10 per page</option>
-                      <option value="15">15 per page</option>
-                      <option value="25">25 per page</option>
-                      <option value="50">50 per page</option>
+                      <option value="10">{{ t('search.perPage.10') }}</option>
+                      <option value="15">{{ t('search.perPage.15') }}</option>
+                      <option value="25">{{ t('search.perPage.25') }}</option>
+                      <option value="50">{{ t('search.perPage.50') }}</option>
                     </select>
                     <select
                       v-model="filters.sort"
                       @change="performSearch"
                       class="text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                     >
-                      <option value="created_at">Created</option>
-                      <option value="updated_at">Updated</option>
-                      <option value="priority">Priority</option>
-                      <option value="status">Status</option>
-                      <option value="ticket_number">Ticket Number</option>
-                      <option value="due_date">Due Date</option>
+                      <option value="created_at">{{ t('search.sortBy.created_at') }}</option>
+                      <option value="updated_at">{{ t('search.sortBy.updated_at') }}</option>
+                      <option value="priority">{{ t('search.sortBy.priority') }}</option>
+                      <option value="status">{{ t('search.sortBy.status') }}</option>
+                      <option value="ticket_number">{{ t('search.sortBy.ticket_number') }}</option>
+                      <option value="due_date">{{ t('search.sortBy.due_date') }}</option>
                     </select>
                     <button
                       @click="filters.direction = filters.direction === 'asc' ? 'desc' : 'asc'"
@@ -196,24 +197,24 @@
               <!-- No Results -->
               <div v-else class="px-6 py-12 text-center">
                 <MagnifyingGlassIcon class="mx-auto h-12 w-12 text-gray-400" />
-                <h3 class="mt-2 text-sm font-medium text-gray-900">No results found</h3>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">{{ t('search.noResultsFound') }}</h3>
                 <p class="mt-1 text-sm text-gray-500">
-                  Try adjusting your search or filters to find what you're looking for.
+                  {{ t('search.adjustSearch') }}
                 </p>
               </div>
 
               <!-- Pagination -->
               <div v-if="tickets.data.length > 0" class="px-6 py-4 border-t border-gray-200">
-                <SimplePagination :data="pagination" label="tickets" @page-changed="changePage" />
+                <SimplePagination :data="pagination" :label="t('pagination.tickets')" @page-changed="changePage" />
               </div>
             </div>
 
             <!-- Initial State -->
             <div v-else class="bg-white rounded-lg shadow-sm p-12 text-center">
               <SearchIcon class="mx-auto h-12 w-12 text-gray-400" />
-              <h3 class="mt-2 text-lg font-medium text-gray-900">Search for tickets</h3>
+              <h3 class="mt-2 text-lg font-medium text-gray-900">{{ t('search.searchForTickets') }}</h3>
               <p class="mt-1 text-sm text-gray-500">
-                Enter a search term or use the filters to find specific tickets.
+                {{ t('search.enterSearchTerm') }}
               </p>
             </div>
           </div>
@@ -260,6 +261,7 @@
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { debounce } from 'lodash-es'
 import { router, usePage } from '@inertiajs/vue3'
+import { useI18n } from 'vue-i18n'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import SearchFilters from '@/Components/Search/SearchFilters.vue'
 import SearchResultItem from '@/Components/Search/SearchResultItem.vue'
@@ -276,6 +278,8 @@ import {
   XMarkIcon,
   ArrowsUpDownIcon
 } from '@heroicons/vue/24/outline'
+
+const { t } = useI18n()
 
 const page = usePage()
 

@@ -17,6 +17,7 @@ use App\Models\KategoriMasalah;
 use App\Models\User;
 use App\Services\TicketService;
 use App\Services\AuthService;
+use App\Services\SystemSettingsService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -149,7 +150,7 @@ class TicketController extends Controller
             'location' => 'nullable|string|max:255',
             'device_info' => 'nullable|string',
             'ip_address' => 'nullable|ip',
-            'files.*' => 'nullable|file|max:2048|mimes:jpeg,png,gif,webp,pdf,doc,docx,txt',
+            'files.*' => 'nullable|' . SystemSettingsService::getFileValidationString(),
         ]);
 
         if ($validator->fails()) {
@@ -298,7 +299,7 @@ class TicketController extends Controller
                 Ticket::PRIORITY_HIGH, Ticket::PRIORITY_URGENT
             ]),
             'location' => 'nullable|string|max:255',
-            'files.*' => 'nullable|file|max:2048|mimes:jpeg,png,gif,webp,pdf,doc,docx,txt',
+            'files.*' => 'nullable|' . SystemSettingsService::getFileValidationString(),
         ]);
 
         if ($validator->fails()) {
@@ -388,7 +389,7 @@ class TicketController extends Controller
         // Validate request
         $validator = Validator::make($request->all(), [
             'comment' => 'required|string',
-            'files.*' => 'nullable|file|max:2048|mimes:jpeg,png,gif,webp,pdf,doc,docx,txt',
+            'files.*' => 'nullable|' . SystemSettingsService::getFileValidationString(),
         ]);
 
         if ($validator->fails()) {

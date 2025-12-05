@@ -264,8 +264,17 @@ class ProfileController extends Controller
                 break;
 
             case 'admin_aplikasi':
+                // Get managed applications count from multiple sources
+                $managedCount = 0;
+                if ($user->managed_applications && is_array($user->managed_applications)) {
+                    $managedCount = count($user->managed_applications);
+                }
+                $directCount = \App\Models\Aplikasi::where('admin_aplikasi_nip', $user->nip)->count();
+                $backupCount = \App\Models\Aplikasi::where('backup_admin_nip', $user->nip)->count();
+                $totalManagedCount = max($managedCount, $directCount + $backupCount);
+                
                 $stats = [
-                    'applications_managed' => $user->managedApplications()->count(),
+                    'applications_managed' => $totalManagedCount,
                     'categories_managed' => 0, // AdminAplikasi doesn't have managedCategories method
                     'tickets_per_app' => $this->getTicketsPerApplication($user),
                 ];
@@ -317,8 +326,17 @@ class ProfileController extends Controller
                 break;
 
             case 'admin_aplikasi':
+                // Get managed applications count from multiple sources
+                $managedCount = 0;
+                if ($user->managed_applications && is_array($user->managed_applications)) {
+                    $managedCount = count($user->managed_applications);
+                }
+                $directCount = \App\Models\Aplikasi::where('admin_aplikasi_nip', $user->nip)->count();
+                $backupCount = \App\Models\Aplikasi::where('backup_admin_nip', $user->nip)->count();
+                $totalManagedCount = max($managedCount, $directCount + $backupCount);
+                
                 $stats = [
-                    'applications_managed' => $user->managedApplications()->count(),
+                    'applications_managed' => $totalManagedCount,
                     'categories_managed' => 0, // AdminAplikasi doesn't have managedCategories method
                     'tickets_per_app' => $this->getTicketsPerApplication($user),
                 ];

@@ -64,11 +64,61 @@ class UserSeeder extends Seeder
                 'phone' => '+62-21-3841005',
                 'status' => 'active',
             ],
+            [
+                'nip' => '199006152010016006',
+                'name' => 'Maya Sari Dewi',
+                'email' => 'maya.dewi@kemlu.go.id',
+                'password' => Hash::make('password123'),
+                'position' => 'Analis Kebijakan',
+                'department' => 'Sekretariat Badan Pengkajian dan Pengembangan Kebijakan',
+                'phone' => '+62-21-3841006',
+                'status' => 'active',
+            ],
+            [
+                'nip' => '199107202010017007',
+                'name' => 'Hendro Wicaksono',
+                'email' => 'hendro.wicaksono@kemlu.go.id',
+                'password' => Hash::make('password123'),
+                'position' => 'Diplomat Muda',
+                'department' => 'Direktorat Kerja Sama Teknik',
+                'phone' => '+62-21-3841007',
+                'status' => 'active',
+            ],
+            [
+                'nip' => '199208252010018008',
+                'name' => 'Tina Agustina',
+                'email' => 'tina.agustina@kemlu.go.id',
+                'password' => Hash::make('password123'),
+                'position' => 'Staf Pendidikan',
+                'department' => 'Pusat Pendidikan dan Pelatihan',
+                'phone' => '+62-21-3841008',
+                'status' => 'active',
+            ],
+            [
+                'nip' => '199309102010019009',
+                'name' => 'Ahmad Fauzi Rahman',
+                'email' => 'ahmad.fauzi@kemlu.go.id',
+                'password' => Hash::make('password123'),
+                'position' => 'Auditor Muda',
+                'department' => 'Inspektorat',
+                'phone' => '+62-21-3841009',
+                'status' => 'active',
+            ],
+            [
+                'nip' => '199410152010011010',
+                'name' => 'Rina Wijaya Sari',
+                'email' => 'rina.wijaya@kemlu.go.id',
+                'password' => Hash::make('password123'),
+                'position' => 'Diplomat Pertama',
+                'department' => 'Direktorat Afrika dan Timur Tengah',
+                'phone' => '+62-21-3841010',
+                'status' => 'active',
+            ],
         ];
 
         foreach ($users as $userData) {
             User::firstOrCreate(
-                ['nip' => $userData['nip']], // Use unique 'nip' field as identifier
+                ['nip' => $userData['nip']],
                 $userData
             );
         }

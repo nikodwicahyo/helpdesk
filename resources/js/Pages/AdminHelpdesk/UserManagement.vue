@@ -27,12 +27,16 @@
                             <h1
                                 class="text-3xl sm:text-4xl font-bold text-gray-900"
                             >
-                                {{ t('nav.userManagement') }}
+                                {{ t("nav.userManagement") }}
                             </h1>
                             <p
                                 class="text-gray-600 text-sm sm:text-base animate-fadeInUp animation-delay-200"
                             >
-                                {{ t('activityLog.description') }}
+                                {{
+                                    t(
+                                        "adminHelpdesk.userManagement.description"
+                                    )
+                                }}
                             </p>
                         </div>
                     </div>
@@ -43,7 +47,7 @@
                             <div
                                 class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"
                             ></div>
-                            <span>{{ t('activityLog.liveMonitoring') }}</span>
+                            <span>{{ t("activityLog.liveMonitoring") }}</span>
                         </div>
                         <div class="flex items-center">
                             <svg
@@ -60,7 +64,7 @@
                                 />
                             </svg>
                             <span>{{
-                                new Date().toLocaleString("en-EN", {
+                                new Date().toLocaleString(locale, {
                                     weekday: "long",
                                     hour: "2-digit",
                                     minute: "2-digit",
@@ -81,7 +85,10 @@
                                     d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
                                 />
                             </svg>
-                            <span>{{ users.total || 0 }} {{ t('nav.users') }}</span>
+                            <span
+                                >{{ users.total || 0 }}
+                                {{ t("nav.users") }}</span
+                            >
                         </div>
                     </div>
                 </div>
@@ -103,7 +110,10 @@
                                 d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                             />
                         </svg>
-                        <span class="hidden sm:inline">{{ t('common.import') }} CSV</span>
+                        <span class="hidden sm:inline"
+                            >{{ t("common.import") }}
+                            {{ t("common.csv") }}</span
+                        >
                         <span class="sm:hidden">📥</span>
                     </button>
                     <button
@@ -123,7 +133,9 @@
                                 d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
                             />
                         </svg>
-                        <span class="hidden sm:inline">{{ t('common.create') }} {{ t('nav.users') }}</span>
+                        <span class="hidden sm:inline"
+                            >{{ t("common.create") }} {{ t("nav.users") }}</span
+                        >
                         <span class="sm:hidden">➕</span>
                     </button>
                 </div>
@@ -163,7 +175,11 @@
                             {{ users.total || 0 }}
                         </h3>
                         <p class="text-sm font-medium text-gray-600 mt-1">
-                            {{ t('activityLog.totalActivities') }}
+                            {{
+                                t(
+                                    "adminHelpdesk.userManagement.stats.totalUsers"
+                                )
+                            }}
                         </p>
                     </div>
 
@@ -193,7 +209,7 @@
                             {{ activeUsersCount }}
                         </h3>
                         <p class="text-sm font-medium text-gray-600 mt-1">
-                            {{ t('status.active') }} {{ t('nav.users') }}
+                            {{ t("status.active") }} {{ t("nav.users") }}
                         </p>
                     </div>
 
@@ -223,7 +239,7 @@
                             {{ inactiveUsersCount }}
                         </h3>
                         <p class="text-sm font-medium text-gray-600 mt-1">
-                            {{ t('status.inactive') }} {{ t('nav.users') }}
+                            {{ t("status.inactive") }} {{ t("nav.users") }}
                         </p>
                     </div>
 
@@ -253,7 +269,7 @@
                             {{ newUsersThisMonth }}
                         </h3>
                         <p class="text-sm font-medium text-gray-600 mt-1">
-                            {{ t('common.newUsers') }}
+                            {{ t("common.newUsers") }}
                         </p>
                     </div>
                 </div>
@@ -279,15 +295,21 @@
                                     v-model="filterRole"
                                     class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                 >
-                                    <option value="">{{ t('activityLog.allEntities') }}</option>
-                                    <option value="user">User</option>
+                                    <option value="">
+                                        {{ t("activityLog.allEntities") }}
+                                    </option>
+                                    <option value="user">
+                                        {{ t("roles.user") }}
+                                    </option>
                                     <option value="admin_helpdesk">
-                                        Admin Helpdesk
+                                        {{ t("roles.adminHelpdesk") }}
                                     </option>
                                     <option value="admin_aplikasi">
-                                        Admin Aplikasi
+                                        {{ t("roles.adminAplikasi") }}
                                     </option>
-                                    <option value="teknisi">Teknisi</option>
+                                    <option value="teknisi">
+                                        {{ t("roles.teknisi") }}
+                                    </option>
                                 </select>
                             </div>
                             <div>
@@ -295,9 +317,15 @@
                                     v-model="filterStatus"
                                     class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                 >
-                                    <option value="">{{ t('activityLog.allEntities') }}</option>
-                                    <option value="active">{{ t('status.active') }}</option>
-                                    <option value="inactive">{{ t('status.inactive') }}</option>
+                                    <option value="">
+                                        {{ t("activityLog.allEntities") }}
+                                    </option>
+                                    <option value="active">
+                                        {{ t("status.active") }}
+                                    </option>
+                                    <option value="inactive">
+                                        {{ t("status.inactive") }}
+                                    </option>
                                 </select>
                             </div>
                             <div>
@@ -305,7 +333,7 @@
                                     @click="resetFilters"
                                     class="w-full bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
                                 >
-                                    {{ t('common.reset') }}
+                                    {{ t("common.reset") }}
                                 </button>
                             </div>
                         </div>
@@ -319,37 +347,37 @@
                                             scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                         >
-                                            {{ t('user.nip') }}
+                                            {{ t("user.nip") }}
                                         </th>
                                         <th
                                             scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                         >
-                                            {{ t('user.name') }}
+                                            {{ t("user.name") }}
                                         </th>
                                         <th
                                             scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                         >
-                                            {{ t('user.email') }}
+                                            {{ t("user.email") }}
                                         </th>
                                         <th
                                             scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                         >
-                                            {{ t('user.role') }}
+                                            {{ t("user.role") }}
                                         </th>
                                         <th
                                             scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                         >
-                                            {{ t('ticket.status') }}
+                                            {{ t("ticket.status") }}
                                         </th>
                                         <th
                                             scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                         >
-                                            {{ t('action.actions') }}
+                                            {{ t("action.actions") }}
                                         </th>
                                     </tr>
                                 </thead>
@@ -382,7 +410,10 @@
                                                 {{ user.name }}
                                             </div>
                                             <div class="text-sm text-gray-500">
-                                                {{ user.department || "-" }}
+                                                {{
+                                                    user.department ||
+                                                    t("common.notAvailable")
+                                                }}
                                             </div>
                                         </td>
                                         <td
@@ -419,8 +450,8 @@
                                             >
                                                 {{
                                                     user.status === "active"
-                                                        ? t('status.active')
-                                                        : t('status.inactive')
+                                                        ? t("status.active")
+                                                        : t("status.inactive")
                                                 }}
                                             </span>
                                         </td>
@@ -433,11 +464,13 @@
                                                 :disabled="!user.can_edit"
                                                 :title="
                                                     !user.can_edit
-                                                        ? t('modal.userModal.cannotEdit')
+                                                        ? t(
+                                                              'modal.userModal.cannotEdit'
+                                                          )
                                                         : ''
                                                 "
                                             >
-                                                {{ t('common.edit') }}
+                                                {{ t("common.edit") }}
                                             </button>
                                             <button
                                                 @click="toggleUserStatus(user)"
@@ -447,14 +480,20 @@
                                                 "
                                                 :title="
                                                     !user.can_toggle_status
-                                                        ? t('modal.userModal.cannotChangeStatus')
+                                                        ? t(
+                                                              'modal.userModal.cannotChangeStatus'
+                                                          )
                                                         : ''
                                                 "
                                             >
                                                 {{
                                                     user.status === "active"
-                                                        ? t('modal.userModal.deactivate')
-                                                        : t('modal.userModal.activate')
+                                                        ? t(
+                                                              "modal.userModal.deactivate"
+                                                          )
+                                                        : t(
+                                                              "modal.userModal.activate"
+                                                          )
                                                 }}
                                             </button>
                                             <button
@@ -463,11 +502,17 @@
                                                 :disabled="!user.can_edit"
                                                 :title="
                                                     !user.can_edit
-                                                        ? t('modal.userModal.cannotResetPassword')
+                                                        ? t(
+                                                              'modal.userModal.cannotResetPassword'
+                                                          )
                                                         : ''
                                                 "
                                             >
-                                                {{ t('modal.userModal.resetPassword') }}
+                                                {{
+                                                    t(
+                                                        "modal.userModal.resetPassword"
+                                                    )
+                                                }}
                                             </button>
                                         </td>
                                     </tr>
@@ -515,15 +560,15 @@
                         <h3 class="text-xl font-bold text-gray-900">
                             {{
                                 isEditing
-                                    ? t('common.edit') + ' ' + t('nav.users')
-                                    : t('common.create') + ' ' + t('nav.users')
+                                    ? t("common.edit") + " " + t("nav.users")
+                                    : t("common.create") + " " + t("nav.users")
                             }}
                         </h3>
                         <p class="text-sm text-gray-500 mt-0.5">
                             {{
                                 isEditing
-                                    ? t('modal.userModal.editDescription')
-                                    : t('modal.userModal.createDescription')
+                                    ? t("modal.userModal.editDescription")
+                                    : t("modal.userModal.createDescription")
                             }}
                         </p>
                     </div>
@@ -534,7 +579,8 @@
                         <label
                             class="block text-sm font-medium text-gray-700 mb-1"
                         >
-                            {{ t('user.nip') }} <span class="text-red-500">*</span>
+                            {{ t("user.nip") }}
+                            <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
                             <input
@@ -543,7 +589,9 @@
                                 required
                                 :disabled="isEditing"
                                 autocomplete="username"
-                                :placeholder="t('modal.userModal.nipPlaceholder')"
+                                :placeholder="
+                                    t('modal.userModal.nipPlaceholder')
+                                "
                                 maxlength="18"
                                 @blur="!isEditing && validateNIP()"
                                 :class="[
@@ -641,14 +689,17 @@
                         <label
                             class="block text-sm font-medium text-gray-700 mb-1"
                         >
-                            {{ t('modal.userModal.fullName') }} <span class="text-red-500">*</span>
+                            {{ t("modal.userModal.fullName") }}
+                            <span class="text-red-500">*</span>
                         </label>
                         <input
                             v-model="form.name"
                             type="text"
                             required
                             autocomplete="name"
-                            :placeholder="t('modal.userModal.fullNamePlaceholder')"
+                            :placeholder="
+                                t('modal.userModal.fullNamePlaceholder')
+                            "
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                         />
                     </div>
@@ -657,7 +708,8 @@
                         <label
                             class="block text-sm font-medium text-gray-700 mb-1"
                         >
-                            {{ t('user.email') }} <span class="text-red-500">*</span>
+                            {{ t("user.email") }}
+                            <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
                             <input
@@ -665,7 +717,9 @@
                                 type="email"
                                 required
                                 autocomplete="email"
-                                :placeholder="t('modal.userModal.emailPlaceholder')"
+                                :placeholder="
+                                    t('modal.userModal.emailPlaceholder')
+                                "
                                 @blur="validateEmail()"
                                 :class="[
                                     'w-full px-3 py-2 pr-10 border rounded-md shadow-sm focus:outline-none transition-colors',
@@ -763,7 +817,7 @@
                     <div class="mb-4">
                         <label
                             class="block text-sm font-medium text-gray-700 mb-1"
-                            >{{ t('user.phone') }}</label
+                            >{{ t("user.phone") }}</label
                         >
                         <input
                             v-model="form.phone"
@@ -777,13 +831,15 @@
                     <div class="mb-4">
                         <label
                             class="block text-sm font-medium text-gray-700 mb-1"
-                            >{{ t('user.department') }}</label
+                            >{{ t("user.department") }}</label
                         >
                         <input
                             v-model="form.department"
                             type="text"
                             autocomplete="organization"
-                            :placeholder="t('modal.userModal.positionPlaceholder')"
+                            :placeholder="
+                                t('modal.userModal.positionPlaceholder')
+                            "
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                         />
                     </div>
@@ -791,13 +847,15 @@
                     <div class="mb-4">
                         <label
                             class="block text-sm font-medium text-gray-700 mb-1"
-                            >{{ t('user.position') }}</label
+                            >{{ t("user.position") }}</label
                         >
                         <input
                             v-model="form.position"
                             type="text"
                             autocomplete="organization-title"
-                            :placeholder="t('modal.userModal.positionPlaceholder')"
+                            :placeholder="
+                                t('modal.userModal.positionPlaceholder')
+                            "
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                         />
                     </div>
@@ -805,7 +863,7 @@
                     <div class="mb-4">
                         <label
                             class="block text-sm font-medium text-gray-700 mb-1"
-                            >{{ t('user.role') }}</label
+                            >{{ t("user.role") }}</label
                         >
                         <select
                             v-model="form.role"
@@ -815,14 +873,16 @@
                             "
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
                         >
-                            <option value="user">{{ t('roles.user') }}</option>
+                            <option value="user">{{ t("roles.user") }}</option>
                             <option value="admin_helpdesk">
-                                {{ t('roles.adminHelpdesk') }}
+                                {{ t("roles.adminHelpdesk") }}
                             </option>
                             <option value="admin_aplikasi">
-                                {{ t('roles.adminAplikasi') }}
+                                {{ t("roles.adminAplikasi") }}
                             </option>
-                            <option value="teknisi">{{ t('roles.teknisi') }}</option>
+                            <option value="teknisi">
+                                {{ t("roles.teknisi") }}
+                            </option>
                         </select>
                         <p
                             v-if="isEditing && form.role === 'admin_helpdesk'"
@@ -835,15 +895,19 @@
                     <div class="mb-4">
                         <label
                             class="block text-sm font-medium text-gray-700 mb-1"
-                            >{{ t('ticket.status') }}</label
+                            >{{ t("ticket.status") }}</label
                         >
                         <select
                             v-model="form.status"
                             required
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                         >
-                            <option value="active">{{ t('status.active') }}</option>
-                            <option value="inactive">{{ t('status.inactive') }}</option>
+                            <option value="active">
+                                {{ t("status.active") }}
+                            </option>
+                            <option value="inactive">
+                                {{ t("status.inactive") }}
+                            </option>
                         </select>
                     </div>
 
@@ -862,7 +926,7 @@
                         <label
                             class="block text-sm font-medium text-gray-700 mb-1"
                         >
-                            {{ t('user.password') }}
+                            {{ t("user.password") }}
                             <span v-if="!isEditing" class="text-red-500"
                                 >*</span
                             >
@@ -880,7 +944,7 @@
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                         />
                         <p class="mt-1 text-xs text-gray-500">
-                            {{ t('modal.userModal.passwordRequirements') }}
+                            {{ t("modal.userModal.passwordRequirements") }}
                         </p>
                     </div>
 
@@ -889,7 +953,9 @@
                         <label
                             class="block text-sm font-medium text-gray-700 mb-1"
                         >
-                            {{ t('modal.userModal.confirmPasswordPlaceholder') }}
+                            {{
+                                t("modal.userModal.confirmPasswordPlaceholder")
+                            }}
                             <span
                                 v-if="!isEditing || form.password"
                                 class="text-red-500"
@@ -900,12 +966,14 @@
                             v-model="form.password_confirmation"
                             :type="showPassword ? 'text' : 'password'"
                             :required="!isEditing || !!form.password"
-                            :placeholder="t('modal.userModal.confirmPasswordPlaceholder')"
+                            :placeholder="
+                                t('modal.userModal.confirmPasswordPlaceholder')
+                            "
                             autocomplete="new-password"
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                         />
                         <p class="mt-1 text-xs text-gray-500">
-                            {{ t('modal.userModal.passwordMatchRequirement') }}
+                            {{ t("modal.userModal.passwordMatchRequirement") }}
                         </p>
                         <div class="mt-1">
                             <input
@@ -916,7 +984,9 @@
                             <label
                                 for="showPassword"
                                 class="ml-2 text-sm text-gray-700"
-                                >{{ t('modal.userModal.showPasswordLabel') }}</label
+                                >{{
+                                    t("modal.userModal.showPasswordLabel")
+                                }}</label
                             >
                         </div>
                     </div>
@@ -927,7 +997,7 @@
                             @click="closeModal"
                             class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
                         >
-                            {{ t('common.cancel') }}
+                            {{ t("common.cancel") }}
                         </button>
                         <button
                             type="submit"
@@ -936,10 +1006,10 @@
                         >
                             {{
                                 formSubmitting
-                                    ? t('common.saving')
+                                    ? t("common.saving")
                                     : isEditing
-                                    ? t('common.update')
-                                    : t('common.save')
+                                    ? t("common.update")
+                                    : t("common.save")
                             }}
                         </button>
                     </div>
@@ -971,10 +1041,11 @@
                         </div>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900">
-                                {{ t('common.import') }} {{ t('nav.users') }} {{ t('modal.fromCSV') }}
+                                {{ t("common.import") }} {{ t("nav.users") }}
+                                {{ t("modal.fromCSV") }}
                             </h3>
                             <p class="text-sm text-gray-500">
-                                {{ t('modal.bulkImportDescription') }}
+                                {{ t("modal.bulkImportDescription") }}
                             </p>
                         </div>
                     </div>
@@ -985,28 +1056,28 @@
                 <!-- Instructions Section -->
                 <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h4 class="font-medium text-blue-900 mb-2">
-                        {{ t('modal.importInstructions') }}:
+                        {{ t("modal.importInstructions") }}:
                     </h4>
                     <ul
                         class="text-sm text-blue-800 space-y-1 list-disc list-inside"
                     >
                         <li>
-                            {{ t('modal.downloadTemplate') }}
+                            {{ t("modal.downloadTemplate") }}
                         </li>
                         <li>
-                            {{ t('modal.fillUserData') }}
+                            {{ t("modal.fillUserData") }}
                         </li>
                         <li>
-                            {{ t('modal.requiredColumns') }}
+                            {{ t("modal.requiredColumns") }}
                         </li>
                         <li>
-                            {{ t('modal.optionalColumns') }}
+                            {{ t("modal.optionalColumns") }}
                         </li>
                         <li>
-                            {{ t('modal.validRoles') }}
+                            {{ t("modal.validRoles") }}
                         </li>
                         <li>
-                            {{ t('modal.validStatus') }}
+                            {{ t("modal.validStatus") }}
                         </li>
                     </ul>
                 </div>
@@ -1016,9 +1087,11 @@
                     class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border"
                 >
                     <div>
-                        <h4 class="font-medium text-gray-900">{{ t('modal.csvTemplate') }}</h4>
+                        <h4 class="font-medium text-gray-900">
+                            {{ t("modal.csvTemplate") }}
+                        </h4>
                         <p class="text-sm text-gray-600">
-                            {{ t('modal.gettingStartedTemplate') }}
+                            {{ t("modal.gettingStartedTemplate") }}
                         </p>
                     </div>
                     <button
@@ -1038,7 +1111,7 @@
                                 d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                             />
                         </svg>
-                        {{ t('common.download') }} {{ t('modal.csvTemplate') }}
+                        {{ t("common.download") }} {{ t("modal.csvTemplate") }}
                     </button>
                 </div>
 
@@ -1074,10 +1147,10 @@
                                 <p
                                     class="text-lg font-medium text-gray-900 mb-2"
                                 >
-                                    Drop your CSV file here
+                                    {{ t("modal.importCSV.dropFile") }}
                                 </p>
                                 <p class="text-sm text-gray-500 mb-4">
-                                    or click to browse
+                                    {{ t("modal.importCSV.orClickToBrowse") }}
                                 </p>
                             </div>
                             <input
@@ -1091,7 +1164,7 @@
                                 @click="$refs.fileInput.click()"
                                 class="px-4 py-2 bg-white border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition"
                             >
-                                Choose File
+                                {{ t("common.chooseFile") }}
                             </button>
                         </div>
 
@@ -1175,8 +1248,8 @@
                                 </svg>
                                 {{
                                     importProgress
-                                        ? "Importing..."
-                                        : "Import Users"
+                                        ? t("common.importing")
+                                        : t("modal.importCSV.importUsers")
                                 }}
                             </button>
                         </div>
@@ -1203,9 +1276,9 @@
                                         d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
                                     />
                                 </svg>
-                                <span class="text-sm font-medium text-blue-900"
-                                    >Total Rows</span
-                                >
+                                <span class="text-sm font-medium text-blue-900">
+                                    {{ t("modal.importCSV.totalRows") }}
+                                </span>
                             </div>
                             <p class="text-2xl font-bold text-blue-900 mt-1">
                                 {{ importResults.total_rows }}
@@ -1229,8 +1302,9 @@
                                         d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                                     />
                                 </svg>
-                                <span class="text-sm font-medium text-green-900"
-                                    >Successful</span
+                                <span
+                                    class="text-sm font-medium text-green-900"
+                                    >{{ t("common.successful") }}</span
                                 >
                             </div>
                             <p class="text-2xl font-bold text-green-900 mt-1">
@@ -1256,8 +1330,9 @@
                                         d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z"
                                     />
                                 </svg>
-                                <span class="text-sm font-medium text-red-900"
-                                    >Failed</span
+                                <span
+                                    class="text-sm font-medium text-red-900"
+                                    >{{ t("common.failed") }}</span
                                 >
                             </div>
                             <p class="text-2xl font-bold text-red-900 mt-1">
@@ -1276,13 +1351,17 @@
                     >
                         <div class="flex items-center justify-between mb-3">
                             <h4 class="font-medium text-red-900">
-                                Import Errors
+                                {{ t("modal.importCSV.importErrors") }}
                             </h4>
                             <button
                                 @click="showErrorDetails = !showErrorDetails"
                                 class="text-sm text-red-600 hover:text-red-800 transition"
                             >
-                                {{ showErrorDetails ? "Hide" : "Show" }} Details
+                                {{
+                                    showErrorDetails
+                                        ? t("common.hideDetails")
+                                        : t("common.showDetails")
+                                }}
                             </button>
                         </div>
 
@@ -1342,13 +1421,13 @@
                                     d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                                 />
                             </svg>
-                            Download Error Report
+                            {{ t("modal.importCSV.downloadErrorReport") }}
                         </button>
                         <button
                             @click="resetImport"
                             class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition"
                         >
-                            Import Another File
+                            {{ t("modal.importCSV.importAnotherFile") }}
                         </button>
                     </div>
                 </div>
@@ -1360,7 +1439,7 @@
                         @click="closeImportModal"
                         class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition"
                     >
-                        Cancel
+                        {{ t("common.cancel") }}
                     </button>
                 </div>
             </template>
@@ -1371,14 +1450,14 @@
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { usePage, Link, router } from "@inertiajs/vue3";
-import { useI18n } from 'vue-i18n'
+import { useI18n } from "vue-i18n";
 import axios from "axios";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Modal from "@/Components/Common/Modal.vue";
 import SimplePagination from "@/Components/Common/SimplePagination.vue";
 import UserInitials from "@/Components/UI/UserInitials.vue";
 
-const { t } = useI18n()
+const { t, locale } = useI18n();
 
 const page = usePage();
 
@@ -1554,12 +1633,12 @@ const validateNIPFormat = (nip) => {
 
     // Check if exactly 18 digits
     if (cleanedNip.length !== 18) {
-        return { valid: false, message: "NIP harus 18 digit" };
+        return { valid: false, message: t("validation.nip.length") };
     }
 
     // Check if all digits
     if (!/^\d+$/.test(cleanedNip)) {
-        return { valid: false, message: "NIP hanya boleh berisi angka" };
+        return { valid: false, message: t("validation.nip.numeric") };
     }
 
     // Validate birth date (first 8 digits in YYYYMMDD format)
@@ -1572,7 +1651,7 @@ const validateNIPFormat = (nip) => {
     if (year < 1920 || year > 2050) {
         return {
             valid: false,
-            message: "Format NIP tidak valid (tahun lahir tidak sesuai)",
+            message: t("validation.nip.invalidYear"),
         };
     }
 
@@ -1580,7 +1659,7 @@ const validateNIPFormat = (nip) => {
     if (month < 1 || month > 12) {
         return {
             valid: false,
-            message: "Format NIP tidak valid (bulan lahir tidak sesuai)",
+            message: t("validation.nip.invalidMonth"),
         };
     }
 
@@ -1598,7 +1677,7 @@ const validateNIPFormat = (nip) => {
     if (day < 1 || day > maxDays) {
         return {
             valid: false,
-            message: "Format NIP tidak valid (tanggal lahir tidak sesuai)",
+            message: t("validation.nip.invalidDay"),
         };
     }
 
@@ -1626,7 +1705,7 @@ const validateNIP = debounce(async () => {
 
     // If format is valid, check availability via API
     validationStatus.value.nip = "checking";
-    validationMessages.value.nip = "Memeriksa ketersediaan NIP...";
+    validationMessages.value.nip = t("validation.nip.checkingAvailability");
 
     try {
         const response = await fetch("/admin/users/check-nip", {
@@ -1644,16 +1723,18 @@ const validateNIP = debounce(async () => {
 
         if (data.valid && data.available) {
             validationStatus.value.nip = "valid";
-            validationMessages.value.nip = "NIP valid dan tersedia";
+            validationMessages.value.nip = t(
+                "validation.nip.validAndAvailable"
+            );
         } else {
             validationStatus.value.nip = "invalid";
             validationMessages.value.nip =
-                data.message || "NIP sudah terdaftar";
+                data.message || t("validation.nip.alreadyRegistered");
         }
     } catch (error) {
         console.error("NIP validation error:", error);
         validationStatus.value.nip = "invalid";
-        validationMessages.value.nip = "Gagal memeriksa NIP";
+        validationMessages.value.nip = t("validation.nip.checkFailed");
     }
 }, 500);
 
@@ -1661,33 +1742,33 @@ const validateNIP = debounce(async () => {
 const validateEmailFormat = (email) => {
     // Check if empty
     if (!email || email.trim() === "") {
-        return { valid: false, message: "Email wajib diisi" };
+        return { valid: false, message: t("validation.email.required") };
     }
 
     // Check length
     if (email.length > 255) {
-        return { valid: false, message: "Email maksimal 255 karakter" };
+        return { valid: false, message: t("validation.email.maxLength") };
     }
 
     // Comprehensive email regex
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     if (!emailRegex.test(email)) {
-        return { valid: false, message: "Format email tidak valid" };
+        return { valid: false, message: t("validation.email.invalidFormat") };
     }
 
     // Additional checks
     if (email.includes("..")) {
         return {
             valid: false,
-            message: "Format email tidak valid (karakter ganda)",
+            message: t("validation.email.doubleChar"),
         };
     }
 
     if (email.startsWith(".") || email.startsWith("-")) {
         return {
             valid: false,
-            message: "Format email tidak valid (karakter awal)",
+            message: t("validation.email.leadingChar"),
         };
     }
 
@@ -1723,7 +1804,7 @@ const validateEmail = debounce(async () => {
 
     // If format is valid, check availability via API
     validationStatus.value.email = "checking";
-    validationMessages.value.email = "Memeriksa ketersediaan email...";
+    validationMessages.value.email = t("validation.email.checkingAvailability");
 
     try {
         const response = await fetch("/admin/users/check-email", {
@@ -1741,16 +1822,18 @@ const validateEmail = debounce(async () => {
 
         if (data.valid && data.available) {
             validationStatus.value.email = "valid";
-            validationMessages.value.email = "Email valid dan tersedia";
+            validationMessages.value.email = t(
+                "validation.email.validAndAvailable"
+            );
         } else {
             validationStatus.value.email = "invalid";
             validationMessages.value.email =
-                data.message || "Email sudah terdaftar";
+                data.message || t("validation.email.alreadyRegistered");
         }
     } catch (error) {
         console.error("Email validation error:", error);
         validationStatus.value.email = "invalid";
-        validationMessages.value.email = "Gagal memeriksa email";
+        validationMessages.value.email = t("validation.email.checkFailed");
     }
 }, 500);
 
@@ -1885,35 +1968,26 @@ const submitForm = async () => {
         // Check real-time validation status for new users
         if (!isEditing.value) {
             if (validationStatus.value.nip === "invalid") {
-                showNotification(
-                    "NIP sudah terdaftar. Silakan gunakan NIP yang berbeda.",
-                    "error"
-                );
+                showNotification(t("message.nipAlreadyRegistered"), "error");
                 formSubmitting.value = false;
                 return;
             }
 
             if (validationStatus.value.nip === "checking") {
-                showNotification(
-                    "Mohon tunggu validasi NIP selesai",
-                    "warning"
-                );
+                showNotification(t("message.nipValidationPending"), "warning");
                 formSubmitting.value = false;
                 return;
             }
 
             if (validationStatus.value.email === "invalid") {
-                showNotification(
-                    "Email sudah terdaftar atau format tidak valid. Silakan gunakan email yang berbeda.",
-                    "error"
-                );
+                showNotification(t("message.emailAlreadyRegistered"), "error");
                 formSubmitting.value = false;
                 return;
             }
 
             if (validationStatus.value.email === "checking") {
                 showNotification(
-                    "Mohon tunggu validasi email selesai",
+                    t("message.emailValidationPending"),
                     "warning"
                 );
                 formSubmitting.value = false;
@@ -1925,22 +1999,22 @@ const submitForm = async () => {
         if (!isEditing.value) {
             // For new users, password is required
             if (!formData.password) {
-                showNotification("Password is required for new users", "error");
+                showNotification(t("message.passwordRequiredNewUser"), "error");
                 formSubmitting.value = false;
                 return;
             }
 
             if (!formData.password_confirmation) {
-                showNotification("Password confirmation is required", "error");
+                showNotification(
+                    t("message.passwordConfirmationRequired"),
+                    "error"
+                );
                 formSubmitting.value = false;
                 return;
             }
 
             if (formData.password !== formData.password_confirmation) {
-                showNotification(
-                    "Password confirmation must match the password",
-                    "error"
-                );
+                showNotification(t("message.passwordMismatch"), "error");
                 formSubmitting.value = false;
                 return;
             }
@@ -1956,10 +2030,7 @@ const submitForm = async () => {
                     !formData.password_confirmation ||
                     formData.password !== formData.password_confirmation
                 ) {
-                    showNotification(
-                        "Password confirmation must match the password",
-                        "error"
-                    );
+                    showNotification(t("message.passwordMismatch"), "error");
                     formSubmitting.value = false;
                     return;
                 }
@@ -2005,8 +2076,8 @@ const submitForm = async () => {
 
         // Show success notification
         const successMessage = isEditing.value
-            ? "Pengguna berhasil diperbarui"
-            : "Pengguna berhasil ditambahkan";
+            ? t("message.userUpdated")
+            : t("message.userAdded");
         showNotification(successMessage, "success");
     } catch (error) {
         console.error("Error saving user:", error);
@@ -2018,7 +2089,7 @@ const submitForm = async () => {
             message: error.response?.data?.message,
         });
 
-        let errorMessage = "Gagal menyimpan pengguna. Silakan coba lagi.";
+        let errorMessage = t("message.saveUserFailed");
 
         if (error.response?.status === 422) {
             // Validation errors
@@ -2048,8 +2119,8 @@ const toggleUserStatus = async (user) => {
     if (!user.can_toggle_status) {
         const message =
             user.role === "admin_helpdesk"
-                ? "Status Admin Helpdesk tidak dapat diubah"
-                : "Anda tidak dapat mengubah status pengguna ini";
+                ? t("message.adminHelpdeskStatusImmutable")
+                : t("message.cannotChangeUserStatus");
 
         showNotification(message, "warning");
         return;
@@ -2057,7 +2128,7 @@ const toggleUserStatus = async (user) => {
 
     const newStatus = user.status === "active" ? "inactive" : "active";
     const actionText =
-        newStatus === "active" ? "mengaktifkan" : "menonaktifkan";
+        newStatus === "active" ? t("common.activate") : t("common.deactivate");
 
     if (!confirm(`Apakah Anda yakin ingin ${actionText} ${user.name}?`)) {
         return;
@@ -2087,7 +2158,7 @@ const toggleUserStatus = async (user) => {
             showNotification(message, "success");
         } else {
             showNotification(
-                response.data.message || "Gagal mengubah status pengguna",
+                response.data.message || t("message.toggleStatusFailed"),
                 "error"
             );
         }
@@ -2116,14 +2187,13 @@ const toggleUserStatus = async (user) => {
 
 const resetUserPassword = async (user) => {
     if (!user.can_edit) {
-        showNotification(
-            "Anda tidak dapat mereset password pengguna ini",
-            "warning"
-        );
+        showNotification(t("message.cannotResetPassword"), "warning");
         return;
     }
 
-    const confirmationMessage = `Apakah Anda yakin ingin mereset password untuk ${user.name}?\n\nPassword baru akan digenerate secara otomatis.`;
+    const confirmationMessage = t("message.confirmResetPassword", {
+        name: user.name,
+    });
     if (!confirm(confirmationMessage)) {
         return;
     }
@@ -2137,53 +2207,39 @@ const resetUserPassword = async (user) => {
             const { user_info, password_info } = response.data;
 
             // Create a detailed success message with password information
-            const passwordDetails = `
-🔐 PASSWORD BERHASIL DIRESET
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-👤 PENGGUNA
-   Nama: ${user_info.name}
-   NIP:  ${user_info.nip}
-   Email: ${user_info.email}
-   Peran: ${user_info.role}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔖 PASSWORD BARU
-   ${password_info.password}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📋 INFORMASI PASSWORD
-   Format: ${password_info.format}
-   Panjang: ${password_info.length} karakter
-   Kekuatan: ${password_info.strength}
-   Level Keamanan: ${password_info.security_level}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⏰ KADALUARSA
-   ${new Date(password_info.expires_at).toLocaleString("en-EN", {
-       weekday: "long",
-       year: "numeric",
-       month: "long",
-       day: "numeric",
-       hour: "2-digit",
-       minute: "2-digit",
-   })}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-💡 INSTRUKSI
-   ${password_info.instructions}
-
-🔐 Amankan password ini dan jangan bagikan kepada siapa pun!
-   Pengguna disarankan untuk mengubah password pada login pertama.
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-`.trim();
+            const passwordDetails = t("message.passwordResetDetails", {
+                user_name: user_info.name,
+                user_nip: user_info.nip,
+                user_email: user_info.email,
+                user_role: user_info.role,
+                new_password: password_info.password,
+                password_format: password_info.format,
+                password_length: password_info.length,
+                password_strength: password_info.strength,
+                security_level: password_info.security_level,
+                expires_at: new Date(password_info.expires_at).toLocaleString(
+                    locale.value,
+                    {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                    }
+                ),
+                instructions: password_info.instructions,
+            });
 
             // Show the password in an alert for copying
             alert(passwordDetails);
 
             // Also show a success notification with quick summary
             showNotification(
-                `✅ Password ${user_info.name} direset: ${password_info.password}`,
+                t("message.passwordResetSuccess", {
+                    name: user_info.name,
+                    password: password_info.password,
+                }),
                 "success"
             );
 
@@ -2193,7 +2249,9 @@ const resetUserPassword = async (user) => {
                 reset_time: new Date().toISOString(),
             });
         } else {
-            const errors = response.data.errors || ["Gagal mereset password"];
+            const errors = response.data.errors || [
+                t("message.resetPasswordFailed"),
+            ];
             showNotification(
                 Array.isArray(errors) ? errors.join(", ") : errors,
                 "error"
@@ -2206,9 +2264,9 @@ const resetUserPassword = async (user) => {
         if (error.response?.status === 500) {
             // Server error - provide more detailed debugging info
             const debugInfo = error.response.data?.debug_info || {};
-            errorMessage = `Terjadi kesalahan server saat mereset password (${
-                debugInfo.error_type || "Unknown Error"
-            }). Silakan coba lagi atau hubungi administrator.`;
+            errorMessage = t("message.serverErrorResetPassword", {
+                error_type: debugInfo.error_type || t("common.unknownError"),
+            });
 
             console.error("Server error details:", {
                 status: error.response.status,
@@ -2230,8 +2288,7 @@ const resetUserPassword = async (user) => {
         } else if (error.message) {
             errorMessage = error.message;
         } else if (error.code === "NETWORK_ERROR") {
-            errorMessage =
-                "Tidak dapat terhubung ke server. Silakan periksa koneksi internet Anda.";
+            errorMessage = t("message.networkError");
         }
 
         showNotification(errorMessage, "error");
@@ -2407,7 +2464,7 @@ const downloadErrorReport = () => {
     if (!importResults.value || !importResults.value.errors) return;
 
     const csvContent = [
-        ["Row", "Error", "Data"],
+        [t("common.row"), t("common.error"), t("common.data")],
         ...importResults.value.errors.map((error) => [
             error.row,
             error.error,

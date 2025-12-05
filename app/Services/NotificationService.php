@@ -294,6 +294,69 @@ class NotificationService
     }
 
     /**
+     * Get notifications for an admin aplikasi (only notifications related to their managed applications).
+     *
+     * @param string $adminAplikasiNip Admin Aplikasi NIP
+     * @param array $filters Optional filters
+     * @param int $perPage Number of notifications per page
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getAdminAplikasiNotifications(string $adminAplikasiNip, array $filters = [], int $perPage = 15): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    {
+        // Find admin aplikasi by NIP
+        $adminAplikasi = \App\Models\AdminAplikasi::where('nip', $adminAplikasiNip)->first();
+        if (!$adminAplikasi) {
+            return new \Illuminate\Pagination\LengthAwarePaginator([], 0, $perPage);
+        }
+
+        // Get all application IDs managed by this admin aplikasi
+        $managedAppIds = [];
+        
+        // Method 1: From managed_applications JSON field
+        if ($adminAplikasi->managed_applications && is_array($adminAplikasi->managed_applications)) {
+            $managedAppIds = $adminAplikasi->managed_applications;
+        }
+        
+        // Method 2: Get applications where this admin is assigned as admin_aplikasi_nip
+        $directAppIds = \App\Models\Aplikasi::where('admin_aplikasi_nip', $adminAplikasiNip)
+            ->pluck('id')
+            ->toArray();
+        
+        // Method 3: Get applications where this admin is assigned as backup_admin_nip
+        $backupAppIds = \App\Models\Aplikasi::where('backup_admin_nip', $adminAplikasiNip)
+            ->pluck('id')
+            ->toArray();
+        
+        // Combine all sources
+        $managedAppIds = array_unique(array_merge($managedAppIds, $directAppIds, $backupAppIds));
+
+        // If no managed applications, return empty result
+        if (empty($managedAppIds)) {
+            return new \Illuminate\Pagination\LengthAwarePaginator([], 0, $perPage);
+        }
+
+        // Build query: notifications where ticket belongs to managed applications
+        // OR notifications directly addressed to this admin aplikasi
+        $query = Notification::query()
+            ->with(['ticket'])
+            ->where(function($q) use ($managedAppIds, $adminAplikasi) {
+                // Notifications for tickets in managed applications
+                $q->whereHas('ticket', function($ticketQuery) use ($managedAppIds) {
+                    $ticketQuery->whereIn('aplikasi_id', $managedAppIds);
+                })
+                // OR notifications directly to this admin aplikasi
+                ->orWhere(function($directQuery) use ($adminAplikasi) {
+                    $directQuery->where('notifiable_type', get_class($adminAplikasi))
+                                ->where('notifiable_id', $adminAplikasi->nip);
+                });
+            });
+
+        $query = $this->applyFilters($query, $filters);
+
+        return $query->paginate($perPage);
+    }
+
+    /**
      * Mark individual notification as read.
      *
      * @param int $notificationId Notification ID

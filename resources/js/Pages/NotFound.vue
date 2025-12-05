@@ -1,8 +1,8 @@
 <template>
-  <AppLayout title="Halaman Tidak Ditemukan">
+  <AppLayout :title="t('notFound.pageTitle')">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        404 - Halaman Tidak Ditemukan
+        {{ t('notFound.header') }}
       </h2>
     </template>
 
@@ -10,13 +10,13 @@
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
           <div class="p-6 bg-white border-b border-gray-200 text-center">
-            <h3 class="text-2xl font-bold text-gray-800 mb-4">Maaf, halaman tidak ditemukan</h3>
-            <p class="text-gray-600 mb-6">Halaman yang Anda cari mungkin telah dipindahkan atau dihapus.</p>
-            <Link 
-              :href="route('dashboard')" 
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">{{ t('notFound.title') }}</h3>
+            <p class="text-gray-600 mb-6">{{ t('notFound.description') }}</p>
+            <Link
+              :href="route('dashboard')"
               class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-white hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150"
             >
-              Kembali ke Dashboard
+              {{ t('notFound.backToDashboard') }}
             </Link>
           </div>
         </div>
@@ -29,4 +29,7 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Link } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 </script>

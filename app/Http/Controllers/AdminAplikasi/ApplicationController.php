@@ -118,7 +118,14 @@ class ApplicationController extends Controller
                 'resolved_tickets' => $application->tickets()->where('status', Ticket::STATUS_RESOLVED)->count(),
                 'total_categories' => $totalCategories,
                 'category_count' => $totalCategories,
-                'assigned_teknisi_count' => $application->assignedTeknis()->count(),
+                'assigned_teknisi_count' => $application->assignedTeknis->count(),
+                'assigned_teknisis' => $application->assignedTeknis->map(function($t) {
+                    return [
+                        'id' => $t->nip, // Mapping NIP to ID for frontend compatibility
+                        'nip' => $t->nip,
+                        'name' => $t->name
+                    ];
+                }),
                 'created_at' => $application->created_at,
                 'formatted_created_at' => $application->created_at->format('d M Y'),
             ];
@@ -228,7 +235,14 @@ class ApplicationController extends Controller
                 'resolved_tickets' => $application->tickets()->where('status', Ticket::STATUS_RESOLVED)->count(),
                 'total_categories' => $totalCategories,
                 'category_count' => $totalCategories,
-                'assigned_teknisi_count' => $application->assignedTeknis()->count(),
+                'assigned_teknisi_count' => $application->assignedTeknis->count(),
+                'assigned_teknisis' => $application->assignedTeknis->map(function($t) {
+                    return [
+                        'id' => $t->nip, // Mapping NIP to ID for frontend compatibility
+                        'nip' => $t->nip,
+                        'name' => $t->name
+                    ];
+                }),
                 'created_at' => $application->created_at,
                 'formatted_created_at' => $application->created_at->format('d M Y'),
             ];
@@ -662,6 +676,16 @@ class ApplicationController extends Controller
 
         $admin = AdminAplikasi::where('nip', $nip)->first();
         
+        if (!$admin) {
+            if ($this->wantsJson($request)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Admin not found.',
+                ], 404);
+            }
+            return back()->withErrors(['Admin not found.']);
+        }
+        
         // Check if admin has access to this application
         if (!$this->hasAccessToApplication($admin, $id)) {
             if ($this->wantsJson($request)) {
@@ -762,7 +786,8 @@ class ApplicationController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'teknisi_nip' => 'required|exists:teknisis,nip',
+            'teknisi_nips' => 'present|array',
+            'teknisi_nips.*' => 'exists:teknisis,nip',
         ]);
 
         if ($validator->fails()) {
@@ -778,32 +803,60 @@ class ApplicationController extends Controller
 
         try {
             $application = Aplikasi::findOrFail($id);
+            $newNips = $request->input('teknisi_nips', []);
             
-            // Add teknisi to application (using pivot table)
-            $application->assignedTeknis()->syncWithoutDetaching([
-                $request->teknisi_nip => [
+            // Get current assignments
+            $currentNips = $application->assignedTeknis()->pluck('teknisis.nip')->toArray();
+            
+            // Determine changes
+            $toDetach = array_diff($currentNips, $newNips);
+            $toAttach = array_diff($newNips, $currentNips);
+            
+            // Detach removed teknisi
+            if (!empty($toDetach)) {
+                $application->assignedTeknis()->detach($toDetach);
+            }
+            
+            // Attach new teknisi
+            if (!empty($toAttach)) {
+                $application->assignedTeknis()->attach($toAttach, [
                     'assigned_by_nip' => $nip,
                     'assigned_at' => Carbon::now(),
-                ]
-            ]);
+                ]);
+            }
+
+            // Log the assignment change if there were changes
+            if (!empty($toDetach) || !empty($toAttach)) {
+                $this->auditLogService->log(
+                    'teknisi_assigned',
+                    $application,
+                    $admin,
+                    [
+                        'application_name' => $application->name,
+                        'added_nips' => array_values($toAttach),
+                        'removed_nips' => array_values($toDetach),
+                        'assigned_by' => $nip,
+                    ]
+                );
+            }
 
             if ($this->wantsJson($request)) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Teknisi assigned successfully.',
+                    'message' => 'Teknisi assignment updated successfully.',
                 ]);
             }
 
-            return back()->with('success', 'Teknisi assigned successfully.');
+            return back()->with('success', 'Teknisi assignment updated successfully.');
 
         } catch (\Exception $e) {
             if ($this->wantsJson($request)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Failed to assign teknisi: ' . $e->getMessage(),
+                    'message' => 'Failed to update teknisi assignment: ' . $e->getMessage(),
                 ], 500);
             }
-            return back()->withErrors(['Failed to assign teknisi: ' . $e->getMessage()]);
+            return back()->withErrors(['Failed to update teknisi assignment: ' . $e->getMessage()]);
         }
     }
 
@@ -1242,6 +1295,9 @@ class ApplicationController extends Controller
 
         // Load counts efficiently
         $query->withCount(['tickets', 'kategoriMasalahs']);
+        
+        // Eager load assigned teknisi for display and management
+        $query->with(['assignedTeknis']);
 
         // Apply filters
         if (!empty($filters['status'])) {

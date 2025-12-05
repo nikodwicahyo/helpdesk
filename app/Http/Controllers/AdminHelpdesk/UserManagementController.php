@@ -17,6 +17,7 @@ use App\Models\Teknisi;
 use App\Models\Aplikasi;
 use App\Services\AuthService;
 use App\Services\AuditLogService;
+use App\Services\SystemSettingsService;
 use Carbon\Carbon;
 use \Illuminate\Database\Eloquent\Builder;
 use \Illuminate\Pagination\LengthAwarePaginator;
@@ -132,6 +133,10 @@ class UserManagementController extends Controller
         $nip = $request->nip;
         $email = $request->email;
 
+        // Get password validation rules from system settings
+        $passwordRules = SystemSettingsService::getPasswordValidationRules(true);
+        $passwordRulesString = implode('|', $passwordRules) . '|confirmed';
+
         // Validate request data
         $validator = Validator::make($request->all(), [
             'nip' => 'required|string|max:20',
@@ -141,8 +146,8 @@ class UserManagementController extends Controller
             'department' => 'nullable|string|max:100',
             'position' => 'nullable|string|max:100',
             'role' => 'required|in:user,admin_helpdesk,admin_aplikasi,teknisi',
-            'password' => 'required|string|min:8|confirmed',
-            'password_confirmation' => 'required|string|min:8',
+            'password' => $passwordRulesString,
+            'password_confirmation' => 'required|string',
             'status' => 'required|in:active,inactive',
         ]);
 
@@ -454,10 +459,11 @@ class UserManagementController extends Controller
                 'status' => 'required|in:active,inactive',
             ];
 
-            // Only validate password if it's provided
+            // Only validate password if it's provided - use system settings
             if ($request->filled('password')) {
-                $rules['password'] = 'required|string|min:8|confirmed';
-                $rules['password_confirmation'] = 'required|string|min:8';
+                $passwordRules = SystemSettingsService::getPasswordValidationRules(true);
+                $rules['password'] = implode('|', $passwordRules) . '|confirmed';
+                $rules['password_confirmation'] = 'required|string';
             }
 
             $validator = Validator::make($request->all(), $rules);

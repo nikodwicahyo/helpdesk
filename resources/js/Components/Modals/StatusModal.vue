@@ -341,7 +341,7 @@ const submit = async () => {
             emit("updated");
         } else {
             errorMessage.value =
-                response.data.message || "Status update failed";
+                response.data.message || t('message.statusUpdateFailed');
             processing.value = false;
         }
     } catch (error) {
@@ -362,8 +362,7 @@ const submit = async () => {
                 errorMessage.value = error.response.data.message;
             }
         } else {
-            errorMessage.value =
-                "Failed to update ticket status. Please try again.";
+            errorMessage.value = t('message.statusUpdateFailedGeneric');
         }
         processing.value = false;
     }

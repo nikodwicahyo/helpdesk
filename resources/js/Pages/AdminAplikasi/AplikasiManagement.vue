@@ -3,8 +3,8 @@
         <template #header>
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Application Management</h1>
-                    <p class="text-gray-600 mt-1">Manage applications and their categories</p>
+                    <h1 class="text-3xl font-bold text-gray-900">{{ t('adminAplikasi.applicationManagement.title') }}</h1>
+                    <p class="text-gray-600 mt-1">{{ t('adminAplikasi.applicationManagement.description') }}</p>
                 </div>
                 <div class="flex items-center space-x-4">
                     <button
@@ -14,7 +14,7 @@
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
-                        Add Application
+                        {{ t('adminAplikasi.applicationManagement.addApplication') }}
                     </button>
                     <button
                         @click="exportApplications"
@@ -23,7 +23,7 @@
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        Export
+                        {{ t('common.export') }}
                     </button>
                 </div>
             </div>
@@ -32,25 +32,25 @@
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <StatCard
-                title="Total Applications"
+                :title="t('adminAplikasi.applicationManagement.stats.totalApplications')"
                 :value="stats.total_applications"
                 icon="📱"
                 color="blue"
             />
             <StatCard
-                title="Active Applications"
+                :title="t('adminAplikasi.applicationManagement.stats.activeApplications')"
                 :value="stats.active_applications"
                 icon="✅"
                 color="green"
             />
             <StatCard
-                title="Total Categories"
+                :title="t('adminAplikasi.applicationManagement.stats.totalCategories')"
                 :value="stats.total_categories"
                 icon="🏷️"
                 color="purple"
             />
             <StatCard
-                title="Total Tickets"
+                :title="t('adminAplikasi.applicationManagement.stats.totalTickets')"
                 :value="stats.total_tickets"
                 icon="🎫"
                 color="yellow"
@@ -62,13 +62,13 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Search -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Search Applications</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('adminAplikasi.applicationManagement.filters.searchLabel') }}</label>
                     <div class="relative">
                         <input
                             v-model="filters.search"
                             @input="debouncedSearch"
                             type="text"
-                            placeholder="Search by name or description..."
+                            :placeholder="t('adminAplikasi.applicationManagement.filters.searchPlaceholder')"
                             class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                         >
                         <svg class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,31 +79,31 @@
 
                 <!-- Status Filter -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('adminAplikasi.applicationManagement.filters.statusLabel') }}</label>
                     <select
                         v-model="filters.status"
                         @change="applyFilters"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     >
-                        <option value="">All Status</option>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                        <option value="maintenance">Maintenance</option>
+                        <option value="">{{ t('common.allStatuses') }}</option>
+                        <option value="active">{{ t('status.active') }}</option>
+                        <option value="inactive">{{ t('status.inactive') }}</option>
+                        <option value="maintenance">{{ t('status.maintenance') }}</option>
                     </select>
                 </div>
 
                 <!-- Sort By -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('adminAplikasi.applicationManagement.filters.sortLabel') }}</label>
                     <select
                         v-model="filters.sort_by"
                         @change="applyFilters"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     >
-                        <option value="name">Name</option>
-                        <option value="created_at">Created Date</option>
-                        <option value="ticket_count">Ticket Count</option>
-                        <option value="status">Status</option>
+                        <option value="name">{{ t('adminAplikasi.applicationManagement.filters.sortName') }}</option>
+                        <option value="created_at">{{ t('adminAplikasi.applicationManagement.filters.sortCreated') }}</option>
+                        <option value="ticket_count">{{ t('adminAplikasi.applicationManagement.filters.sortTickets') }}</option>
+                        <option value="status">{{ t('adminAplikasi.applicationManagement.filters.sortStatus') }}</option>
                     </select>
                 </div>
             </div>
@@ -114,7 +114,7 @@
             <div class="px-6 py-4 border-b border-gray-200">
                 <div class="flex items-center justify-between">
                     <h2 class="text-xl font-semibold text-gray-900">
-                        Applications ({{ applications.total }})
+                        {{ t('adminAplikasi.applicationManagement.applicationsCount', { count: applications.total }) }}
                     </h2>
                     <div class="flex items-center space-x-4">
                         <div class="flex items-center space-x-2 bg-gray-100 rounded-lg p-1">
@@ -125,7 +125,7 @@
                                     viewMode === 'grid' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'
                                 ]"
                             >
-                                Grid View
+                                {{ t('common.gridView') }}
                             </button>
                             <button
                                 @click="viewMode = 'list'"
@@ -134,7 +134,7 @@
                                     viewMode === 'list' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'
                                 ]"
                             >
-                                List View
+                                {{ t('common.listView') }}
                             </button>
                         </div>
                         <select
@@ -142,9 +142,9 @@
                             @change="changePerPage"
                             class="text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                         >
-                            <option :value="12">12 per page</option>
-                            <option :value="24">24 per page</option>
-                            <option :value="48">48 per page</option>
+                            <option :value="12">{{ t('common.perPage', { count: 12 }) }}</option>
+                            <option :value="24">{{ t('common.perPage', { count: 24 }) }}</option>
+                            <option :value="48">{{ t('common.perPage', { count: 48 }) }}</option>
                         </select>
                     </div>
                 </div>
@@ -153,7 +153,7 @@
             <!-- Loading State -->
             <div v-if="loading" class="p-12 text-center">
                 <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-                <p class="mt-2 text-gray-500">Loading applications...</p>
+                <p class="mt-2 text-gray-500">{{ t('adminAplikasi.applicationManagement.loading') }}</p>
             </div>
 
             <!-- Empty State -->
@@ -161,9 +161,9 @@
                 <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
-                <h3 class="mt-2 text-sm font-medium text-gray-900">No applications found</h3>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">{{ t('adminAplikasi.applicationManagement.empty.title') }}</h3>
                 <p class="mt-1 text-sm text-gray-500">
-                    {{ hasActiveFilters ? 'Try adjusting your filters' : 'Get started by creating your first application' }}
+                    {{ hasActiveFilters ? t('adminAplikasi.applicationManagement.empty.filtered') : t('adminAplikasi.applicationManagement.empty.description') }}
                 </p>
                 <div class="mt-6">
                     <button
@@ -171,14 +171,14 @@
                         @click="showCreateModal = true"
                         class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition"
                     >
-                        Create New Application
+                        {{ t('adminAplikasi.applicationManagement.empty.primaryAction') }}
                     </button>
                     <button
                         v-else
                         @click="clearFilters"
                         class="bg-gray-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-700 transition"
                     >
-                        Clear Filters
+                        {{ t('common.clearFilters') }}
                     </button>
                 </div>
             </div>
@@ -203,7 +203,7 @@
                                 <div>
                                     <h3 class="text-lg font-semibold text-gray-900">{{ app.name }}</h3>
                                     <span :class="['px-2 py-1 text-xs font-medium rounded-full', getStatusColor(app.status)]">
-                                        {{ app.status }}
+                                        {{ getStatusLabel(app.status, app.status_label) }}
                                     </span>
                                 </div>
                             </div>
@@ -216,17 +216,17 @@
                         <div class="grid grid-cols-2 gap-4 mb-4">
                             <div class="text-center">
                                 <p class="text-2xl font-bold text-gray-900">{{ app.total_tickets || app.ticket_count || 0 }}</p>
-                                <p class="text-xs text-gray-500">Total Tickets</p>
+                                <p class="text-xs text-gray-500">{{ t('adminAplikasi.applicationManagement.grid.totalTickets') }}</p>
                             </div>
                             <div class="text-center">
                                 <p class="text-2xl font-bold text-gray-900">{{ app.total_categories || app.category_count || 0 }}</p>
-                                <p class="text-xs text-gray-500">Categories</p>
+                                <p class="text-xs text-gray-500">{{ t('common.categories') }}</p>
                             </div>
                         </div>
 
                         <!-- Assigned Teknisi -->
                         <div v-if="app.assigned_teknisis && app.assigned_teknisis.length > 0" class="mb-4">
-                            <p class="text-xs text-gray-500 mb-2">Assigned Teknisi:</p>
+                            <p class="text-xs text-gray-500 mb-2">{{ t('adminAplikasi.applicationManagement.grid.assignedTeknisi') }}</p>
                             <div class="flex flex-wrap gap-1">
                                 <span
                                     v-for="teknisi in app.assigned_teknisis.slice(0, 3)"
@@ -239,14 +239,14 @@
                                     v-if="app.assigned_teknisis.length > 3"
                                     class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
                                 >
-                                    +{{ app.assigned_teknisis.length - 3 }} more
+                                    {{ t('adminAplikasi.applicationManagement.grid.moreTeknisi', { count: app.assigned_teknisis.length - 3 }) }}
                                 </span>
                             </div>
                         </div>
 
                         <!-- Recent Categories -->
                         <div v-if="app.recent_categories && app.recent_categories.length > 0" class="mb-4">
-                            <p class="text-xs text-gray-500 mb-2">Recent Categories:</p>
+                            <p class="text-xs text-gray-500 mb-2">{{ t('adminAplikasi.applicationManagement.grid.recentCategories') }}</p>
                             <div class="flex flex-wrap gap-1">
                                 <span
                                     v-for="category in app.recent_categories.slice(0, 3)"
@@ -265,20 +265,20 @@
                                     @click.stop="manageCategories(app.id)"
                                     class="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
                                 >
-                                    Categories
+                                    {{ t('nav.categories') }}
                                 </button>
                                 <button
-                                    @click.stop="assignTeknisi(app.id)"
+                                    @click.stop="assignTeknisi(app)"
                                     class="text-green-600 hover:text-green-800 text-sm font-medium"
                                 >
-                                    Assign Teknisi
+                                    {{ t('adminAplikasi.applicationManagement.actions.assignTeknisi') }}
                                 </button>
                             </div>
                             <div class="flex items-center space-x-2">
                                 <button
                                     @click.stop="editApplication(app)"
                                     class="text-blue-600 hover:text-blue-900"
-                                    title="Edit"
+                                    :title="t('common.edit')"
                                 >
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -287,7 +287,7 @@
                                 <button
                                     @click.stop="deleteApplication(app)"
                                     class="text-red-600 hover:text-red-900"
-                                    title="Delete"
+                                    :title="t('common.delete')"
                                 >
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -305,28 +305,28 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Application
+                                {{ t('adminAplikasi.applicationManagement.table.application') }}
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Description
+                                {{ t('adminAplikasi.applicationManagement.table.description') }}
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Status
+                                {{ t('adminAplikasi.applicationManagement.table.status') }}
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Categories
+                                {{ t('common.categories') }}
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Assigned Teknisi
+                                {{ t('adminAplikasi.applicationManagement.table.assignedTeknisi') }}
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Tickets
+                                {{ t('common.tickets') }}
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Created
+                                {{ t('common.created') }}
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Actions
+                                {{ t('common.actions') || t('adminAplikasi.applicationManagement.table.actions') }}
                             </th>
                         </tr>
                     </thead>
@@ -345,7 +345,7 @@
                                     </div>
                                     <div>
                                         <div class="text-sm font-medium text-gray-900">{{ app.name }}</div>
-                                        <div class="text-sm text-gray-500">{{ app.version || 'v1.0' }}</div>
+                                        <div class="text-sm text-gray-500">{{ app.version || t('adminAplikasi.applicationManagement.defaultVersion') }}</div>
                                     </div>
                                 </div>
                             </td>
@@ -356,32 +356,32 @@
                             </td>
                             <td class="px-6 py-4">
                                 <span :class="['px-2 py-1 text-xs font-medium rounded-full', getStatusColor(app.status)]">
-                                    {{ app.status }}
+                                    {{ getStatusLabel(app.status, app.status_label) }}
                                 </span>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-900">
-                                    <p>{{ app.total_categories || app.category_count || 0 }} categories</p>
+                                    <p>{{ t('adminAplikasi.applicationManagement.table.categoriesCount', { count: app.total_categories || app.category_count || 0 }) }}</p>
                                     <p v-if="app.active_categories > 0" class="text-xs text-green-600">
-                                        {{ app.active_categories }} active
+                                        {{ t('adminAplikasi.applicationManagement.table.activeCategoriesCount', { count: app.active_categories }) }}
                                     </p>
                                 </div>
                             </td>
                             <td class="px-6 py-4">
                                 <div v-if="app.assigned_teknisis && app.assigned_teknisis.length > 0" class="text-sm">
-                                    <p class="text-gray-900">{{ app.assigned_teknisis.length }} assigned</p>
+                                    <p class="text-gray-900">{{ t('adminAplikasi.applicationManagement.table.assignedCount', { count: app.assigned_teknisis.length }) }}</p>
                                     <p class="text-xs text-gray-500">
                                         {{ app.assigned_teknisis.slice(0, 2).map(t => t.name).join(', ') }}
                                         <span v-if="app.assigned_teknisis.length > 2">...</span>
                                     </p>
                                 </div>
-                                <span v-else class="text-sm text-gray-400">Unassigned</span>
+                                <span v-else class="text-sm text-gray-400">{{ t('common.unassigned') }}</span>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-900">
-                                    <p>{{ app.total_tickets || app.ticket_count || 0 }} total</p>
+                                    <p>{{ t('adminAplikasi.applicationManagement.table.totalTicketsCount', { count: app.total_tickets || app.ticket_count || 0 }) }}</p>
                                     <p v-if="app.open_tickets > 0" class="text-xs text-yellow-600">
-                                        {{ app.open_tickets }} open
+                                        {{ t('adminAplikasi.applicationManagement.table.openTicketsCount', { count: app.open_tickets }) }}
                                     </p>
                                 </div>
                             </td>
@@ -393,7 +393,7 @@
                                     <button
                                         @click="viewApplication(app.id)"
                                         class="text-indigo-600 hover:text-indigo-900"
-                                        title="View Details"
+                                        :title="t('common.viewDetails')"
                                     >
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -401,9 +401,18 @@
                                         </svg>
                                     </button>
                                     <button
+                                        @click.stop="assignTeknisi(app)"
+                                        class="text-purple-600 hover:text-purple-900"
+                                        :title="t('adminAplikasi.applicationManagement.actions.assignTeknisi')"
+                                    >
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                                        </svg>
+                                    </button>
+                                    <button
                                         @click="editApplication(app)"
                                         class="text-green-600 hover:text-green-900"
-                                        title="Edit"
+                                        :title="t('common.edit')"
                                     >
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -412,7 +421,7 @@
                                     <button
                                         @click="manageCategories(app.id)"
                                         class="text-blue-600 hover:text-blue-900"
-                                        title="Manage Categories"
+                                        :title="t('adminAplikasi.applicationManagement.actions.manageCategories')"
                                     >
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
@@ -421,7 +430,7 @@
                                     <button
                                         @click="deleteApplication(app)"
                                         class="text-red-600 hover:text-red-900"
-                                        title="Delete"
+                                        :title="t('common.delete')"
                                     >
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -437,7 +446,7 @@
             <!-- Pagination -->
             <SimplePagination
                 :data="applications"
-                label="aplikasi"
+                :label="t('adminAplikasi.applicationManagement.paginationLabel')"
                 @page-changed="handlePageChange"
             />
         </div>
@@ -472,6 +481,7 @@ import StatCard from '@/Components/Common/StatCard.vue';
 import SimplePagination from '@/Components/Common/SimplePagination.vue';
 import AdminAplikasiApplicationModal from '@/Components/Modals/AdminAplikasiApplicationModal.vue';
 import AssignTeknisiModal from '@/Components/Modals/AssignTeknisiModal.vue';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
     applications: {
@@ -491,6 +501,8 @@ const props = defineProps({
         default: () => ({}),
     },
 });
+
+const { t, locale } = useI18n();
 
 const loading = ref(false);
 const viewMode = ref('grid');
@@ -566,10 +578,17 @@ const assignTeknisi = (app) => {
 };
 
 const deleteApplication = (app) => {
-    if (confirm(`Are you sure you want to delete "${app.name}"? This action cannot be undone.`)) {
+    if (confirm(t('adminAplikasi.applicationManagement.confirmDelete', { name: app.name }))) {
         router.delete(route('admin-aplikasi.applications.destroy', app.id), {
+            preserveScroll: true,
             onSuccess: () => {
-                router.reload();
+                // Page will be automatically refreshed by Inertia after successful redirect
+            },
+            onError: (errors) => {
+                console.error('Delete failed:', errors);
+                const fallback = t('adminAplikasi.applicationManagement.deleteFailed');
+                const errorMessage = errors?.message || (errors ? Object.values(errors).flat().join('\n') : '') || fallback;
+                alert(errorMessage);
             },
         });
     }
@@ -635,11 +654,27 @@ const getStatusColor = (status) => {
 };
 
 const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-    });
+    if (!dateString) return t('common.notAvailable');
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    try {
+        return new Intl.DateTimeFormat(locale.value || 'en-US', options).format(new Date(dateString));
+    } catch (error) {
+        return new Intl.DateTimeFormat('en-US', options).format(new Date(dateString));
+    }
+};
+
+const formatStatusKey = (value) => {
+    if (!value) return '';
+    return value.split('_').map((segment, index) => index === 0 ? segment : segment.charAt(0).toUpperCase() + segment.slice(1)).join('');
+};
+
+const getStatusLabel = (status, label) => {
+    if (label) return label;
+    if (!status) return t('common.unknown');
+    const key = formatStatusKey(status);
+    const translationKey = `status.${key || status}`;
+    const translated = t(translationKey);
+    return translated === translationKey ? status : translated;
 };
 
 // Computed property for all teknisi (combining from props)

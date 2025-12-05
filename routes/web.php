@@ -185,6 +185,16 @@ Route::middleware(['auth', 'session.tracking', 'session.timeout', 'inertia'])->g
         Route::post('/system-settings/reset', [SystemController::class, 'reset'])->name('system.reset');
         Route::post('/system-settings/test-email', [SystemController::class, 'testEmail'])->name('system.test-email');
 
+        // Backup routes
+        Route::prefix('backup')->name('backup.')->group(function () {
+            Route::post('/create', [\App\Http\Controllers\AdminHelpdesk\BackupController::class, 'create'])->name('create');
+            Route::get('/download/latest', [\App\Http\Controllers\AdminHelpdesk\BackupController::class, 'downloadLatest'])->name('download.latest');
+            Route::get('/download/{backup}', [\App\Http\Controllers\AdminHelpdesk\BackupController::class, 'download'])->name('download');
+            Route::delete('/{backup}', [\App\Http\Controllers\AdminHelpdesk\BackupController::class, 'destroy'])->name('delete');
+            Route::get('/history', [\App\Http\Controllers\AdminHelpdesk\BackupController::class, 'history'])->name('history');
+            Route::get('/statistics', [\App\Http\Controllers\AdminHelpdesk\BackupController::class, 'statistics'])->name('statistics');
+        });
+
         // Activity Log routes
         Route::prefix('activity-log')->name('activity-log.')->group(function () {
             Route::get('/', [ActivityLogController::class, 'index'])->name('index');

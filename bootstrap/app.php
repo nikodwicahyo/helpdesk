@@ -11,6 +11,44 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    ->withSchedule(function (\Illuminate\Console\Scheduling\Schedule $schedule) {
+        // Get backup settings from database
+        $autoBackup = \App\Models\SystemSetting::get('auto_backup', 'disabled');
+        $backupTime = \App\Models\SystemSetting::get('backup_time', '02:00');
+
+        // Schedule backup based on settings
+        if ($autoBackup === 'daily') {
+            $schedule->command('app:backup-database daily')
+                ->dailyAt($backupTime)
+                ->withoutOverlapping()
+                ->runInBackground();
+        } elseif ($autoBackup === 'weekly') {
+            $schedule->command('app:backup-database weekly')
+                ->weeklyOn(1, $backupTime) // Monday
+                ->withoutOverlapping()
+                ->runInBackground();
+        } elseif ($autoBackup === 'monthly') {
+            $schedule->command('app:backup-database monthly')
+                ->monthlyOn(1, $backupTime) // 1st of month
+                ->withoutOverlapping()
+                ->runInBackground();
+        }
+
+        // Clean up old backups daily
+        $schedule->command('app:cleanup-old-backups')
+            ->dailyAt('03:00')
+            ->withoutOverlapping();
+
+        // Auto-close resolved tickets hourly
+        $schedule->command('app:auto-close-tickets')
+            ->hourly()
+            ->withoutOverlapping();
+
+        // Check SLA breaches every 15 minutes
+        $schedule->command('app:check-sla-breaches --notify')
+            ->everyFifteenMinutes()
+            ->withoutOverlapping();
+    })
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->validateCsrfTokens(except: [
             'api/check-nip',

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\AdminAplikasi;
-use App\Models\Aplikasi;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -14,14 +13,6 @@ class AdminAplikasiSeeder extends Seeder
      */
     public function run(): void
     {
-        $applications = Aplikasi::all()->keyBy('code');
-
-        // Ensure applications exist before proceeding
-        if ($applications->isEmpty()) {
-            $this->command->warn('No applications found. Please run AplikasiSeeder first.');
-            return;
-        }
-
         $adminAplikasis = [
             [
                 'nip' => '197501012000011001',
@@ -39,7 +30,7 @@ class AdminAplikasiSeeder extends Seeder
                     'backup_management',
                     'audit_logging',
                 ],
-                'managed_applications' => array_keys($applications->toArray()),
+                'managed_applications' => ['SIKEP', 'SIAN', 'E-OFFICE', 'SIKEU', 'PDD', 'SIKON', 'SIMONAS', 'E-LEARN', 'HELPDESK', 'APD'],
                 'technical_expertise' => 'Enterprise Architecture, System Integration, Cybersecurity',
                 'password' => Hash::make('admin123'),
             ],
@@ -57,7 +48,7 @@ class AdminAplikasiSeeder extends Seeder
                     'data_backup_sikep',
                     'report_generation_sikep',
                 ],
-                'managed_applications' => isset($applications['SIKEP']) ? ['SIKEP'] : [],
+                'managed_applications' => ['SIKEP'],
                 'technical_expertise' => 'Human Resource Information Systems, Database Administration',
                 'password' => Hash::make('admin123'),
             ],
@@ -75,7 +66,7 @@ class AdminAplikasiSeeder extends Seeder
                     'document_template_management',
                     'user_access_control',
                 ],
-                'managed_applications' => isset($applications['E-OFFICE']) ? ['E-OFFICE'] : [],
+                'managed_applications' => ['E-OFFICE'],
                 'technical_expertise' => 'Document Management Systems, Workflow Automation',
                 'password' => Hash::make('admin123'),
             ],
@@ -93,7 +84,7 @@ class AdminAplikasiSeeder extends Seeder
                     'content_management',
                     'web_administration',
                 ],
-                'managed_applications' => isset($applications['SIAN'], $applications['PDD']) ? ['SIAN', 'PDD'] : [],
+                'managed_applications' => ['SIAN', 'PDD'],
                 'technical_expertise' => 'Web Development, Content Management Systems',
                 'password' => Hash::make('admin123'),
             ],
@@ -111,7 +102,7 @@ class AdminAplikasiSeeder extends Seeder
                     'financial_systems',
                     'consular_systems',
                 ],
-                'managed_applications' => isset($applications['SIKEU'], $applications['SIKON']) ? ['SIKEU', 'SIKON'] : [],
+                'managed_applications' => ['SIKEU', 'SIKON'],
                 'technical_expertise' => 'Financial Systems, Consular Applications',
                 'password' => Hash::make('admin123'),
             ],
@@ -129,7 +120,7 @@ class AdminAplikasiSeeder extends Seeder
                     'asset_management',
                     'learning_management',
                 ],
-                'managed_applications' => isset($applications['SIMONAS'], $applications['E-LEARN']) ? ['SIMONAS', 'E-LEARN'] : [],
+                'managed_applications' => ['SIMONAS', 'E-LEARN'],
                 'technical_expertise' => 'Asset Management Systems, E-Learning Platforms',
                 'password' => Hash::make('admin123'),
             ],
@@ -147,7 +138,7 @@ class AdminAplikasiSeeder extends Seeder
                     'ticket_management',
                     'reporting_analytics',
                 ],
-                'managed_applications' => isset($applications['HELPDESK']) ? ['HELPDESK'] : [],
+                'managed_applications' => ['HELPDESK'],
                 'technical_expertise' => 'IT Service Management, System Administration',
                 'password' => Hash::make('admin123'),
             ],
@@ -164,7 +155,7 @@ class AdminAplikasiSeeder extends Seeder
                     'protocol_management',
                     'event_coordination',
                 ],
-                'managed_applications' => isset($applications['APD']) ? ['APD'] : [],
+                'managed_applications' => ['APD'],
                 'technical_expertise' => 'Protocol Management Systems, Event Management',
                 'password' => Hash::make('admin123'),
             ],
@@ -172,7 +163,7 @@ class AdminAplikasiSeeder extends Seeder
 
         foreach ($adminAplikasis as $admin) {
             AdminAplikasi::firstOrCreate(
-                ['nip' => $admin['nip']], // Use unique 'nip' field as identifier
+                ['nip' => $admin['nip']],
                 $admin
             );
         }

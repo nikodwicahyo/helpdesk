@@ -3,8 +3,8 @@
         <template #header>
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Categories Management</h1>
-                    <p class="text-gray-600 mt-1">System-wide category oversight and management</p>
+                    <h1 class="text-3xl font-bold text-gray-900">{{ t('nav.categories') }} Management</h1>
+                    <p class="text-gray-600 mt-1">{{ t('adminHelpdesk.categoriesManagement.description') }}</p>
                 </div>
                 <div class="flex items-center space-x-4">
                     <button
@@ -14,7 +14,7 @@
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
-                        Add Category
+                        {{ t('common.add') }} {{ t('common.category') }}
                     </button>
                     <button
                         @click="exportCategories"
@@ -31,26 +31,22 @@
 
         <!-- Statistics Overview -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <StatCard
-                title="Total Categories"
+                        <StatCard :title="t('adminHelpdesk.categoriesManagement.stats.totalCategories')"
                 :value="stats.total_categories"
                 icon="📁"
                 color="blue"
             />
-            <StatCard
-                title="Active Categories"
+                        <StatCard :title="t('adminHelpdesk.categoriesManagement.stats.activeCategories')"
                 :value="stats.active_categories"
                 icon="✅"
                 color="green"
             />
-            <StatCard
-                title="Total Applications"
+                        <StatCard :title="t('adminHelpdesk.categoriesManagement.stats.totalApplications')"
                 :value="stats.total_applications"
                 icon="💻"
                 color="purple"
             />
-            <StatCard
-                title="Categories with Tickets"
+                        <StatCard :title="t('adminHelpdesk.categoriesManagement.stats.categoriesWithTickets')"
                 :value="stats.categories_with_tickets"
                 icon="🎫"
                 color="yellow"
@@ -61,53 +57,53 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('common.search') }}</label>
                     <input
                         v-model="filters.search"
                         @input="applyFilters"
                         type="text"
-                        placeholder="Search categories..."
+                        :placeholder="t('adminHelpdesk.categoriesManagement.filters.searchPlaceholder')"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     />
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Application</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('ticket.application') }}</label>
                     <select
                         v-model="filters.aplikasi_id"
                         @change="applyFilters"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     >
-                        <option value="">All Applications</option>
+                        <option value="">{{ t('adminHelpdesk.categoriesManagement.filters.allApplications') }}</option>
                         <option v-for="app in filterOptions.applications" :key="app.value" :value="app.value">
                             {{ app.label }}
                         </option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('ticket.status') }}</label>
                     <select
                         v-model="filters.status"
                         @change="applyFilters"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     >
-                        <option value="">All Statuses</option>
+                        <option value="">{{ t('common.allStatuses') }}</option>
                         <option v-for="status in filterOptions.statuses" :key="status.value" :value="status.value">
                             {{ status.label }}
                         </option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('common.sortBy') }}</label>
                     <div class="flex space-x-2">
                         <select
                             v-model="filters.sort_by"
                             @change="applyFilters"
                             class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                         >
-                            <option value="name">Name</option>
-                            <option value="created_at">Created Date</option>
-                            <option value="total_tickets">Total Tickets</option>
-                            <option value="application">Application</option>
+                            <option value="name">{{ t('common.name') }}</option>
+                            <option value="created_at">{{ t('time.createdDate') }}</option>
+                            <option value="total_tickets">{{ t('ticket.totalTickets') }}</option>
+                            <option value="application">{{ t('ticket.application') }}</option>
                         </select>
                         <button
                             @click="toggleSortDirection"
@@ -127,34 +123,33 @@
         <div v-if="selectedCategories.length > 0" class="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-6">
             <div class="flex items-center justify-between">
                 <div class="flex items-center">
-                    <span class="text-sm font-medium text-indigo-800">
-                        {{ selectedCategories.length }} categories selected
-                    </span>
-                </div>
+                                            <span class="text-sm font-medium text-indigo-800">
+                                                {{ selectedCategories.length }} {{ t('common.categoriesSelected') }}
+                                            </span>                </div>
                 <div class="flex items-center space-x-4">
                     <button
                         @click="bulkAction('activate')"
                         class="text-sm bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
                     >
-                        Activate
+                        {{ t('common.activate') }}
                     </button>
                     <button
                         @click="bulkAction('deactivate')"
                         class="text-sm bg-yellow-600 text-white px-3 py-1 rounded hover:bg-yellow-700"
                     >
-                        Deactivate
+                        {{ t('common.deactivate') }}
                     </button>
                     <button
                         @click="bulkAction('delete')"
                         class="text-sm bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
                     >
-                        Delete
+                        {{ t('common.delete') }}
                     </button>
                     <button
                         @click="selectedCategories = []"
                         class="text-sm bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700"
                     >
-                        Clear Selection
+                        {{ t('common.clearSelection') }}
                     </button>
                 </div>
             </div>
@@ -163,7 +158,7 @@
         <!-- Categories Table -->
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                <h2 class="text-lg font-semibold text-gray-900">Categories Overview</h2>
+                <h2 class="text-lg font-semibold text-gray-900">{{ t('adminHelpdesk.categoriesManagement.categoriesOverview') }}</h2>
                 <label class="flex items-center">
                     <input
                         v-model="selectAll"
@@ -171,7 +166,7 @@
                         type="checkbox"
                         class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                     />
-                    <span class="ml-2 text-sm text-gray-700">Select All</span>
+                    <span class="ml-2 text-sm text-gray-700">{{ t('common.selectAll') }}</span>
                 </label>
             </div>
 
@@ -188,28 +183,28 @@
                                 />
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Category
+                                {{ t('ticket.category') }}
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Application
+                                {{ t('ticket.application') }}
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Admin
+                                {{ t('common.admin') }}
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Status
+                                {{ t('ticket.status') }}
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Tickets
+                                {{ t('nav.tickets') }}
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Avg Resolution Time
+                                {{ t('dashboard.admin.avgResolutionTime') }}
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Created
+                                {{ t('common.created') }}
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Actions
+                                {{ t('common.actions') }}
                             </th>
                         </tr>
                     </thead>
@@ -219,7 +214,7 @@
                                 <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
-                                <p class="mt-2">No categories found</p>
+                                <p class="mt-2">{{ t('adminHelpdesk.categoriesManagement.empty.title') }}</p>
                             </td>
                         </tr>
                         <tr v-for="category in categories.data" :key="category.id" class="hover:bg-gray-50">
@@ -243,7 +238,7 @@
                                     <div class="text-xs text-gray-500">{{ category.aplikasi.code }}</div>
                                     <div class="text-xs text-gray-400">({{ category.aplikasi.status }})</div>
                                 </div>
-                                <span v-else class="text-sm text-gray-400">No application</span>
+                                <span v-else class="text-sm text-gray-400">{{ t('common.noApplication') }}</span>
                             </td>
                             <td class="px-6 py-4">
                                 <span v-if="category.admin_aplikasi" class="text-sm text-gray-900">{{ category.admin_aplikasi.name }}</span>
@@ -258,9 +253,9 @@
                                 <div class="text-sm text-gray-900">
                                     <div class="font-medium">{{ category.total_tickets }}</div>
                                     <div class="text-xs text-gray-500">
-                                        <span class="text-yellow-600">{{ category.open_tickets }} open</span> /
-                                        <span class="text-blue-600">{{ category.in_progress_tickets }} in progress</span> /
-                                        <span class="text-green-600">{{ category.resolved_tickets }} resolved</span>
+                                        <span class="text-yellow-600">{{ category.open_tickets }} {{ t('status.open') }}</span> /
+                                        <span class="text-blue-600">{{ category.in_progress_tickets }} {{ t('status.inProgress') }}</span> /
+                                        <span class="text-green-600">{{ category.resolved_tickets }} {{ t('status.resolved') }}</span>
                                     </div>
                                 </div>
                             </td>
@@ -268,12 +263,12 @@
                                 <span v-if="category.avg_resolution_time" class="text-sm text-gray-900">
                                     {{ category.avg_resolution_time }}h
                                 </span>
-                                <span v-else class="text-sm text-gray-400">N/A</span>
+                                <span v-else class="text-sm text-gray-400">{{ t('common.notAvailable') }}</span>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-900">{{ category.formatted_created_at }}</div>
                                 <div v-if="category.last_ticket_activity" class="text-xs text-gray-500">
-                                    Active: {{ category.last_ticket_activity }}
+                                    {{ t('common.active') }}: {{ category.last_ticket_activity }}
                                 </div>
                             </td>
                             <td class="px-6 py-4">
@@ -281,7 +276,7 @@
                                     <button
                                         @click="editCategory(category)"
                                         class="text-indigo-600 hover:text-indigo-800"
-                                        title="Edit Category"
+                                        :title="t('common.edit') + ' ' + t('ticket.category')"
                                     >
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -290,7 +285,7 @@
                                     <button
                                         @click="deleteCategory(category)"
                                         class="text-red-600 hover:text-red-800"
-                                        title="Delete Category"
+                                        :title="t('common.delete') + ' ' + t('ticket.category')"
                                     >
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -329,10 +324,13 @@
 import { ref, onMounted, computed, watch } from 'vue';
 import { Link, router } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
+import { useI18n } from 'vue-i18n';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import StatCard from '@/Components/Common/StatCard.vue';
 import SimplePagination from '@/Components/Common/SimplePagination.vue';
 import CategoryModal from '@/Components/Modals/CategoryModal.vue';
+
+const { t } = useI18n();
 
 const props = defineProps({
     categories: {
@@ -399,11 +397,11 @@ const editCategory = (category) => {
 
 const deleteCategory = async (category) => {
     if (category.total_tickets > 0) {
-        alert(`Cannot delete category "${category.name}" because it has ${category.total_tickets} tickets.`);
+        alert(t('adminHelpdesk.categoriesManagement.cannotDeleteWithTickets', { name: category.name, count: category.total_tickets }));
         return;
     }
 
-    if (!confirm(`Are you sure you want to delete category "${category.name}"?`)) {
+    if (!confirm(t('adminHelpdesk.categoriesManagement.confirmDelete', { name: category.name }))) {
         return;
     }
 
@@ -420,18 +418,18 @@ const deleteCategory = async (category) => {
         if (data.success) {
             router.reload({ preserveScroll: true });
         } else {
-            alert('Failed to delete category: ' + data.errors.join(', '));
+            alert(t('adminHelpdesk.categoriesManagement.deleteFailed') + data.errors.join(', '));
         }
     } catch (error) {
-        alert('Error deleting category: ' + error.message);
+        alert(t('adminHelpdesk.categoriesManagement.deleteError') + error.message);
     }
 };
 
 const bulkAction = async (action) => {
     if (selectedCategories.value.length === 0) return;
 
-    const actionText = action === 'delete' ? 'delete' : `${action} the selected`;
-    if (!confirm(`Are you sure you want to ${actionText} ${selectedCategories.value.length} categories?`)) {
+    const actionText = action === 'delete' ? t('common.delete') : `${t('common.activate')} / ${t('common.deactivate')} selected`;
+    if (!confirm(t('adminHelpdesk.categoriesManagement.confirmBulkAction', { action: actionText, count: selectedCategories.value.length }))) {
         return;
     }
 
@@ -492,7 +490,7 @@ const exportCategories = async () => {
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
             </svg>
-            Export started! Download will begin shortly.
+            ${t('message.exportStarted')}
         `;
         document.body.appendChild(successDiv);
 
@@ -506,7 +504,7 @@ const exportCategories = async () => {
         console.error('Export failed:', error);
 
         // Show user-friendly error message
-        const errorMessage = error.message || 'Unknown error occurred during export';
+        const errorMessage = error.message || t('message.unknownExportError');
 
         // Create a nice error notification
         const errorDiv = document.createElement('div');
@@ -515,7 +513,7 @@ const exportCategories = async () => {
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
-            Export failed: ${errorMessage}
+            ${t('message.exportFailed')}: ${errorMessage}
         `;
         document.body.appendChild(errorDiv);
 

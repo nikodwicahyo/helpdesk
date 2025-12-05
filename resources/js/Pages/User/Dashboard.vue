@@ -538,67 +538,6 @@
 
             <!-- Right Column - Sidebar Info -->
             <div class="space-y-6 sm:space-y-8">
-                <!-- Upcoming Deadlines -->
-                <div class="bg-white rounded-lg shadow-md">
-                    <div class="p-6 border-b border-gray-200">
-                        <h2 class="text-lg font-semibold text-gray-900">
-                            {{ $t('dashboard.user.upcomingDeadlines') }}
-                        </h2>
-                    </div>
-
-                    <div
-                        v-if="upcomingDeadlines.length === 0"
-                        class="p-6 text-center"
-                    >
-                        <svg
-                            class="mx-auto h-8 w-8 text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                        </svg>
-                        <p class="mt-2 text-sm text-gray-500">
-                            {{ $t('dashboard.user.noUpcomingDeadlines') }}
-                        </p>
-                    </div>
-
-                    <div v-else class="divide-y divide-gray-200">
-                        <div
-                            v-for="deadline in upcomingDeadlines"
-                            :key="deadline.id"
-                            class="p-4 hover:bg-gray-50 transition cursor-pointer"
-                            @click="viewTicket(deadline.id)"
-                        >
-                            <div class="flex items-center justify-between">
-                                <div class="flex-1">
-                                    <p
-                                        class="font-medium text-gray-900 text-sm"
-                                    >
-                                        {{ deadline.title }}
-                                    </p>
-                                    <p class="text-xs text-gray-500 mt-1">
-                                        {{ deadline.ticket_number }}
-                                    </p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-sm font-medium text-red-600">
-                                        {{ deadline.days_until_due }} {{ $t('dashboard.user.days') }}
-                                    </p>
-                                    <p class="text-xs text-gray-500">
-                                        {{ deadline.formatted_due_date }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Application Usage -->
                 <div class="bg-white rounded-lg shadow-md">
                     <div class="p-6 border-b border-gray-200">
@@ -824,13 +763,15 @@ const weeklyActivityChartData = computed(() => {
         const date = new Date(today);
         date.setDate(date.getDate() - i);
         
-        // Format date as YYYY-MM-DD to match backend format
-        const dateKey = date.toISOString().split('T')[0];
+        // Format date as YYYY-MM-DD using local timezone to match backend format
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const dateKey = `${year}-${month}-${day}`;
         
         // Create label as "Weekday Day" (e.g., "Mon 25")
         const weekday = date.toLocaleDateString(t('time.locale'), { weekday: 'short' });
-        const day = date.getDate();
-        labels.push(`${weekday} ${day}`);
+        labels.push(`${weekday} ${date.getDate()}`);
         
         // Get count for this date, default to 0
         data.push(weeklyActivity[dateKey] || 0);
