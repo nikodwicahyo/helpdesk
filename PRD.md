@@ -1063,27 +1063,7 @@ helpdesk-kemlu/
 
 ---
 
-## 20. Budget Estimation
-
-| Item | Cost (IDR) |
-|------|-----------|
-| **Development** | |
-| - Backend Development (2 developers, 3 months) | 90.000.000 |
-| - Frontend Development (2 developers, 3 months) | 90.000.000 |
-| - UI/UX Design | 15.000.000 |
-| - Project Management | 20.000.000 |
-| **Infrastructure** (1 year) | |
-| - Cloud Server (AWS/Azure) | 36.000.000 |
-| - Domain & SSL Certificate | 2.000.000 |
-| - Backup Storage | 6.000.000 |
-| **Testing & QA** | 15.000.000 |
-| **Documentation & Training** | 10.000.000 |
-| **Contingency (10%)** | 28.400.000 |
-| **TOTAL** | **312.400.000** |
-
----
-
-## 21. Timeline
+## 20. Timeline
 
 | Phase | Duration | Deliverables |
 |-------|----------|-------------|
@@ -1096,7 +1076,7 @@ helpdesk-kemlu/
 
 ---
 
-## 22. Risks & Mitigation
+## 21. Risks & Mitigation
 
 | Risk | Impact | Probability | Mitigation |
 |------|--------|-------------|------------|
