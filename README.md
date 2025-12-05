@@ -57,7 +57,7 @@ Follow these instructions to get the project up and running on your local machin
 1.  **Clone the repository:**
     ```bash
     git clone <repository-url>
-    cd helpdesk-kemlu-v3-now
+    cd helpdesk
     ```
 
 2.  **Install PHP dependencies:**
