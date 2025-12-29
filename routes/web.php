@@ -54,7 +54,7 @@ Route::get('/', function () {
 })->name('landing');
 
 // Protected routes with role-based access control
-Route::middleware(['auth', 'session.tracking', 'session.timeout', 'inertia'])->group(function () {
+Route::middleware(['auth:web,admin_helpdesk,admin_aplikasi,teknisi,user', 'session.tracking', 'session.timeout', 'inertia'])->group(function () {
 
     // Common authenticated routes (all roles)
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -97,6 +97,7 @@ Route::middleware(['auth', 'session.tracking', 'session.timeout', 'inertia'])->g
         // Ticket Management routes
         Route::get('/tickets', [TicketManagementController::class, 'index'])->name('admin.tickets.index');
         Route::prefix('/tickets-management')->name('tickets-management.')->group(function () {
+            Route::get('/stats', [TicketManagementController::class, 'getTicketStats'])->name('stats');
             Route::get('/', [TicketManagementController::class, 'index'])->name('index');
             Route::post('/', [TicketManagementController::class, 'store'])->name('store');
             Route::get('/{ticket}', [TicketManagementController::class, 'show'])->name('show');

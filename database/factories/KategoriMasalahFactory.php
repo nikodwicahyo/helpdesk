@@ -44,9 +44,7 @@ class KategoriMasalahFactory extends Factory
             'icon' => $this->faker->randomElement(['fas fa-desktop', 'fas fa-bug', 'fas fa-network-wired', 'fas fa-key']),
             'color' => $this->faker->randomElement(['#007bff', '#28a745', '#fd7e14', '#dc3545']),
             'keywords' => $this->faker->words(5),
-            'aplikasi_id' => function () {
-                return \App\Models\Aplikasi::inRandomOrder()->first()->id ?? 1;
-            },
+            'aplikasi_id' => \App\Models\Aplikasi::factory(),
         ];
     }
 }

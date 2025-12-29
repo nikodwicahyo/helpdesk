@@ -305,6 +305,17 @@ class TimezoneService
     }
     
     /**
+     * Check if a timezone is valid
+     * 
+     * @param string $timezone
+     * @return bool
+     */
+    public static function isValidTimezone(string $timezone): bool
+    {
+        return in_array($timezone, \DateTimeZone::listIdentifiers());
+    }
+
+    /**
      * Log timezone-related operation
      * 
      * @param string $message

@@ -290,7 +290,7 @@ class TicketManagementController extends Controller
     /**
      * Assign a ticket to a technician.
      */
-    public function assign(Request $request, $ticketId)
+    public function assign(Request $request, Ticket $ticket)
     {
         $admin = Auth::user();
 
@@ -314,7 +314,7 @@ class TicketManagementController extends Controller
         }
 
         try {
-            $ticket = Ticket::findOrFail($ticketId);
+            // $ticket is already resolved via Route Model Binding
             $teknisi = Teknisi::where('nip', $request->teknisi_nip)->firstOrFail();
 
             // Assign ticket to teknisi
@@ -367,9 +367,76 @@ class TicketManagementController extends Controller
     }
 
     /**
+     * Unassign a ticket from a technician.
+     */
+    public function unassign(Request $request, Ticket $ticket)
+    {
+        $admin = Auth::user();
+
+        // Check if it's an AJAX request (for partial updates) or form submission
+        $isAjax = $request->expectsJson();
+
+        // Validate request
+        $validator = Validator::make($request->all(), [
+            'reason' => 'required|string|max:500',
+        ]);
+
+        if ($validator->fails()) {
+            if ($isAjax) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()->all(),
+                ], 422);
+            }
+            return back()->withErrors($validator)->withInput();
+        }
+
+        try {
+            // Unassign ticket
+            if (!$ticket->unassignTeknisi($admin->nip, $request->reason)) {
+                if ($isAjax) {
+                    return response()->json([
+                        'success' => false,
+                        'errors' => ['Failed to unassign ticket'],
+                    ], 422);
+                }
+                return back()->withErrors(['error' => 'Failed to unassign ticket'])->withInput();
+            }
+
+            // Log the unassignment (handled in model, but we can do extra log here if needed)
+            // AuditLogService::logTicketUnassigned($ticket, $admin);
+
+            if ($isAjax) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Ticket unassigned successfully',
+                    'ticket' => [
+                        'id' => $ticket->id,
+                        'assigned_teknisi' => null,
+                        'assigned_teknisi_nip' => null,
+                    ],
+                ]);
+            }
+
+            return back()->with('success', "Ticket {$ticket->ticket_number} unassigned successfully");
+
+        } catch (\Exception $e) {
+            Log::error('Error in TicketManagementController@unassign: ' . $e->getMessage());
+
+            if ($isAjax) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => ['Ticket not found'],
+                ], 404);
+            }
+            return back()->withErrors(['error' => 'Ticket not found'])->withInput();
+        }
+    }
+
+    /**
      * Update ticket priority.
      */
-    public function updatePriority(Request $request, $ticketId)
+    public function updatePriority(Request $request, Ticket $ticket)
     {
         $admin = Auth::user();
 
@@ -396,7 +463,7 @@ class TicketManagementController extends Controller
         }
 
         try {
-            $ticket = Ticket::findOrFail($ticketId);
+            // $ticket is already resolved via Route Model Binding
 
             // Update priority
             $oldPriority = $ticket->priority;
@@ -646,11 +713,7 @@ class TicketManagementController extends Controller
                     ->selectRaw('AVG(resolution_time_minutes) / 60 as avg_hours')
                     ->value('avg_hours') ?? 0,
 
-                'median_resolution_time' => Ticket::where('status', Ticket::STATUS_RESOLVED)
-                    ->whereNotNull('resolution_time_minutes')
-                    ->whereBetween('resolved_at', [$startDate, $endDate])
-                    ->selectRaw('PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY resolution_time_minutes) / 60 as median_hours')
-                    ->value('median_hours') ?? 0,
+                'median_resolution_time' => $this->calculateMedianResolutionTime($startDate, $endDate),
             ],
 
             'sla_performance' => [
@@ -790,6 +853,34 @@ class TicketManagementController extends Controller
         }
 
         return $query->paginate($perPage);
+    }
+
+    /**
+     * Calculate median resolution time in hours.
+     */
+    private function calculateMedianResolutionTime($startDate, $endDate): float
+    {
+        $times = Ticket::where('status', Ticket::STATUS_RESOLVED)
+            ->whereNotNull('resolution_time_minutes')
+            ->whereBetween('resolved_at', [$startDate, $endDate])
+            ->pluck('resolution_time_minutes')
+            ->sort()
+            ->values();
+
+        $count = $times->count();
+        if ($count === 0) {
+            return 0;
+        }
+
+        $middle = floor(($count - 1) / 2);
+
+        if ($count % 2) {
+            $median = $times[$middle];
+        } else {
+            $median = ($times[$middle] + $times[$middle + 1]) / 2;
+        }
+
+        return round($median / 60, 1);
     }
 
     /**

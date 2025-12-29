@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('ticket_id')->constrained('tickets')->onDelete('cascade');
             $table->string('action'); // Action performed (e.g., 'created', 'assigned', 'status_changed', 'commented')
-            $table->string('performed_by_nip'); // NIP of who performed the action
+            $table->string('performed_by_nip')->nullable(); // NIP of who performed the action
             $table->enum('performed_by_type', ['user', 'teknisi', 'admin_helpdesk', 'admin_aplikasi', 'system']); // Type of performer
             $table->string('field_name')->nullable(); // Which field was changed
             $table->text('old_value')->nullable(); // Previous value

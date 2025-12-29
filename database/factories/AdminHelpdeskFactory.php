@@ -20,6 +20,7 @@ class AdminHelpdeskFactory extends Factory
             'department' => $this->faker->randomElement(['IT', 'Helpdesk', 'Support', 'Operations']),
             'position' => $this->faker->randomElement(['Manager', 'Coordinator', 'Specialist', 'Analyst']),
             'status' => 'active',
+            'role' => 'admin_helpdesk',
             'permissions' => ['ticket_management', 'user_management', 'report_viewer'],
             'specialization' => $this->faker->randomElement(['IT Support', 'Network Administration', 'System Analysis']),
             'password' => Hash::make('admin123'),

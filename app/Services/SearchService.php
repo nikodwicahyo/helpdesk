@@ -181,7 +181,7 @@ class SearchService
                       $tekQuery->where('name', 'like', "%{$searchTerm}%");
                   })
                   ->orWhereHas('comments', function ($commentQuery) use ($searchTerm) {
-                      $commentQuery->where('content', 'like', "%{$searchTerm}%")
+                      $commentQuery->where('comment', 'like', "%{$searchTerm}%")
                                    ->where('is_internal', false);
                   });
             });

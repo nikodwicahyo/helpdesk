@@ -216,7 +216,7 @@ class SessionController extends Controller
             Log::error('Session extension failed', [
                 'error' => $e->getMessage(),
                 'session_id' => Session::getId(),
-                'user_nip' => Auth::user()->nip ?? null,
+                'user_nip' => Auth::check() ? Auth::user()->nip : null,
                 'trace' => $e->getTraceAsString()
             ]);
 
@@ -266,7 +266,7 @@ class SessionController extends Controller
         } catch (\Exception $e) {
             Log::error('Get user sessions failed', [
                 'error' => $e->getMessage(),
-                'user_nip' => Auth::user()->nip ?? null,
+                'user_nip' => Auth::check() ? Auth::user()->nip : null,
                 'trace' => $e->getTraceAsString()
             ]);
 
@@ -357,7 +357,7 @@ class SessionController extends Controller
         } catch (\Exception $e) {
             Log::error('Terminate all sessions failed', [
                 'error' => $e->getMessage(),
-                'user_nip' => Auth::user()->nip ?? null,
+                'user_nip' => Auth::check() ? Auth::user()->nip : null,
                 'trace' => $e->getTraceAsString()
             ]);
 

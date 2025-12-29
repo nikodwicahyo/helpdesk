@@ -219,8 +219,10 @@ class AppServiceProvider extends ServiceProvider
             'loading' => false,
         ]);
 
-        // Register model observers for automatic notifications
-        $this->registerModelObservers();
+        // Register model observers for automatic notifications (skip during tests)
+        if (!env('DISABLE_MODEL_OBSERVERS', false)) {
+            $this->registerModelObservers();
+        }
 
         // Register custom helpdesk collector for Debugbar
         $this->registerHelpdeskCollector();

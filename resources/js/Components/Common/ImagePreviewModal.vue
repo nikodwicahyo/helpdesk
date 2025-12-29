@@ -30,7 +30,7 @@
                         <!-- Close button -->
                         <button
                             @click="closeModal"
-                            class="absolute top-4 right-4 z-10 text-white hover:text-gray-300 transition-colors bg-black bg-opacity-50 rounded-full p-2"
+                            class="absolute top-4 right-4 z-10 text-white hover:text-gray-300 transition-colors bg-black/50 rounded-full p-2"
                             title="Close (ESC)"
                         >
                             <svg
@@ -52,7 +52,7 @@
                         <button
                             v-if="hasPrevious"
                             @click="previousImage"
-                            class="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 text-white hover:text-gray-300 transition-colors bg-black bg-opacity-50 rounded-full p-3"
+                            class="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 text-white hover:text-gray-300 transition-colors bg-black/50 rounded-full p-3"
                             title="Previous (←)"
                         >
                             <svg
@@ -73,7 +73,7 @@
                         <button
                             v-if="hasNext"
                             @click="nextImage"
-                            class="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 text-white hover:text-gray-300 transition-colors bg-black bg-opacity-50 rounded-full p-3"
+                            class="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 text-white hover:text-gray-300 transition-colors bg-black/50 rounded-full p-3"
                             title="Next (→)"
                         >
                             <svg
@@ -114,7 +114,7 @@
 
                         <!-- Image info -->
                         <div
-                            class="mt-4 text-center text-white bg-black bg-opacity-50 rounded-lg p-4"
+                            class="mt-4 text-center text-white bg-black/50 rounded-lg p-4"
                         >
                             <p class="text-lg font-medium">
                                 {{ currentImage.name }}

@@ -251,12 +251,16 @@ class Ticket extends Model
      */
     public function assignToTeknisi(string $teknisiNip, string $assignedByNip, string $notes = null): bool
     {
+        if ($this->status === self::STATUS_OPEN) {
+            $this->status = self::STATUS_ASSIGNED;
+        }
+
         $this->assigned_teknisi_nip = $teknisiNip;
         $this->assigned_by_nip = $assignedByNip;
 
         if ($this->save()) {
             $this->createHistoryRecord(
-                $this->status,
+                $this->status === self::STATUS_ASSIGNED ? self::STATUS_OPEN : $this->status,
                 $this->status,
                 $assignedByNip,
                 "Assigned to teknisi: {$notes}",
@@ -273,13 +277,19 @@ class Ticket extends Model
      */
     public function unassignTeknisi(string $unassignedByNip, string $reason = null): bool
     {
+        $oldStatus = $this->status;
+        
+        if ($this->status === self::STATUS_ASSIGNED) {
+            $this->status = self::STATUS_OPEN;
+        }
+
         $oldTeknisiNip = $this->assigned_teknisi_nip;
         $this->assigned_teknisi_nip = null;
         $this->assigned_by_nip = $unassignedByNip;
 
         if ($this->save()) {
             $this->createHistoryRecord(
-                $this->status,
+                $oldStatus,
                 $this->status,
                 $unassignedByNip,
                 "Unassigned from teknisi {$oldTeknisiNip}: {$reason}",
@@ -386,7 +396,7 @@ class Ticket extends Model
     /**
      * Create history record
      */
-    protected function createHistoryRecord(string $oldStatus, string $newStatus, ?string $userNip, ?string $notes = null, string $actionType = 'status_change'): void
+    public function createHistoryRecord(string $oldStatus, string $newStatus, ?string $userNip, ?string $notes = null, string $actionType = 'status_change'): void
     {
         // Determine the performer type based on NIP
         $performedByType = 'system';

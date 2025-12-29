@@ -26,10 +26,10 @@ class TicketDraftFactory extends Factory
             'user_nip' => User::factory(),
             'aplikasi_id' => Aplikasi::factory(),
             'kategori_masalah_id' => KategoriMasalah::factory(),
-            'judul' => $this->faker->sentence(),
-            'deskripsi' => $this->faker->paragraph(),
-            'prioritas' => $this->faker->randomElement(['low', 'medium', 'high', 'urgent']),
-            'lokasi' => $this->faker->optional(0.7)->address(),
+            'title' => $this->faker->sentence(),
+            'description' => $this->faker->paragraph(),
+            'priority' => $this->faker->randomElement(['low', 'medium', 'high', 'urgent']),
+            'location' => $this->faker->optional(0.7)->address(),
             'draft_data' => [
                 'aplikasi_id' => $this->faker->numberBetween(1, 10),
                 'kategori_masalah_id' => $this->faker->numberBetween(1, 20),
@@ -88,10 +88,10 @@ class TicketDraftFactory extends Factory
     public function complete(): static
     {
         return $this->state(fn (array $attributes) => [
-            'judul' => $this->faker->sentence(5),
-            'deskripsi' => $this->faker->paragraph(5),
-            'prioritas' => $this->faker->randomElement(['low', 'medium', 'high', 'urgent']),
-            'lokasi' => $this->faker->address(),
+            'title' => $this->faker->sentence(5),
+            'description' => $this->faker->paragraph(5),
+            'priority' => $this->faker->randomElement(['low', 'medium', 'high', 'urgent']),
+            'location' => $this->faker->address(),
             'draft_data' => [
                 'aplikasi_id' => $this->faker->numberBetween(1, 10),
                 'kategori_masalah_id' => $this->faker->numberBetween(1, 20),

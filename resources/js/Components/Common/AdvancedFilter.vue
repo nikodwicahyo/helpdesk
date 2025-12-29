@@ -312,7 +312,7 @@
     </div>
 
     <!-- Save Filter Modal -->
-    <div v-if="showSaveModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div v-if="showSaveModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
         <div class="bg-white rounded-lg p-6 w-full max-w-md">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Save Filter</h3>
             <input

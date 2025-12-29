@@ -11,7 +11,7 @@
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" />
+        <div class="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity" />
       </TransitionChild>
 
       <div class="fixed inset-0 overflow-y-auto">

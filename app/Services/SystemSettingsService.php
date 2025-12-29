@@ -381,24 +381,25 @@ class SystemSettingsService
         $regexParts = [];
 
         if ($requireUppercase) {
-            $regexParts[] = '(?=.*[A-Z])';
+            $regexParts[] = '(?=.*[A-Z])';  // At least one uppercase letter
         }
 
         if ($requireLowercase) {
-            $regexParts[] = '(?=.*[a-z])';
+            $regexParts[] = '(?=.*[a-z])';  // At least one lowercase letter
         }
 
         if ($requireNumbers) {
-            $regexParts[] = '(?=.*\d)';
+            $regexParts[] = '(?=.*\d)';  // At least one digit
         }
 
         if ($requireSymbols) {
-            $regexParts[] = '(?=.*[@$!%*?&])';
+            $regexParts[] = '(?=.*[@$!%*?&])';  // At least one standard symbol
         }
 
         if (!empty($regexParts)) {
-            $regex = '/^' . implode('', $regexParts) . '.+$/';
-            $rules[] = "regex:{$regex}";
+            // Create the complete regex pattern - match the full password after lookaheads
+            $fullPattern = '/' . '^' . implode('', $regexParts) . '.+' . '/u';
+            $rules[] = "regex:{$fullPattern}";
         }
 
         return $rules;
