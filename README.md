@@ -85,7 +85,7 @@ Follow these instructions to get the project up and running on your local machin
 6.  **Run database migrations and seeders:**
     This will create the necessary tables and populate them with initial data.
     ```bash
-    php artisan migrate:fresh --seed
+    php artisan migrate --seed
     ```
 
 ## 🔧 Development
