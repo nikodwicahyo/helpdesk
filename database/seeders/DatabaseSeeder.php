@@ -63,15 +63,15 @@ class DatabaseSeeder extends Seeder
         $this->command->info('  - 10 Technical Support Staff');
         $this->command->info('  - 10 Sample Tickets');
         $this->command->info('  - 15+ Ticket Comments');
-        $this->command->info('  - 200+ Audit Log Entries');
+        $this->command->info('  - 100+ Audit Log Entries');
         $this->command->info('  - 12 Notifications');
         $this->command->info('  - 4 Sample Reports');
         $this->command->info('  - 5 Knowledge Base Articles');
         $this->command->info('');
         $this->command->info('Default login credentials:');
-        $this->command->info('  - Regular User: password123');
         $this->command->info('  - Admin Helpdesk: admin123');
         $this->command->info('  - Admin Aplikasi: admin123');
         $this->command->info('  - Teknisi: password123');
+        $this->command->info('  - Regular User: password123');
     }
 }

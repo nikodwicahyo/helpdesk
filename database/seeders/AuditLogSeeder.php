@@ -38,14 +38,15 @@ class AuditLogSeeder extends Seeder
 
         $auditLogs = [];
 
-        // 1. Create login logs for all users (spread over last 30 days)
-        // IMPORTANT: Always ensure timestamps are in the past by using minimum 1 day ago
+        // 1. Create login logs for all users (spread over last 60 days)
+        // IMPORTANT: Always ensure timestamps are in the past (minimum 2 days ago)
+        // This ensures real user activity always appears first in Activity Log
         $this->command->info('  → Creating login/logout logs...');
         foreach ($users as $user) {
-            // 3-5 logins per user
-            for ($i = 0; $i < rand(3, 5); $i++) {
-                // Ensure timestamps are always in the past (1-30 days ago)
-                $loginTime = Carbon::now()->subDays(rand(1, 30))->subHours(rand(0, 23))->subMinutes(rand(0, 59));
+            // Only 1-2 logins per user (reduced from 3-5)
+            for ($i = 0; $i < rand(1, 2); $i++) {
+                // Ensure timestamps are always in the past (2-60 days ago)
+                $loginTime = Carbon::now()->subDays(rand(2, 60))->subHours(rand(0, 23))->subMinutes(rand(0, 59));
                 
                 $auditLogs[] = [
                     'action' => 'login',
@@ -63,8 +64,8 @@ class AuditLogSeeder extends Seeder
                     'created_at' => $loginTime,
                 ];
 
-                // Some logout logs (70% of logins have logout)
-                if (rand(1, 10) <= 7) {
+                // Some logout logs (50% of logins have logout - reduced from 70%)
+                if (rand(1, 10) <= 5) {
                     $logoutTime = $loginTime->copy()->addHours(rand(2, 8));
                     $auditLogs[] = [
                         'action' => 'logout',
@@ -85,11 +86,11 @@ class AuditLogSeeder extends Seeder
             }
         }
 
-        // Admin login logs
+        // Admin login logs (reduced from 5-10 to 2-3)
         foreach ($adminHelpdesks as $admin) {
-            for ($i = 0; $i < rand(5, 10); $i++) {
-                // Ensure timestamps are always in the past (1-30 days ago)
-                $loginTime = Carbon::now()->subDays(rand(1, 30))->subHours(rand(0, 23))->subMinutes(rand(0, 59));
+            for ($i = 0; $i < rand(2, 3); $i++) {
+                // Ensure timestamps are always in the past (2-60 days ago)
+                $loginTime = Carbon::now()->subDays(rand(2, 60))->subHours(rand(0, 23))->subMinutes(rand(0, 59));
                 
                 $auditLogs[] = [
                     'action' => 'login',
@@ -109,11 +110,11 @@ class AuditLogSeeder extends Seeder
             }
         }
 
-        // Teknisi login logs
+        // Teknisi login logs (reduced from 5-10 to 2-3)
         foreach ($teknisis as $teknisi) {
-            for ($i = 0; $i < rand(5, 10); $i++) {
-                // Ensure timestamps are always in the past (1-30 days ago)
-                $loginTime = Carbon::now()->subDays(rand(1, 30))->subHours(rand(0, 23))->subMinutes(rand(0, 59));
+            for ($i = 0; $i < rand(2, 3); $i++) {
+                // Ensure timestamps are always in the past (2-60 days ago)
+                $loginTime = Carbon::now()->subDays(rand(2, 60))->subHours(rand(0, 23))->subMinutes(rand(0, 59));
                 
                 $auditLogs[] = [
                     'action' => 'login',
@@ -167,7 +168,17 @@ class AuditLogSeeder extends Seeder
                 $assignedByAdmin = $adminHelpdesks->where('nip', $ticket->assigned_by_nip)->first();
 
                 if ($assignedTeknisi && $assignedByAdmin) {
+                    // Calculate assignedAt ensuring it's not in the future
+                    // Ticket created_at is in the past (e.g. 1-8 hours ago)
+                    // We add 15-60 mins, but clamp to now()
                     $assignedAt = $ticket->created_at->copy()->addMinutes(rand(15, 60));
+                    if ($assignedAt->gt(Carbon::now())) {
+                        $assignedAt = Carbon::now()->subMinutes(rand(5, 30));
+                        // Ensure it's still after created_at
+                        if ($assignedAt->lte($ticket->created_at)) {
+                            $assignedAt = $ticket->created_at->copy()->addMinutes(1);
+                        }
+                    }
                     
                     $auditLogs[] = [
                         'action' => 'assigned',
@@ -193,8 +204,21 @@ class AuditLogSeeder extends Seeder
 
                     // 2c. Teknisi comments/updates (1-3 comments)
                     for ($i = 0; $i < rand(1, 3); $i++) {
+                        // Calculate commentAt relative to assignedAt, ensuring not in future
                         $commentAt = $assignedAt->copy()->addMinutes(rand(30, 180));
+                        if ($commentAt->gt(Carbon::now())) {
+                            $commentAt = Carbon::now()->subMinutes(rand(1, 10));
+                            // Ensure after assignedAt
+                            if ($commentAt->lte($assignedAt)) {
+                                $commentAt = $assignedAt->copy()->addMinutes(rand(1, 5));
+                            }
+                        }
                         
+                        // Double check we didn't push it into future with the fix
+                        if ($commentAt->gt(Carbon::now())) {
+                           $commentAt = Carbon::now()->subSeconds(rand(10, 59));
+                        }
+
                         $auditLogs[] = [
                             'action' => 'commented',
                             'entity_type' => 'Ticket',
@@ -307,9 +331,10 @@ class AuditLogSeeder extends Seeder
         }
 
         $totalLogs = count($auditLogs);
-        $this->command->info("✓ Created {$totalLogs} realistic audit log entries!");
+        $this->command->info("✓ Created {$totalLogs} audit log entries (reduced for better performance)!");
         $this->command->info('  • Login/Logout logs: ' . collect($auditLogs)->whereIn('action', ['login', 'logout'])->count());
         $this->command->info('  • Ticket lifecycle logs: ' . collect($auditLogs)->whereIn('action', ['created', 'assigned', 'commented', 'resolved', 'closed'])->count());
         $this->command->info('  • User management logs: ' . collect($auditLogs)->where('action', 'created')->where('entity_type', 'User')->count());
+        $this->command->info('  ℹ All timestamps are 2-60 days in the past to ensure real user activity appears first');
     }
 }
