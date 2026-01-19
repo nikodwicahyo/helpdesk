@@ -85,7 +85,7 @@ Follow these instructions to get the project up and running on your local machin
 6.  **Run database migrations and seeders:**
     This will create the necessary tables and populate them with initial data.
     ```bash
-    php artisan migrate --seed
+    php artisan migrate:fresh --seed
     ```
 
 ## 🔧 Development
@@ -110,10 +110,6 @@ Alternatively, you can start each service in a separate terminal:
 -   **Vite Frontend Server:**
     ```bash
     npm run dev
-    ```
--   **Laravel Reverb for Real-time Broadcasting:**
-    ```bash
-    php artisan reverb:start
     ```
 -   **Queue Worker:**
     ```bash
