@@ -39,11 +39,13 @@ class AuditLogSeeder extends Seeder
         $auditLogs = [];
 
         // 1. Create login logs for all users (spread over last 30 days)
+        // IMPORTANT: Always ensure timestamps are in the past by using minimum 1 day ago
         $this->command->info('  → Creating login/logout logs...');
         foreach ($users as $user) {
             // 3-5 logins per user
             for ($i = 0; $i < rand(3, 5); $i++) {
-                $loginTime = Carbon::now()->subDays(rand(0, 30))->subHours(rand(0, 23));
+                // Ensure timestamps are always in the past (1-30 days ago)
+                $loginTime = Carbon::now()->subDays(rand(1, 30))->subHours(rand(0, 23))->subMinutes(rand(0, 59));
                 
                 $auditLogs[] = [
                     'action' => 'login',
@@ -86,7 +88,8 @@ class AuditLogSeeder extends Seeder
         // Admin login logs
         foreach ($adminHelpdesks as $admin) {
             for ($i = 0; $i < rand(5, 10); $i++) {
-                $loginTime = Carbon::now()->subDays(rand(0, 30))->subHours(rand(0, 23));
+                // Ensure timestamps are always in the past (1-30 days ago)
+                $loginTime = Carbon::now()->subDays(rand(1, 30))->subHours(rand(0, 23))->subMinutes(rand(0, 59));
                 
                 $auditLogs[] = [
                     'action' => 'login',
@@ -109,7 +112,8 @@ class AuditLogSeeder extends Seeder
         // Teknisi login logs
         foreach ($teknisis as $teknisi) {
             for ($i = 0; $i < rand(5, 10); $i++) {
-                $loginTime = Carbon::now()->subDays(rand(0, 30))->subHours(rand(0, 23));
+                // Ensure timestamps are always in the past (1-30 days ago)
+                $loginTime = Carbon::now()->subDays(rand(1, 30))->subHours(rand(0, 23))->subMinutes(rand(0, 59));
                 
                 $auditLogs[] = [
                     'action' => 'login',

@@ -268,7 +268,23 @@ class LoginController extends Controller
             Auth::guard('web')->login($user, $remember);
             
             // Log the login activity
-            AuditLogService::logLogin($user);
+            Log::info('LoginController: About to log login activity', [
+                'user_nip' => $user->nip,
+                'user_name' => $user->name,
+            ]);
+            
+            try {
+                $auditLog = AuditLogService::logLogin($user);
+                Log::info('LoginController: Login activity logged', [
+                    'audit_log_id' => $auditLog ? $auditLog->id : 'NULL',
+                    'user_nip' => $user->nip,
+                ]);
+            } catch (\Exception $e) {
+                Log::error('LoginController: Failed to log login activity', [
+                    'error' => $e->getMessage(),
+                    'user_nip' => $user->nip,
+                ]);
+            }
 
             if (app()->isLocal()) {
             Log::debug('Web guard login completed', [
@@ -629,7 +645,23 @@ class LoginController extends Controller
             ]);
             
             // Log the logout activity
-            AuditLogService::logLogout($user);
+            Log::info('LoginController: About to log logout activity', [
+                'user_nip' => $user->nip,
+                'user_name' => $user->name,
+            ]);
+            
+            try {
+                $auditLog = AuditLogService::logLogout($user);
+                Log::info('LoginController: Logout activity logged', [
+                    'audit_log_id' => $auditLog ? $auditLog->id : 'NULL',
+                    'user_nip' => $user->nip,
+                ]);
+            } catch (\Exception $e) {
+                Log::error('LoginController: Failed to log logout activity', [
+                    'error' => $e->getMessage(),
+                    'user_nip' => $user->nip,
+                ]);
+            }
 
             // Complete logout process with session cleanup
             $this->authService->completeLogout($user->nip, session()->getId());
