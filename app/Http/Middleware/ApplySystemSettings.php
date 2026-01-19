@@ -17,6 +17,12 @@ class ApplySystemSettings
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Skip applying system settings during console commands to avoid database queries
+        // before migrations are run
+        if (app()->runningInConsole()) {
+            return $next($request);
+        }
+
         // Apply system settings to Laravel config
         $this->applyGeneralSettings();
         $this->applyMailSettings();
